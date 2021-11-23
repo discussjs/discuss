@@ -1,0 +1,13 @@
+
+# Vuercl
+.vercel
+vercel.json
+
+# vscode
+.vscode
+
+# project file
+node_modules
+package-lock.json
+.env
+

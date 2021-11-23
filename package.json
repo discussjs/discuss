@@ -1,0 +1,67 @@
+{
+  "name": "discuss",
+  "version": "1.0.0-beta.0",
+  "description": "一个简单，安全，免费的评论系统 | A simple, safe, free comment system",
+  "main": "index.js",
+  "scripts": {
+    "start:client": "webpack serve --config ./webpack/dev.js",
+    "build:client": "webpack --config ./webpack/prod.js",
+    "start:server": "node ./start.js",
+    "start:server:hot": "npx nodemon ./start.js"
+  },
+  "keywords": [
+    "comments",
+    "concise",
+    "vue"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lete114/Discuss"
+  },
+  "author": {
+    "name": "Lete乐特",
+    "url": "https://www.imlete.cn"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.15.3",
+    "akismet-api": "^5.2.1",
+    "axios": "^0.22.0",
+    "bcrypt": "^5.0.1",
+    "dotenv": "^10.0.0",
+    "highlight.js": "^11.2.0",
+    "html-minifier": "^4.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "loading-script": "^1.0.0",
+    "marked": "^3.0.8",
+    "md5": "^2.3.0",
+    "mongoose": "^6.0.12",
+    "nodemailer": "^6.7.0",
+    "vue": "^3.0.0",
+    "xss": "^1.0.10"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.10",
+    "@babel/plugin-transform-runtime": "^7.15.0",
+    "@babel/preset-env": "^7.12.11",
+    "@vue/compiler-sfc": "^3.1.1",
+    "babel-loader": "^8.2.2",
+    "babel-polyfill": "^6.26.0",
+    "clean-webpack-plugin": "^4.0.0-alpha.0",
+    "compression-webpack-plugin": "^8.0.0",
+    "css-loader": "^5.2.6",
+    "html-webpack-plugin": "^5.3.1",
+    "nodemon": "^2.0.15",
+    "style-loader": "^2.0.0",
+    "svg-inline-loader": "^0.8.2",
+    "vue-loader": "^16.5.0",
+    "webpack": "^5.39.0",
+    "webpack-cli": "^4.7.2",
+    "webpack-dev-server": "^4.2.0",
+    "webpack-merge": "^5.8.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}

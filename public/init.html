@@ -1,0 +1,220 @@
+<style>
+  body {
+    background-color: #eaeaea;
+  }
+
+  .title {
+    font-size: 2em;
+    font-weight: 800;
+    margin-bottom: 10px;
+  }
+
+  .init {
+    text-align: center;
+    position: fixed;
+    top: 5rem;
+    left: 50%;
+    margin-left: -10rem;
+    padding: 1rem;
+    width: 20rem;
+    background: #fff;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    border-radius: 10px;
+  }
+
+  .init-info {
+    list-style: none;
+    margin: 1em 0;
+    padding: 0;
+  }
+
+  input {
+    border: 1px solid #000;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+    margin: 0 auto 10px;
+    box-sizing: content-box;
+    display: block;
+    text-align: center;
+    font-weight: 300;
+    appearance: none;
+    outline: 0;
+    padding: 10px 15px;
+    width: 250px;
+    font-size: 18px;
+    transition-duration: 0.25s;
+  }
+
+  input[type='button']:hover {
+    cursor: pointer;
+    background-color: #f0f0f0;
+  }
+
+  input[disabled]:hover {
+    cursor: not-allowed;
+  }
+
+  .login-status {
+    color: red;
+    margin-top: 10px;
+    display: none;
+  }
+
+  .shake {
+    animation-name: shake-horizontal;
+    animation-duration: 1s;
+    animation-timing-function: ease;
+    animation-delay: 0s;
+    animation-iteration-count: 1;
+    animation-direction: normal;
+    animation-fill-mode: none;
+  }
+  @keyframes shake-horizontal {
+    0% {
+      -webkit-transform: translateX(0);
+      transform: translateX(0);
+    }
+    10% {
+      -webkit-transform: translateX(-10px);
+      transform: translateX(-10px);
+    }
+    20% {
+      -webkit-transform: translateX(10px);
+      transform: translateX(10px);
+    }
+    30% {
+      -webkit-transform: translateX(-10px);
+      transform: translateX(-10px);
+    }
+    40% {
+      -webkit-transform: translateX(10px);
+      transform: translateX(10px);
+    }
+    50% {
+      -webkit-transform: translateX(-10px);
+      transform: translateX(-10px);
+    }
+    60% {
+      -webkit-transform: translateX(10px);
+      transform: translateX(10px);
+    }
+    70% {
+      -webkit-transform: translateX(-10px);
+      transform: translateX(-10px);
+    }
+    80% {
+      -webkit-transform: translateX(8px);
+      transform: translateX(8px);
+    }
+    90% {
+      -webkit-transform: translateX(-8px);
+      transform: translateX(-8px);
+    }
+    100% {
+      -webkit-transform: translateX(0);
+      transform: translateX(0);
+    }
+  }
+</style>
+<script>
+  /**
+   *
+   * 封装ajax请求
+   * @param {*} obj 请求参数
+   * @returns {Promise}
+   */
+  function ajax(obj) {
+    return new Promise((resolve, reject) => {
+      //设置是否异步，默认为true
+      obj.async = obj.async || true
+      //设置数据的默认值
+      obj.data = obj.data || null
+      var xhr
+      if (window.XMLHttpRequest) xhr = new XMLHttpRequest()
+      //非ie
+      else xhr = new ActiveXObject('Microsoft.XMLHTTP') //ie
+
+      xhr.open('post', obj.url, obj.async)
+      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded')
+      xhr.send(JSON.stringify(obj.data))
+
+      xhr.onreadystatechange = () => {
+        if (xhr.readyState === 4) {
+          if (xhr.status === 200) resolve(JSON.parse(xhr.responseText))
+          else {
+            // 由于 async/await 不能捕获 reject 所以使用 resolve
+            // 如果执意要用 reject 那么就得用try/catch来捕获 reject
+            resolve({ status: xhr.status, msg: '请求错误' })
+          }
+        }
+      }
+    })
+  }
+</script>
+
+<div class="init">
+  <div class="title">Init Discuss</div>
+  <div class="description">初始化管理员身份</div>
+  <div class="login-status"></div>
+  <ul class="init-info">
+    <div class="input">
+      <li>
+        <input placeholder="用户名" type="text" id="name" />
+      </li>
+      <li>
+        <input placeholder="密码" type="password" id="password" />
+      </li>
+      <li>
+        <input placeholder="确认密码" type="password" id="confirm" />
+      </li>
+      <li>
+        <input placeholder="邮件地址" type="email" id="mail" />
+      </li>
+    </div>
+    <li>
+      <input type="button" class="submit" onclick="FormSubmit()" value="提交" />
+    </li>
+  </ul>
+</div>
+
+<script>
+  async function FormSubmit() {
+    const submit = document.querySelector('.submit')
+
+    const reg = /^([a-z0-9-])*[^-]@([a-z0-9-])+[^-]*(\.[a-z]{2,5})+$/
+    const username = document.querySelector('#name').value
+    const password = document.querySelector('#password').value
+    const confirm = document.querySelector('#confirm').value
+    const mail = document.querySelector('#mail').value
+
+    const isConform =
+      username.length >= 2 &&
+      password.length >= 6 &&
+      password === confirm &&
+      reg.test(mail)
+    if (isConform) {
+    submit.setAttribute('disabled', '')
+      const { data: isInit } = await ajax({
+        url: '/',
+        data: {
+          type: 'INIT',
+          mail,
+          username,
+          password
+        }
+      })
+      if (isInit) {
+        location.href = '/'
+        return
+      }
+      submit.removeAttribute('disabled')
+    }
+    const init = document.querySelector('.input')
+    init.classList.add('shake')
+    setTimeout(() => {
+      init.classList.remove('shake')
+    }, 1000)
+  }
+</script>

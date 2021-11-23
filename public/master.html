@@ -1,0 +1,108 @@
+<style>
+  a {
+    text-decoration: none;
+    color: #12addb;
+  }
+
+  .wrap {
+    border-radius: 10px;
+    border-left: 3px solid #e58a8a;
+    border-right: 3px solid #e58a8a;
+    box-shadow: 0 1px 5px #aaaaaa;
+    line-height: 180%;
+    padding: 0 15px 12px;
+    margin: 50px auto;
+    font-size: 12px;
+  }
+
+  .title {
+    border-bottom: 1px solid #dddddd;
+    font-size: 14px;
+    font-weight: normal;
+    padding: 10px 0;
+  }
+
+  .title a {
+    color: #000;
+  }
+
+  .D-comment {
+    display: flex;
+    padding: 12px 10px;
+  }
+
+  .D-avatar img {
+    margin-right: 12px;
+    width: 48px;
+    height: 48px;
+    border-radius: 5px;
+  }
+
+  .D-header {
+    line-height: 1;
+  }
+
+  .D-nick,
+  .D-comment-content a {
+    font-size: 15px;
+    color: #4cd3c2;
+    font-weight: 500;
+    cursor: pointer;
+  }
+
+  .D-comment-content {
+    display: flex;
+    flex-direction: row;
+    word-break: break-all;
+  }
+
+  .D-comment-content p {
+    font-size: 14px;
+  }
+
+  .D-emot-comment {
+    display: inline-block;
+    vertical-align: middle;
+    width: 1.5em;
+    margin: 0.25em;
+  }
+
+  .D-emoji {
+    vertical-align: middle;
+    width: 2em;
+    display: inline-block !important;
+  }
+
+  .footer {
+    font-size: 12px;
+    font-weight: normal;
+    padding: 13px 0 0;
+    border-top: 1px solid #dddddd;
+  }
+</style>
+<div class="wrap">
+  <div class="title">
+    ${subject}
+  </div>
+  <div>
+    <div class="D-comment">
+      <div class="D-avatar">
+        <img src="${avatar}" alt="${nick}">
+      </div>
+      <div class="D-comment-main">
+        <div class="D-header">
+          <span class="D-nick">${nick}</span>
+        </div>
+        <div class="D-body">
+          <div class="D-comment-content">
+            ${content}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+    点击
+    <a href="${url}" target="_blank">查看回复的完整內容</a><br>
+  </div>
+</div>

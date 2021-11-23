@@ -1,0 +1,26 @@
+# git
+.git
+
+# Vuercl
+.vercel
+vercel.json
+
+# vscode
+.vscode
+
+# project file
+src/client
+.env
+.env.example
+node_modules
+package-lock.json
+babel.config.js
+.prettierrc.yml
+.editorconfig
+.gitignore
+public/index.html
+public/master.html
+
+# webpack
+webpack
+
