@@ -1,6 +1,6 @@
 const Comment = require('../database/mongoose/model/Comment')
 const { GetAdmin } = require('./adminUtils')
-const { XSS, GetAvatar, DeepColne } = require('./index')
+const { XSS, GetAvatar, DeepColne,IndexHandler } = require('./index')
 
 /**
  * 限制字数
@@ -50,25 +50,25 @@ function WordNumberExceed(configWordNumber,paramsWordNumber) {
   const siteExceed = siteWordNumber && site > siteWordNumber
 
   // #region 内容超出输出日志
-  if(contentExceed){
-    console.log('内容字数:',content);
-    console.log('内容规定字数:',contentWordNumber);
-    console.log('内容超出字数:',content - contentWordNumber);
+  if (contentExceed) {
+    console.log('内容字数:', content)
+    console.log('内容规定字数:', contentWordNumber)
+    console.log('内容超出字数:', content - contentWordNumber)
   }
-  if(nickExceed){
-    console.log('昵称字数:',content);
-    console.log('昵称规定字数:',nickExceed);
-    console.log('昵称超出字数:',content - nickExceed);
+  if (nickExceed) {
+    console.log('昵称字数:', content)
+    console.log('昵称规定字数:', nickExceed)
+    console.log('昵称超出字数:', content - nickExceed)
   }
-  if(mailExceed){
-    console.log('邮箱字数:',content);
-    console.log('邮箱规定字数:',mailExceed);
-    console.log('邮箱超出字数:',content - mailExceed);
+  if (mailExceed) {
+    console.log('邮箱字数:', content)
+    console.log('邮箱规定字数:', mailExceed)
+    console.log('邮箱超出字数:', content - mailExceed)
   }
-  if(siteExceed){
-    console.log('网址字数:',content);
-    console.log('网址规定字数:',siteExceed);
-    console.log('网址超出字数:',content - siteExceed);
+  if (siteExceed) {
+    console.log('网址字数:', content)
+    console.log('网址规定字数:', siteExceed)
+    console.log('网址超出字数:', content - siteExceed)
   }
   // #endregion
 
@@ -85,7 +85,7 @@ function WordNumberExceed(configWordNumber,paramsWordNumber) {
  * @returns
  */
 async function UpdateComment(arr, exec, comment) {
-  let data = { status:exec }
+  let data = { status: exec }
 
   // 修改为置顶
   if (exec == 'stick') data = { stick: true }
@@ -143,8 +143,7 @@ async function CommitCommentHandler(params, token) {
   const content = XSS(params.content)
   const created = timestamp
   const updated = timestamp
-  let path = params.path.replace(/\/index.html$/, '')
-  if (path.length > 1) path = path.replace(/\/$/, '')
+  let path = IndexHandler(params.path)
 
   const avatar = await GetAvatar(params.mail)
 

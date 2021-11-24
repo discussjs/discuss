@@ -11,6 +11,7 @@ const {
   SendMailHandler
 } = require('../utils/commentUtils')
 const {
+  IndexHandler,
   DeepColne,
   VerifyParams,
   akismet,
@@ -20,6 +21,9 @@ const {
 } = require('../utils')
 
 async function GetComment(params) {
+  // 处理index.html
+  params.path = IndexHandler(params.path)
+
   const { pageNo: currentPage, pageSize, path } = params
   // 查询条件
   let options = {
@@ -113,11 +117,9 @@ async function CommitComment(params) {
 
   const config = await GetAdmin({}, [])
 
-
   const token = await VerifyToken(params.token)
 
-
-  if(!token){
+  if (!token) {
     // 字数限制
     const paramsWordNumber = {
       content: params.content.length,
@@ -125,7 +127,7 @@ async function CommitComment(params) {
       mail: params.mail.length,
       site: params.site.length
     }
-    const isExceed = WordNumberExceed(config.word_number,paramsWordNumber)
+    const isExceed = WordNumberExceed(config.word_number, paramsWordNumber)
     if (isExceed) return '字数超出规定范围'
   }
 
@@ -157,7 +159,6 @@ async function CommitComment(params) {
 
   // 保存成功
   if (result) {
-
     // 没有配置邮件信息则直接结束
     const condition = config.mail_from && config.mail_accept
     if (!condition) return true

@@ -1,18 +1,9 @@
 const { join } = require('path')
 const mongoose = require('mongoose')
-const minify = require('html-minifier').minify
-const readFileSync = require('fs').readFileSync
+const { HtmlMinify } = require('../../../utils/minify')
 
-const options = {
-  minifyJS: true,
-  minifyCSS: true,
-  removeComments: true, // 删除注释
-  collapseWhitespace: true, // 删除多余空白处
-  removeAttributeQuotes: true // 删除属性引号
-}
-const mailPath = join(__dirname,'../../../../../public/mail.html')
-const content = readFileSync(mailPath, { encoding: 'utf8' })
-const data = minify(content, options)
+const path = join(__dirname, '../../../../../public/mail.html')
+const data = HtmlMinify(path)
 
 const { model, Schema } = mongoose
 

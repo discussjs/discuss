@@ -8,7 +8,14 @@ const marked = require('./marked')
 const SendMail = require('./SendMail')
 const XSS = require('./XSS')
 const GetAvatar = require('./avatar')
+const { HtmlMinify } = require('./minify')
 const { jwt_sign, jwt_verify } = require('./jwt')
+
+function IndexHandler(params) {
+  let path = params.replace(/\/index\.html|\/$/gi, '')
+  if (path.length == 0) path += '/'
+  return path
+}
 
 // 获取请求数据
 async function GetPostData(req) {
@@ -51,6 +58,11 @@ function SetFavicon(req, res) {
   }
 }
 
+function Discussjs() {
+  const path = join(__dirname, '../../../dist/Discuss.js')
+  if (!existsSync(path)) return '这里什么都没有哦 OwO !'
+  return readFileSync(path, { encoding: 'utf-8' })
+}
 
 function DeepColne(options = {}) {
   const str = JSON.stringify(options)
@@ -59,10 +71,12 @@ function DeepColne(options = {}) {
 }
 
 module.exports = {
+  IndexHandler,
   GetPostData,
   GetClientIP,
   GetFavicon,
   SetFavicon,
+  Discussjs,
   DeepColne,
   cors,
   VerifyParams,
@@ -73,5 +87,6 @@ module.exports = {
   XSS,
   GetAvatar,
   timeAgo,
-  SendMail
+  SendMail,
+  HtmlMinify
 }

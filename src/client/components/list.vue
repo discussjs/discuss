@@ -67,6 +67,11 @@
                       ></a>
                       <span v-else v-text="citem.nick"></span>
                     </div>
+                    <div
+                      class="D-master D-tag"
+                      v-if="citem.master"
+                      v-text="master"
+                    ></div>
                   </div>
                   <div class="D-comments-meta">
                     <time v-text="citem.time"></time>

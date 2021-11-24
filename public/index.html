@@ -8,18 +8,31 @@
   <link rel="icon" href="/favicon.ico" />
   <title>Discuss Comments</title>
   <script src="./Discuss.js"></script>
+  <style>
+    body {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    @media screen and (max-width: 900px) {
+      body {
+        padding: 10px;
+      }
+    }
+  </style>
 </head>
 
 <body>
   <div id="Discuss-Comments"></div>
   <script>
-    const url = `//${location.hostname}:6870`
+    const url = `//${location.hostname}:<%= htmlWebpackPlugin.options.port %>`
     Discuss({
       el: '#Discuss-Comments',
       master: '博主',
       placeholder: '快来评论呀',
       serverURLs: url,
-      path: window.location.pathname,
+      path: location.pathname,
       emotMaps: {
         OwO: {
           type: 'text', items: {

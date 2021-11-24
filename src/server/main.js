@@ -12,21 +12,43 @@ const {
   OperateComment
 } = require('./router/admin')
 const { GetComment, CommitComment } = require('./router/comment')
-const { cors, GetPostData, GetClientIP, SetFavicon } = require('./utils')
+const {
+  cors,
+  GetPostData,
+  GetClientIP,
+  SetFavicon,
+  Discussjs,
+  HtmlMinify
+} = require('./utils')
 
+/*
+此方法解决非项目核心功能
+*/
+async function FrontLoading(req, res) {
+  // 返回JS
+  if (req.url === '/Discuss.js') return res.end(Discussjs())
 
-module.exports = async (req, res) => {
-
-  const favicon = SetFavicon(req, res) // 设置favicon
-  if (favicon) return
+  // 设置favicon
+  const favicon = SetFavicon(req, res)
+  if (favicon) return true
 
   if (req.method === 'GET') {
     res.setHeader('Content-Type', 'text/plain; charset=utf-8')
     const isInit = await InitPage(req, res)
 
-    if (!isInit) res.end('这里什么都没有哦 OwO !')
-    return
+    if (isInit) {
+      const path = require('path').join(__dirname, '../../public/server.html')
+      const result = HtmlMinify(path)
+      res.setHeader('Content-Type', 'text/html; charset=utf-8')
+      res.end(result)
+    }
+    return true
   }
+}
+
+module.exports = async (req, res) => {
+  const resultFL = await FrontLoading(req, res)
+  if (resultFL) return
 
   let body = {}
   let result = { msg: 'success' }

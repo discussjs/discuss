@@ -1,24 +1,17 @@
 const bcrypt = require('bcrypt')
-const minify = require('html-minifier').minify
-const { readFileSync, existsSync } = require('fs')
 const { join } = require('path')
 const { jwt_sign, jwt_verify } = require('../utils')
 const Admin = require('../database/mongoose/model/Admin')
 const Comment = require('../database/mongoose/model/Comment')
 
-const {
-  SECRET,
-  VerifyToken,
-  GetAdmin,
-  isInit
-} = require('../utils/adminUtils')
+const { SECRET, VerifyToken, GetAdmin, isInit } = require('../utils/adminUtils')
 const {
   GetCommentCounts,
   limitPageNo,
   DeleteComment,
   UpdateComment
 } = require('../utils/commentUtils')
-const { marked, timeAgo } = require('../utils')
+const { marked, timeAgo, HtmlMinify } = require('../utils')
 
 /**
  * 初始化
@@ -69,24 +62,15 @@ async function login({ username, password, token }) {
  */
 async function InitPage(req, res) {
   const isinit = await isInit()
-  if (isinit) return
+  if (isinit) return isinit
 
   const path = join(__dirname, '../../../public/init.html')
 
-  if (existsSync(path)) {
-    const options = {
-      minifyJS: true,
-      minifyCSS: true,
-      removeComments: true, // 删除注释
-      collapseWhitespace: true, // 删除多余空白处
-      removeAttributeQuotes: true // 删除属性引号
-    }
-    const content = readFileSync(path, { encoding: 'utf8' })
-    const result = minify(content, options)
-    res.setHeader('Content-Type', 'text/html; charset=utf-8')
-    res.end(result)
-    return true
-  }
+  if (!existsSync(path)) return true
+  const result = HtmlMinify(path)
+  res.setHeader('Content-Type', 'text/html; charset=utf-8')
+  res.end(result)
+  return false
 }
 
 /**
