@@ -29,15 +29,15 @@
                   v-text="item.nick"
                 ></a>
                 <span v-else v-text="item.nick"></span>
+                <span
+                  class="D-master D-tag"
+                  v-if="item.master"
+                  v-text="master"
+                ></span>
+                <span class="D-stick D-tag" v-if="item.stick">置顶</span>
+                <time class="D-comments-date" v-text="item.time"></time>
               </div>
-              <div
-                class="D-master D-tag"
-                v-if="item.master"
-                v-text="master"
-              ></div>
-              <div class="D-stick D-tag" v-if="item.stick">置顶</div>
             </div>
-            <div class="D-comments-meta"><time v-text="item.time"></time></div>
           </div>
           <div class="D-comments-content" v-html="item.content"></div>
           <div class="D-comments-reply" @click="onReply(item._id)">回复</div>
@@ -66,15 +66,13 @@
                         v-text="citem.nick"
                       ></a>
                       <span v-else v-text="citem.nick"></span>
+                      <span
+                        class="D-master D-tag"
+                        v-if="citem.master"
+                        v-text="master"
+                      ></span>
+                      <time class="D-comments-date" v-text="citem.time"></time>
                     </div>
-                    <div
-                      class="D-master D-tag"
-                      v-if="citem.master"
-                      v-text="master"
-                    ></div>
-                  </div>
-                  <div class="D-comments-meta">
-                    <time v-text="citem.time"></time>
                   </div>
                 </div>
                 <div class="D-comments-content" v-html="citem.content"></div>
@@ -235,6 +233,7 @@ export default {
 
 .D-info {
   display: flex;
+  align-items: flex-start;
 }
 
 .D-avatar img {
@@ -244,6 +243,8 @@ export default {
 }
 
 .D-nick {
+  position: relative;
+  display: flex;
   color: #00c4b6;
   padding-left: 15px;
   font-weight: 600;
@@ -269,13 +270,11 @@ export default {
 .D-stick {
   background: #ff81aa;
 }
-
-.D-comments-meta {
+.D-comments-date {
+  top: 20px;
+  position: absolute;
   color: #8f949e;
-  margin-left: 55px;
-  margin-top: -24px;
-  padding-bottom: 5px;
-  font-size: 0.5rem;
+  font-size: 10px;
 }
 
 .D-comments-content {
@@ -333,11 +332,6 @@ export default {
 .D-comments-child .D-avatar img {
   width: 32px;
   height: 32px;
-}
-
-.D-comments-child .D-comments-meta {
-  margin-left: 48px;
-  margin-top: -16px;
 }
 
 .D-more {

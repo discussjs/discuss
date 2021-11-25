@@ -116,16 +116,20 @@ export default {
       // 字数超出
       // 内容
       const contentWordNumber = this.wordNumber.contentWordNumber || 0
-      const isContentExceed = this.content.length > contentWordNumber && contentWordNumber != 0
+      const isContentExceed =
+        this.content.length > contentWordNumber && contentWordNumber != 0
       // 昵称
       const nickWordNumber = this.wordNumber.nickWordNumber || 0
-      const isNickExceed = this.meta.nick.length > nickWordNumber && nickWordNumber != 0
+      const isNickExceed =
+        this.meta.nick.length > nickWordNumber && nickWordNumber != 0
       // 邮箱
       const mailWordNumber = this.wordNumber.mailWordNumber || 0
-      const isMailExceed = this.meta.mail.length > mailWordNumber && mailWordNumber != 0
+      const isMailExceed =
+        this.meta.mail.length > mailWordNumber && mailWordNumber != 0
       // 网址
       const siteWordNumber = this.wordNumber.siteWordNumber || 0
-      const isSiteExceed = this.meta.site.length > siteWordNumber && siteWordNumber != 0
+      const isSiteExceed =
+        this.meta.site.length > siteWordNumber && siteWordNumber != 0
 
       return {
         isContentExceed,
@@ -133,7 +137,7 @@ export default {
         isMailExceed,
         isSiteExceed
       }
-    },
+    }
   },
   data() {
     return {
@@ -179,7 +183,13 @@ export default {
       const isNickExceed = this.WordNumber.isNickExceed
       const isMailExceed = this.WordNumber.isMailExceed
       const isSiteExceed = this.WordNumber.isSiteExceed
-      const condition = nick && mail && !isContentExceed && !isNickExceed && !isMailExceed && !isSiteExceed
+      const condition =
+        nick &&
+        mail &&
+        !isContentExceed &&
+        !isNickExceed &&
+        !isMailExceed &&
+        !isSiteExceed
       if (condition) this.isConform = false
       else this.isConform = true
     },
@@ -418,6 +428,11 @@ textarea:focus {
 .D-emot-btn,
 .D-markdown {
   margin-right: 10px;
+}
+
+.D-markdown > a {
+  fill: currentColor;
+  color: currentColor;
 }
 
 .D-toolbar {
