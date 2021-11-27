@@ -1,0 +1,37 @@
+post:
+  title: Not Title
+  created: Created
+  updated: Updated
+  wordcount: Word Count
+  min2read: Reading time
+  min2readUnit: min
+  visitors: Visitors
+  toc: Catalog
+
+page:
+  tag: TagCloud
+  categories: Categories
+  error: BackHome
+
+search:
+  title: Local Search
+  input: Search the article
+
+rightside:
+  directComments: Direct comments
+  backToTop: Back To Top
+  settings: Settings
+  dark: Dark/Light
+
+copyright:
+  author: Authorship
+  articleUrl: Article Links
+  notice: Copyright
+
+comments: Comments
+
+footer:
+  framework: Framework
+  theme: Theme
+
+articleCount: Article Overview

@@ -1,0 +1,101 @@
+// Home 首页
+
+#header,#post-list,#post,#page
+    position relative
+    padding 10px 30px
+    background var(--main-bg)
+    width 70%
+    min-width 60%
+    max-width 90%
+
+#post-list
+    margin-bottom 40px
+    border-radius 0 0 10px 10px
+
+.post-item
+    display flex
+    margin 20px 0
+    padding-bottom 10px
+    border-bottom 1px solid var(--adorn)
+
+    .post-item-info
+        width 100%
+        padding-right 10px
+
+    .post-item-cover
+        order 1
+        width 100%
+        max-width 40%
+        height 140px
+        position relative
+        overflow hidden
+        border-radius 10px
+
+        img
+            display block
+            transition opacity 0.4s ease-out
+            position absolute
+            left 0
+            top 0
+            object-fit cover
+            width 100%
+            height 100%
+
+    .post-title
+        color var(--title-color)
+        font-size 1.1rem
+        margin-bottom 4px
+        font-weight 700
+        display -webkit-box
+        overflow hidden
+        text-decoration none
+        line-height 1.5
+        -webkit-box-orient vertical
+        -webkit-line-clamp 2
+        word-wrap break-word
+        word-break break-all
+
+    .post-description
+        margin-bottom 20px
+        font-size 0.82rem
+        line-height 24px
+        overflow hidden
+        word-wrap break-word
+        word-break break-all
+        display -webkit-box
+        -webkit-box-orient vertical
+        -webkit-line-clamp $line
+
+    .post-meta-wrap
+        color #999
+        font-size 0.6rem
+        margin 10px 0 0
+
+        .post-categorie, .post-tag
+            margin-left 6px
+
+        a
+            text-decoration none
+            color #999
+
+    .post-item-cover + .post-item-info
+        position relative
+
+        .post-meta-wrap
+            position absolute
+            bottom 0px
+
+@media (max-width 768px)
+    #post-list .post-item
+        flex-direction column-reverse
+
+        .post-meta-wrap
+            margin-top 10px
+            position unset
+
+        .post-item-cover
+            height 230px
+            max-width 100%
+            margin-bottom 10px
+
+@import '_partial/header'
