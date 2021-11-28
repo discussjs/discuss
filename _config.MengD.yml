@@ -112,7 +112,7 @@ discuss:
   source: https://cdn.jsdelivr.net/npm/discuss/dist/Discuss.js
   master: 管理员
   placeholder: 快来评论呀
-  serverURLs: https://discuss-vercel.vercel.app
+  serverURLs: https://discuss-doc.imlete.cn
   path: location.pathname
   emotMaps: {
         OwO: {
