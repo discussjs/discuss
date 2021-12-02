@@ -12,7 +12,7 @@ const {
   DeleteComment,
   UpdateComment
 } = require('../utils/commentUtils')
-const { marked, timeAgo, HtmlMinify } = require('../utils')
+const { marked, timeAgo, HtmlMinify, VerifyParams } = require('../utils')
 
 /**
  * 初始化
@@ -38,18 +38,30 @@ async function init({ username, password, mail }) {
  * @param {String} token token
  * @returns
  */
-async function login({ username, password, token }) {
-  const result = { token: false }
+async function Login(params) {
+  const { username, password, token } = params
+  const result = {}
+
+  // 判断token是否有效
   if (token) {
-    result.token = await VerifyToken(token)
+    const isToken = await VerifyToken(token)
+    if (!isToken) throw new Error('Token已过期')
+    result.token = isToken
     return result
   }
 
-  const DB = await Admin.find({ username })
-  const resultDB = DB[0]
-  const isPassword = bcrypt.compareSync(password, resultDB.password)
+  // 验证评论信息是否合法
+  VerifyParams(params, ['username', 'password'])
+
+  const DB = await Admin.findOne()
+
+  const isUsername = username === DB.username
+  const isPassword = bcrypt.compareSync(password, DB.password)
+  // 用户名密码是否正确
+  if (!isUsername || !isPassword) throw new Error('用户名或密码错误')
+
   if (isPassword) {
-    result.token = jwt_sign({ id: resultDB._id }, SECRET, { expiresIn: '7d' })
+    result.token = jwt_sign({ id: DB._id }, SECRET, { expiresIn: '7d' })
     return result
   }
   return result
@@ -191,6 +203,7 @@ async function SaveConfig(params) {
   data.limit = parseInt(data.limit)
   data.limitAll = parseInt(data.limitAll)
   data.site_url = data.site_url.replace(/\/$/, '')
+  if (data.password) data.password = bcrypt.hashSync(data.password, 10)
 
   const { id } = jwt_verify(token, SECRET)
   if (id) {
@@ -203,7 +216,7 @@ async function SaveConfig(params) {
 module.exports = {
   InitPage,
   init,
-  login,
+  Login,
   AdminGetComments,
   GetConfig,
   SaveConfig,

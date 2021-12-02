@@ -182,8 +182,9 @@ async function CommitComment(params) {
     // 邮件通知数据处理
     const sends = await SendMailHandler(data, config, token)
 
-    // 发送邮件
-    sends.forEach((item) => SendMail(item))
+    for (const item of sends) {
+      await SendMail(item)
+    }
     return true
   }
 

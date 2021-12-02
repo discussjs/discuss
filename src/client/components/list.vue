@@ -31,7 +31,7 @@
                 <span v-else v-text="item.nick"></span>
                 <span
                   class="D-master D-tag"
-                  v-if="item.master"
+                  v-if="item.master=='true'"
                   v-text="master"
                 ></span>
                 <span class="D-stick D-tag" v-if="item.stick">置顶</span>
@@ -68,7 +68,7 @@
                       <span v-else v-text="citem.nick"></span>
                       <span
                         class="D-master D-tag"
-                        v-if="citem.master"
+                        v-if="citem.master=='true'"
                         v-text="master"
                       ></span>
                       <time class="D-comments-date" v-text="citem.time"></time>

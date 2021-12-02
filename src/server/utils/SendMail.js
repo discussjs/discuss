@@ -1,6 +1,6 @@
 const nodemailer = require('nodemailer')
 
-async function  SendMail(options) {
+async function SendMail(options) {
   let transporter = nodemailer.createTransport({
     host: options.host,
     port: options.port,
@@ -29,7 +29,10 @@ async function  SendMail(options) {
   // 验证成功 开始发送
   try {
     const success = await transporter.sendMail(mail)
-    if (success) console.log('SMTP 邮箱通知成功')
+    if (success) {
+      console.log('SMTP 邮箱通知成功')
+      console.log('SMTP 邮箱通知细节:', success)
+    }
   } catch (error) {
     throw new Error('SMTP 邮箱通知异常：', error)
   }

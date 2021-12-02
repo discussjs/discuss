@@ -300,7 +300,7 @@ export default {
       comments: [],
       counts: 0,
       pageNo: 1,
-      pageSize: 3,
+      pageSize: 6,
       pageCount: 1,
       pages: [],
 

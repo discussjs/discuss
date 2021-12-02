@@ -7,7 +7,10 @@ const { AkismetClient } = require('akismet-api')
  * @returns Is Spam Comment
  */
 async function AkismetHandler(key, blog, comment) {
-  if (!key) return 'accept'
+  if (!key) {
+    console.log('未设置 Akismet');
+    return 'accept'
+  }
   try {
     // 密钥/博客
     const client = new AkismetClient({ key, blog })

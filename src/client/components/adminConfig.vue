@@ -1,29 +1,30 @@
 <template>
   <div class="D-admin-config-container">
     <div class="D-admin-config">
-      <div
-        class="admin-config-group"
-        v-for="setting in settings"
-        :key="setting.name"
-      >
-        <details>
-          <summary v-text="setting.name"></summary>
-          <div
-            class="admin-config-item"
-            v-for="item in setting.items"
-            :key="item.desc"
-          >
-            <div class="admin-config-input">
-              <div class="admin-config-desc" v-text="item.desc"></div>
-              <input
-                v-model="item.value"
-                type="text"
-                :placeholder="item.placeholder"
-              />
+      <template v-for="setting in settings" :key="setting.name">
+        <div
+          :ref="setting.name == '修改密码' ? 'password' : ''"
+          class="admin-config-group"
+        >
+          <details>
+            <summary v-text="setting.name"></summary>
+            <div
+              class="admin-config-item"
+              v-for="item in setting.items"
+              :key="item.desc"
+            >
+              <div class="admin-config-input">
+                <div class="admin-config-desc" v-text="item.desc"></div>
+                <input
+                  v-model="item.value"
+                  type="text"
+                  :placeholder="item.placeholder"
+                />
+              </div>
             </div>
-          </div>
-        </details>
-      </div>
+          </details>
+        </div>
+      </template>
     </div>
     <div class="D-admin-config-actions">
       <button
@@ -42,6 +43,8 @@ import iconLoading from '../assets/svg/loading.svg'
 
 import debounce from '../lib/debounce'
 import ajax from '../lib/request'
+import { ShakeError } from '../lib/utils'
+
 export default {
   components: {},
   data() {
@@ -187,11 +190,13 @@ export default {
           name: '修改密码',
           items: [
             {
+              key: 'password',
               desc: '新密码',
               placeholder: '新密码',
               value: ''
             },
             {
+              key: 'confirm_password',
               desc: '确认密码',
               placeholder: '确认密码',
               value: ''
@@ -214,10 +219,22 @@ export default {
       }
     },
     SaveConfig: debounce(300, async function () {
-      this.isSave = true
+      const delay = 5000
+      const save = '保存'
+
       this.ForConfig((item) => {
         this.config[item.key] = item.value
       })
+
+      if (this.config.password !== this.config.confirm_password) {
+        this.saveMsg = '密码错误'
+        ShakeError(this.$refs.password)
+        setTimeout(() => this.saveMsg = save, delay)
+        return
+      }
+
+      this.isSave = true
+
       const options = {
         url: this.url,
         data: {
@@ -226,11 +243,12 @@ export default {
           data: this.config
         }
       }
+      
       const { data } = await ajax(options)
       if (data) {
         this.saveMsg = '已保存'
         this.isSave = false
-        setTimeout(() => (this.saveMsg = '保存'), 5000)
+        setTimeout(() => (this.saveMsg = save), delay)
       }
     }),
     InitConfig() {

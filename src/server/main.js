@@ -5,7 +5,7 @@ mongoose(process.env.DISCUSS_MONGODB)
 const {
   init,
   InitPage,
-  login,
+  Login,
   AdminGetComments,
   GetConfig,
   SaveConfig,
@@ -47,6 +47,7 @@ async function FrontLoading(req, res) {
 }
 
 module.exports = async (req, res) => {
+  
   const resultFL = await FrontLoading(req, res)
   if (resultFL) return
 
@@ -82,7 +83,7 @@ module.exports = async (req, res) => {
         result.data = await OperateComment(body)
         break
       case 'LOGIN':
-        result.data = await login(body)
+        result.data = await Login(body)
         break
       case 'GET_CONFIG':
         result.data = await GetConfig(body)

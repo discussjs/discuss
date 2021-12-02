@@ -371,6 +371,7 @@ export default {
 
 <style scoped>
 .D-submit {
+  margin: 10px 0;
   display: flex;
   flex-direction: column;
 }

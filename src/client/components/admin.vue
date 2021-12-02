@@ -8,14 +8,12 @@
           <input
             type="text"
             v-model="username"
-            :onInput="onInput"
             placeholder="请输入用户名"
             required
           />
           <input
             type="password"
             v-model="password"
-            :onInput="onInput"
             placeholder="请输入密码"
             required
           />
@@ -29,7 +27,7 @@
           <button
             class="D-login D-button D-button-primary"
             @click="onLogin"
-            :disabled="!isConform"
+            :disabled="disabled"
             v-html="isLogin ? iconLoading : '登录'"
           ></button>
         </div>
@@ -74,6 +72,7 @@ import DConfig from './adminConfig.vue'
 
 import iconLoading from '../assets/svg/loading.svg'
 import ajax from '../lib/request'
+import { ShakeError } from '../lib/utils'
 
 export default {
   components: { DComment, DConfig },
@@ -84,7 +83,7 @@ export default {
       password: '',
       confirm: '',
       isLogin: false,
-      isConform: true,
+      disabled: false,
       loginMsg: '登录',
       url: this.$D.serverURLs,
       isLoading: false,
@@ -98,6 +97,7 @@ export default {
     async VerifyToken() {
       // 验证token是否有效
       const token = localStorage.DiscussToken || ''
+
       if (token) {
         this.isLoading = true
         this.showLogin = false
@@ -105,8 +105,7 @@ export default {
           url: this.url,
           data: { type: 'LOGIN', token }
         })
-        if (!data) return
-        if (data.token) {
+        if (data && data.token) {
           this.isLoading = false
           this.loginSuccess = true
         } else {
@@ -115,17 +114,9 @@ export default {
         }
       }
     },
-    LoginError() {
-      const login = this.$refs.login
-      login.classList.add('shake')
-      setTimeout(() => login.classList.remove('shake'), 1000)
-    },
-    onInput() {
-      this.isConform = this.username.length > 1 && this.password.length > 5
-    },
     async onLogin() {
+      this.disabled = true
       this.isLogin = true
-
       const params = {
         url: this.url,
         data: {
@@ -137,11 +128,13 @@ export default {
       // 登录验证
       const { data } = await ajax(params)
       if (!data) {
-        this.LoginError()
+        ShakeError(this.$refs.login)
+        this.disabled = false
         this.isLogin = false
         console.error('Discuss [INFO]: 请求失败')
         return
       }
+      this.disabled = false
       this.isLogin = false
       this.showLogin = false
       this.loginSuccess = true
@@ -174,16 +167,6 @@ export default {
 </script>
 
 <style scoped>
-.shake {
-  animation-name: shake-horizontal;
-  animation-duration: 1s;
-  animation-timing-function: ease;
-  animation-delay: 0s;
-  animation-iteration-count: 1;
-  animation-direction: normal;
-  animation-fill-mode: none;
-}
-
 .D-admin-container {
   top: 0;
   right: 0;

@@ -71,6 +71,15 @@
 }
 
 /* 抖动 */
+.shake {
+  animation-name: shake-horizontal;
+  animation-duration: 1s;
+  animation-timing-function: ease;
+  animation-delay: 0s;
+  animation-iteration-count: 1;
+  animation-direction: normal;
+  animation-fill-mode: none;
+}
 @keyframes shake-horizontal {
   0% {
     -webkit-transform: translateX(0);
