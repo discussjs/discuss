@@ -2,7 +2,7 @@
 <p align="center">一个简单，安全，免费的评论系统 | A simple, safe, free comment system</p>
 
 <p align="center">
-    <a href="https://github.com/lete114/Discuss/releases/"><img src="https://img.shields.io/github/package-json/v/lete114/Discuss/master?color=%23e58a8a&label=master" alt="master"></a>
+    <a href="https://github.com/lete114/Discuss/releases/"><img src="https://img.shields.io/npm/v/discuss" alt="Version"></a>
     <a href="https://github.com/lete114/Discuss/tree/dev"><img src="https://img.shields.io/github/package-json/v/lete114/Discuss/dev?color=%231ab1ad&label=dev" alt="dev"></a>
     <a href="https://github.com/lete114/Discuss/blob/master/LICENSE"><img src="https://img.shields.io/github/license/lete114/Discuss?color=FF5531" alt="MIT License"></a>
 </p>
@@ -12,6 +12,9 @@
 由于这是我在学习 vue 的过程中边学边做的，可能部分功能不是很完善
 
 如果你有什么好的建议或者新功能，欢迎提出或参与贡献
+
+感谢: [Pubudu Dodangoda
+](https://github.com/pupudu) 提供的 NPM 包名
 
 > 后台样式是借鉴于[Twikoo](https://twikoo.js.org/)，以后会有自己的想法、风格、布局做出更改
 
@@ -49,80 +52,11 @@
 
 ## 快速开始
 
-关于`客户端配置`就不多写了，直接借鉴本项目路径下的`/public/index.html`进行配置就好了
+官方文档: [https://discuss.js.org/Quick-Start.html](https://discuss.js.org/Quick-Start.html)
 
-服务端部署
+Demo: [https://discuss-demo.imlete.cn/](https://discuss-demo.imlete.cn/)
 
 > 注意: 目前仅支持 MongoDB
-
-### 克隆仓库部署
-<details>
-<summary>点击展开</summary>
-
-```bash
-git clone https://github.com/lete114/Discuss.git Discuss
-cd Discuss
-cp .env.example .env
-vim .env
-```
-
-.env 修改环境配置文件
-修改好后执行`npm run start:server`即可
-
-```env
-# Discuss environment Config
-
-# 数据库连接地址
-DISCUSS_MONGODB='mongodb://localhost:27017/Discuss'
-
-# 启动的端口号
-DISCUSS_PORT='6870'
-
-# 加密的密钥字符串(自定义)
-DISCUSS_SECRET='Discuss'
-```
-
-</details>
-
-### NPM 安装部署
-<details>
-<summary>点击展开</summary>
-
-```bash
-mkdir Discuss                   # 创建目录
-cd Discuss                      # 进入目录
-npm init -y                     # 初始化npm
-npm install discuss --save      # 安装Discuss
-touch index.js .env             # 创建index.js 以及 .env(环> 置文件)
-```
-
-index.js 引入 Discuss 并调用
-
-```js
-const Discuss = require('discuss')
-Discuss.server()
-```
-
-.env 修改环境配置文件
-修改好后执行`node index.js`即可，或者修改`package.json`用`npm run xxx`来启动都可以
-
-```env 修改环境配置文件
-# Discuss environment Config
-
-# 数据库连接地址
-DISCUSS_MONGODB='mongodb://localhost:27017/Discuss'
-
-# 启动的端口号
-DISCUSS_PORT='6870'
-
-# 加密的密钥字符串(自定义)
-DISCUSS_SECRET='Discuss'
-
-```
-
-</details>
-
-以上两种方式任选一种方式部署，部署完成后通过访问部署服务器地址(`http://localhost:6870`)，进行初始化管理员账户
 
 ## 开发
 

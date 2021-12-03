@@ -638,7 +638,7 @@ export default {
   background-color: #ff81aa;
 }
 
-.D-waiting-current{
+.D-waiting-current {
   border-color: #f4645f;
   background-color: #f4645f;
 }
@@ -687,6 +687,7 @@ export default {
 }
 
 .D-table-wrap table {
+  color: #fff;
   width: 100%;
 }
 
@@ -877,7 +878,6 @@ export default {
 .D-current {
   background: #00c4b6;
 }
-
 
 .D-pagination-page {
   padding: 0 0.3rem;
