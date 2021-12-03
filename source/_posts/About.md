@@ -15,7 +15,11 @@ cover: /img/1.jpg
 
 如果你有什么好的建议或者新功能，欢迎提出或参与贡献
 
+感谢: [Pubudu Dodangoda
+](https://github.com/pupudu) 提供的 NPM 包名
+
 > 后台样式是借鉴于[Twikoo](https://twikoo.js.org/)，以后会有自己的想法、风格、布局做出更改
+
 
 ## 特点
 
@@ -107,10 +111,10 @@ const Discuss = require("discuss");
 Discuss.server();
 ```
 
-.env 修改环境配置文件
+修改环境配置文件
 修改好后执行`node index.js`即可，或者修改`package.json`用`npm run xxx`来启动都可以
 
-```env 修改环境配置文件
+```env
 # Discuss environment Config
 
 # 数据库连接地址
