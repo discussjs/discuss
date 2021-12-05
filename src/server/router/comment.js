@@ -147,7 +147,6 @@ async function CommitComment(params) {
       'mail_accept',
       'master_subject',
       'reply_subject',
-      'mail_template'
     ])
 
     data.type = 'PUSH_MAIL'
