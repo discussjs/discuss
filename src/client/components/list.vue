@@ -31,7 +31,7 @@
                 <span v-else v-text="item.nick"></span>
                 <span
                   class="D-master D-tag"
-                  v-if="item.master=='true'"
+                  v-if="item.master"
                   v-text="master"
                 ></span>
                 <span class="D-stick D-tag" v-if="item.stick">置顶</span>
@@ -68,7 +68,7 @@
                       <span v-else v-text="citem.nick"></span>
                       <span
                         class="D-master D-tag"
-                        v-if="citem.master=='true'"
+                        v-if="citem.master"
                         v-text="master"
                       ></span>
                       <time class="D-comments-date" v-text="citem.time"></time>
@@ -111,6 +111,7 @@ import iconLoading from '../assets/svg/loading.svg'
 import iconSetting from '@fortawesome/fontawesome-free/svgs/solid/cog.svg'
 
 export default {
+  props: { comment: Object },
   components: { DSubmit },
   data() {
     return {
@@ -120,7 +121,6 @@ export default {
       comments: [],
       counts: 0,
       pageNo: 1,
-      pageSize: 6,
       pageCount: 1,
       moerDisabled: false,
       showMore: false,
@@ -131,6 +131,9 @@ export default {
       iconLoading,
       iconSetting
     }
+  },
+  async mounted() {
+    await this.GetComment()
   },
   updated() {
     lazyload('.D-comments-list img[d-src]', 'd-src')
@@ -148,8 +151,7 @@ export default {
         data: {
           type: 'GET_COMMENT',
           path: this.path,
-          pageNo: this.pageNo,
-          pageSize: this.pageSize
+          pageNo: this.pageNo
         }
       }
       const { data } = await ajax(options)
@@ -166,7 +168,7 @@ export default {
 
       this.counts = data.counts
       this.pageCount = data.pageCount
-      this.comments = data.comments
+      this.comments = this.comments.concat(data.comments)
 
       // 页码大于当前页显示‘更多评论’按钮
       const isShowMore = this.pageCount > this.pageNo
@@ -186,8 +188,10 @@ export default {
       }
     }
   },
-  async mounted() {
-    await this.GetComment()
+  watch: {
+    comment(newV, oldV) {
+      this.comments.unshift(newV)
+    }
   }
 }
 </script>

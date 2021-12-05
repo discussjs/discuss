@@ -5,7 +5,6 @@ const cors = require('./CORS')
 const VerifyParams = require('./verify')
 const akismet = require('./akismet')
 const marked = require('./marked')
-const SendMail = require('./SendMail')
 const XSS = require('./XSS')
 const GetAvatar = require('./avatar')
 const { HtmlMinify } = require('./minify')
@@ -87,6 +86,5 @@ module.exports = {
   XSS,
   GetAvatar,
   timeAgo,
-  SendMail,
   HtmlMinify
 }

@@ -1,9 +1,6 @@
 const marked = require('marked')
 const hljs = require('highlight.js')
 
-// 判断是否以p标签开头
-const reg = /^<p>.*?<\/p>$/gi
-
 const HighlightRenderer = {
   renderer: new marked.Renderer(),
   highlight: function (code, lang) {
@@ -40,8 +37,7 @@ function MarkedHandler(content, isMarked, isHighlight) {
 
   // 渲染marked 如果为false 则返回原内容
   if (isMarked) content = marked(content)
-
-  if(!reg.test(content)) content = `<p>${content}</p>`
+  else content = `<p>${content}</p>`
 
   return content
 }

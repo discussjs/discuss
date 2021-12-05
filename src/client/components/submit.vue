@@ -338,7 +338,8 @@ export default {
 
       if (data) {
         // 提交评论后，将数据进行处理并返回
-        this.$emit('GetComment')
+        this.$emit('comment', data)
+        this.content = ''
         return
       }
 
@@ -360,8 +361,8 @@ export default {
   watch: {
     options(newV, oldV) {
       this.wordNumber = newV.wordNumber
-      this.markedConfig.enable = newV.marked
-      this.markedConfig.highlightjs.enable = newV.highlight
+      this.markedConfig.highlightjs = newV.highlight
+      this.markedConfig = Object.assign(this.markedConfig, newV.marked)
       this.IsConform()
       this.parseMarked()
     }

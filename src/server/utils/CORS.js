@@ -4,7 +4,7 @@ const Admin = require('../database/mongoose/model/Admin')
 
 async function CORSHandler(req, res) {
   // 设置安全域名
-  const result = (await Admin.findOne()) || {}
+  const {domain} = global.config||{}
 
   res.setHeader('Access-Control-Allow-Origin', '*')
   res.setHeader('Access-Control-Allow-Methods', 'POST')
@@ -14,15 +14,13 @@ async function CORSHandler(req, res) {
     'Origin,X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
   )
 
-  if (!result.domain) return true
-
-  let resultDomain = result.domain
+  if (!domain) return true
 
   // 获取请求域名(去除协议)
   let origin = req.headers.origin
   if (origin) origin = origin.replace(/^http(s)?:\/\//, '').replace(/\/$/, '')
 
-  const isDomain = resultDomain.indexOf(origin) != -1
+  const isDomain = domain.indexOf(origin) != -1
 
   return isDomain
 }

@@ -1,3 +1,6 @@
+const { SendMail } = require('./utils/Mail')
+const Admin = require('./database/mongoose/model/Admin')
+
 // 连接数据库
 const mongoose = require('./database/mongoose')
 mongoose(process.env.DISCUSS_MONGODB)
@@ -47,7 +50,10 @@ async function FrontLoading(req, res) {
 }
 
 module.exports = async (req, res) => {
-  
+  // 将配置信息锁定到全局
+  global.config = await Admin.findOne().lean()
+
+  // 处理所有get请求
   const resultFL = await FrontLoading(req, res)
   if (resultFL) return
 
@@ -76,6 +82,9 @@ module.exports = async (req, res) => {
       case 'COMMIT_COMMENT':
         result.data = await CommitComment(body)
         break
+      case 'PUSH_MAIL':
+        result.data = await SendMail(body)
+        break
       case 'GET_COMMENT_ADMIN':
         result.data = await AdminGetComments(body)
         break
@@ -95,7 +104,7 @@ module.exports = async (req, res) => {
   } catch (error) {
     console.error('请求参数：', body)
     console.error('错误信息：', error)
-    result.msg = 'Discuss ERROR: ' + error
+    result.msg = 'Discuss: ' + error
   }
   res.end(JSON.stringify(result))
 }

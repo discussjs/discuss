@@ -1,6 +1,12 @@
 const Comment = require('../database/mongoose/model/Comment')
-const { GetAdmin } = require('./adminUtils')
-const { XSS, GetAvatar, DeepColne,IndexHandler } = require('./index')
+const {
+  XSS,
+  GetAvatar,
+  DeepColne,
+  IndexHandler,
+  marked,
+  timeAgo
+} = require('./index')
 
 /**
  * 限制字数
@@ -8,12 +14,8 @@ const { XSS, GetAvatar, DeepColne,IndexHandler } = require('./index')
  * @returns {Object}
  */
 function WordNumberLimit(configWordNumber) {
-  let [
-    contentWordNumber,
-    nickWordNumber,
-    mailWordNumber,
-    siteWordNumber
-  ] = configWordNumber.split(',').map((item)=> parseInt(item))
+  let [contentWordNumber, nickWordNumber, mailWordNumber, siteWordNumber] =
+    configWordNumber.split(',').map((item) => parseInt(item))
 
   contentWordNumber = contentWordNumber || 0
   nickWordNumber = nickWordNumber || 0
@@ -34,15 +36,10 @@ function WordNumberLimit(configWordNumber) {
  * @param {Object} paramsWordNumber
  * @returns {Boolean}
  */
-function WordNumberExceed(configWordNumber,paramsWordNumber) {
-
-  const {
-    contentWordNumber,
-    nickWordNumber,
-    mailWordNumber,
-    siteWordNumber
-  } = WordNumberLimit(configWordNumber)
-  const {content,nick,mail,site} = paramsWordNumber
+function WordNumberExceed(configWordNumber, paramsWordNumber) {
+  const { contentWordNumber, nickWordNumber, mailWordNumber, siteWordNumber } =
+    WordNumberLimit(configWordNumber)
+  const { content, nick, mail, site } = paramsWordNumber
 
   const contentExceed = contentWordNumber && content > contentWordNumber
   const nickExceed = nickWordNumber && nick > nickWordNumber
@@ -123,18 +120,48 @@ async function GetCommentCounts(options) {
 }
 
 // 限制页码
-async function limitPageNo(pageNo, pageSize, options) {
+async function limitPageNo(page, pageSize, options) {
   // 根据父评论数量进行分页
   const counts = await Comment.find(options).countDocuments().lean()
 
   let pageCount = Math.ceil(counts / pageSize)
   if (pageCount < 1) pageCount = 1
   // 当前页大于总页数则将返回最后一页
-  if (pageNo > pageCount) {
-    pageNo = pageCount
+  if (page > pageCount) {
+    page = pageCount
   }
 
-  return { pageNo, pageCount }
+  return { page, pageCount }
+}
+
+function CommentHandler(data) {
+  const config = global.config
+  const avatarCdn = config.avatar_cdn
+  const marked_enable = config.marked.enable + '' == 'true' ? true : false
+  const highlight_enable = config.highlight.enable + '' == 'true' ? true : false
+
+  data.stick = data.stick == 'true' ? true : false
+  data.master = data.master == 'true' ? true : false
+
+  data.content = marked(data.content, marked_enable, highlight_enable)
+
+  // 处理头像
+  if (!/^http/.test(data.avatar)) {
+    data.avatar = avatarCdn + data.avatar
+  }
+
+  data.time = timeAgo(data.created)
+
+  // 删除多余信息
+  delete data.ip
+  delete data.mail
+  delete data.path
+  delete data.ua
+  delete data.status
+  delete data.created
+  delete data.updated
+
+  return data
 }
 
 async function CommitCommentHandler(params, token) {
@@ -170,7 +197,7 @@ async function CommitCommentHandler(params, token) {
 async function limitFilter(ip) {
   const tenmin = 600000 // 10分钟
 
-  const { limit, limitAll } = await GetAdmin()
+  const { limit, limitAll } = global.config
 
   // 10分钟内，相同的ip能评论多少条(默认10)
   if (parseInt(limit)) {
@@ -178,7 +205,7 @@ async function limitFilter(ip) {
       ip,
       created: { $gt: Date.now() - tenmin }
     })
-    if (count > limit) {
+    if (count >= limit) {
       throw new Error('发言频率过高')
     }
   }
@@ -187,75 +214,10 @@ async function limitFilter(ip) {
     const count = await Comment.find().countDocuments({
       created: { $gt: Date.now() - tenmin }
     })
-    if (count > limitAll) {
+    if (count >= limitAll) {
       throw new Error('服务器繁忙，请稍后再试...')
     }
   }
-}
-
-function SendMailTemplateHandler(option) {
-  const html = option.template
-    .replace(/\${subject}/g, option.subject)
-    .replace(/\${avatar}/g, option.avatar)
-    .replace(/\${nick}/g, option.nick)
-    .replace(/\${content}/g, option.content)
-    .replace(/\${url}/g, option.url)
-
-  return html
-}
-
-// 发送邮件处理
-async function SendMailHandler(params, config, token) {
-  const sends = []
-
-  // 初始化模板渲染
-  const option = {
-    avatar: params.avatar,
-    nick: params.nick,
-    content: params.content,
-    url: config.site_url + params.path,
-    template: config.mail_template,
-    subject: config.master_subject
-  }
-
-  // 初始化博主邮件信息
-  const mailOprions = {
-    host: config.mail_host,
-    port: config.mail_port,
-    user: config.mail_from,
-    pass: config.mail_accept,
-    from: config.mail_from,
-    to: config.mail,
-    subject: config.master_subject,
-    html: SendMailTemplateHandler(option)
-  }
-
-  // 存储博主收到的邮件信息 (如果是博主则不保存)
-  if (!token) sends.push(DeepColne(mailOprions))
-
-  // 处理回复评论通知
-  const _id = []
-  const rid = params.rid
-  const pid = params.pid
-  if (rid) _id.push({ _id: rid })
-  if (pid) _id.push({ _id: pid })
-  if (pid) {
-    // 设置邮件标题 | 渲染邮件标题
-    mailOprions.subject = config.reply_subject
-    option.subject = config.reply_subject
-
-    // 根据评论id查询父邮箱(返回一个数组)
-    const mailArr = await Comment.find({ $or: _id }, ['mail'])
-    for (const item of mailArr) {
-      // 如果回复的邮箱是博主邮箱这终止当前循环进入下一次循环
-      if (item.mail == config.mail) continue
-      // 处理保存邮件通知信息
-      mailOprions.to = item.mail
-      mailOprions.html = SendMailTemplateHandler(option)
-      sends.push(DeepColne(mailOprions))
-    }
-  }
-  return sends
 }
 
 module.exports = {
@@ -266,7 +228,7 @@ module.exports = {
   GetReplyComment,
   GetCommentCounts,
   limitPageNo,
+  CommentHandler,
   CommitCommentHandler,
-  limitFilter,
-  SendMailHandler
+  limitFilter
 }

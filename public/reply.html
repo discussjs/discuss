@@ -7,26 +7,32 @@
         <span style="color:#e58a8a;font-weight:700">&gt;&gt;&gt; </span>
         ${subject}
       </h2>
-      <div style="padding:0 12px 0 12px;margin-top:18px">
+      <div style="padding:0 12px 0 12px;margin: 18px 0 40px;">
         <div>
-          <p><strong>${nick}</strong> 评论：</p>
+          <p style="display:flex;justify-content:flex-end">您曾说：</p>
+          <div style="display: flex;justify-content: flex-end;margin-bottom: 5px">
+            <div style="width: auto;flex: none;order: 2">
+              <img src="${Pavatar}" style="width: 40px;height: 40px;border-radius: 5px">
+            </div>
+            <div style="position: relative;margin-right: 10px">
+              <span
+                style="width: 0;height: 0;border-top:8px solid transparent;border-bottom:8px solid transparent;border-left:8px solid;border-left-color:#f4f4f4;border-right:0;border-right-color:transparent;right: -7px;left: auto;top: 12px;position: absolute"></span>
+              <div style="background-color: #f1f3fa;padding: 1px 10px;border-radius: 9px;margin-bottom: 3px">${Pcontent}
+              </div>
+            </div>
+          </div>
+          <p><strong>${nick}</strong> 给你回复：</p>
           <div style="display: flex;margin-bottom: 5px">
             <div style="width: auto;flex: none">
               <img src="${avatar}" style="width: 40px;height: 40px;border-radius: 5px">
             </div>
             <div style="position: relative;margin-left: 10px">
               <span
-                style="width: 0;height: 0;border-top: 8px solid transparent;border-bottom: 8px solid transparent;border-right: 8px solid;border-right-color: #f4f4f4;left: -7px;right: auto;top: 12px;position: absolute">
-              </span>
+                style="width: 0;height: 0;border-top: 8px solid transparent;border-bottom: 8px solid transparent;border-right: 8px solid;border-right-color: #f4f4f4;left: -7px;right: auto;top: 12px;position: absolute"></span>
               <div style="background-color:#f1f3fa;padding: 1px 10px;border-radius:9px;">${content}</div>
             </div>
           </div>
         </div>
-        <p>其他信息：</p>
-        <p style="background-color:#f5f5f5;border:0 solid #ddd;padding:10px 15px;margin:18px 0">IP：${ip}
-          <br>邮箱：
-          <a href="mailto:${mail}">${mail}</a>
-        </p>
       </div>
       <div style="text-align:center">
         <a style="text-decoration:none;color:#fff;background:#e58a8a;padding:5px 20px;border-radius:4px;margin-top:10px;"

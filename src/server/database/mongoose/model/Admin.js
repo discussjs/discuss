@@ -1,9 +1,4 @@
-const { join } = require('path')
 const mongoose = require('mongoose')
-const { HtmlMinify } = require('../../../utils/minify')
-
-const path = join(__dirname, '../../../../../public/mail.html')
-const data = HtmlMinify(path)
 
 const { model, Schema } = mongoose
 
@@ -13,28 +8,49 @@ const AdminSchema = new Schema(
     password: { type: String, default: '', require: true },
     mail: { type: String, default: '', require: true },
     domain: { type: String, default: '', require: true },
-    site_name: { type: String, default: '', require: true },
-    site_url: { type: String, default: '', require: true },
 
+    // 评论处理
+    comment_count: { type: Number, default: 6, require: true },
+    word_number: { type: String, default: 0, require: true },
+    limit: { type: Number, default: 0, require: true },
+    limitAll: { type: Number, default: 0, require: true },
     akismet: { type: String, default: '', require: true },
     avatar_cdn: {
       type: String,
       default: 'https://cn.gravatar.com/avatar/',
       require: true
     },
-    word_number: { type: String, default: 0, require: true },
-    limit: { type: Number, default: 0, require: true },
-    limitAll: { type: Number, default: 0, require: true },
-    marked: { type: String, default: 'false', require: true },
-    highlight: { type: String, default: 'false', require: true },
+    marked: {
+      type: Object,
+      default: {
+        enable: false,
+        source: 'https://cdn.jsdelivr.net/npm/marked@latest/marked.min.js'
+      },
+      require: true
+    },
+    highlight: {
+      type: Object,
+      default: {
+        enable: false,
+        source:
+          'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@latest/build/highlight.min.js',
+        theme:
+          'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@latest/build/styles/default.min.css'
+      },
+      require: true
+    },
 
+    // 邮件提醒
+    site_url: { type: String, default: '', require: true },
+    serverURLs: { type: String, default: '', require: true },
     mail_host: { type: String, default: '', require: true },
     mail_port: { type: String, default: '', require: true },
     mail_from: { type: String, default: '', require: true },
     mail_accept: { type: String, default: '', require: true },
     master_subject: { type: String, default: '', require: true },
+    master_template: { type: String, default: '', require: true },
     reply_subject: { type: String, default: '', require: true },
-    mail_template: { type: String, default: data, require: true }
+    reply_template: { type: String, default: '', require: true }
   },
   { versionKey: false } // 禁用__v字段
 )

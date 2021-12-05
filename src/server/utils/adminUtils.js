@@ -14,17 +14,6 @@ async function isInit() {
 }
 
 /**
- * 查询配置信息
- * @param {Object} filter 查询条件
- * @param {Array} select 查询字段
- * @returns
- */
-async function GetAdmin(filter = {}, select = []) {
-  const admin = await Admin.find(filter, select).lean()
-  return admin[0]
-}
-
-/**
  * 验证token是否正确
  * @param {String} token token信息
  * @returns
@@ -33,8 +22,8 @@ async function VerifyToken(token) {
   const { msg, id } = jwt_verify(token, SECRET)
   if (msg) return false
   if (id) {
-    const DB = await Admin.findById(id)
-    if (DB) return true
+    const condition = id === global.config._id.toString()
+    if (condition) return true
     return false
   }
 }
@@ -62,4 +51,4 @@ async function AdminGetComments(params) {
   return { options, isAdmin }
 }
 
-module.exports = { SECRET, isInit, VerifyToken, AdminGetComments, GetAdmin }
+module.exports = { SECRET, isInit, VerifyToken, AdminGetComments }

@@ -1,11 +1,8 @@
 <template>
   <div class="D-comments">
-    <D-submit
-      @GetComment="GetComment"
-      :options="options"
-    ></D-submit>
+    <D-submit @comment="CommentFn" :options="options"></D-submit>
     <D-list
-      ref="list"
+      :comment="comment"
       @admin="$emit('admin')"
       @options="OptionsFn"
     ></D-list>
@@ -22,16 +19,17 @@ export default {
   },
   data() {
     return {
+      comment: [],
       options: {}
     }
   },
   methods: {
-    GetComment() {
-      this.$refs.list.GetComment()
+    CommentFn(comment) {
+      this.comment = comment
     },
     OptionsFn(options) {
       this.options = options
-    },
+    }
   }
 }
 </script>

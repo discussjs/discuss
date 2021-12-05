@@ -1,11 +1,11 @@
 const bcrypt = require('bcrypt')
 const { existsSync } = require('fs')
 const { join } = require('path')
-const { jwt_sign, jwt_verify } = require('../utils')
+const { jwt_sign, jwt_verify, DeepColne } = require('../utils')
 const Admin = require('../database/mongoose/model/Admin')
 const Comment = require('../database/mongoose/model/Comment')
 
-const { SECRET, VerifyToken, GetAdmin, isInit } = require('../utils/adminUtils')
+const { SECRET, VerifyToken, isInit } = require('../utils/adminUtils')
 const {
   GetCommentCounts,
   limitPageNo,
@@ -39,6 +39,8 @@ async function init({ username, password, mail }) {
  * @returns
  */
 async function Login(params) {
+  const config = global.config
+
   const { username, password, token } = params
   const result = {}
 
@@ -53,15 +55,13 @@ async function Login(params) {
   // 验证评论信息是否合法
   VerifyParams(params, ['username', 'password'])
 
-  const DB = await Admin.findOne()
-
-  const isUsername = username === DB.username
-  const isPassword = bcrypt.compareSync(password, DB.password)
+  const isUsername = username === config.username
+  const isPassword = bcrypt.compareSync(password, config.password)
   // 用户名密码是否正确
   if (!isUsername || !isPassword) throw new Error('用户名或密码错误')
 
   if (isPassword) {
-    result.token = jwt_sign({ id: DB._id }, SECRET, { expiresIn: '7d' })
+    result.token = jwt_sign({ id: config._id }, SECRET, { expiresIn: '7d' })
     return result
   }
   return result
@@ -92,17 +92,14 @@ async function InitPage(req, res) {
  * @returns
  */
 async function AdminGetComments(params) {
+  const config = global.config
+
   const token = await VerifyToken(params.token)
   if (!token) return false
 
-  const {
-    pageNo: currentPage,
-    pageSize,
-    keyword,
-    status,
-    current,
-    path
-  } = params
+  let { pageSize } = params
+  if (!pageSize) pageSize = config.comment_count
+  const { pageNo, keyword, status, current, path } = params
 
   const options = { keyword, status }
 
@@ -120,33 +117,36 @@ async function AdminGetComments(params) {
   const counts = await GetCommentCounts(options)
 
   // 限制页码
-  const { pageNo, pageCount } = await limitPageNo(
-    currentPage,
-    pageSize,
-    options
-  )
+  const { page, pageCount } = await limitPageNo(pageNo, pageSize, options)
 
   const comments = await Comment.find(options)
-    .skip((pageNo - 1) * pageSize)
+    .skip((page - 1) * pageSize)
     .limit(pageSize)
     .sort({ created: -1 })
     .lean()
 
-  const commentConfig = await GetAdmin({}, [
-    'avatar_cdn',
-    'marked',
-    'highlight'
-  ])
-  const avatarCdn = commentConfig.avatar_cdn
-  const isMarked = commentConfig.marked == 'true' ? true : false
-  const isHighlight = commentConfig.highlight == 'true' ? true : false
+  const avatarCdn = config.avatar_cdn
+
+  const markedOptions = {}
+  const highlightOptions = {}
+  markedOptions.enable = config.marked.enable + '' == 'true' ? true : false
+  markedOptions.source = config.marked.source
+  highlightOptions.enable =
+    config.highlight.enable + '' == 'true' ? true : false
+  highlightOptions.source = config.highlight.source
+  highlightOptions.theme = config.highlight.theme
 
   for (const item of comments) {
     item.stick = item.stick == 'true' ? true : false
+    item.master = item.master == 'true' ? true : false
 
     item.OriginalContent = item.content
 
-    item.content = marked(item.content, isMarked, isHighlight)
+    item.content = marked(
+      item.content,
+      markedOptions.enable,
+      highlightOptions.enable
+    )
 
     // 处理头像
     if (!/^http/.test(item.avatar)) {
@@ -161,7 +161,7 @@ async function AdminGetComments(params) {
     delete item.updated
   }
 
-  const result = { comments, counts, pageCount }
+  const result = { comments, counts, pageCount, pageSize }
 
   return result
 }
@@ -189,9 +189,18 @@ async function OperateComment({ id, exec, token, comment }) {
 async function GetConfig(params) {
   const token = await VerifyToken(params.token)
   if (!token) return false
-  const config = await GetAdmin({}, [])
+
+  const config = DeepColne(global.config)
   delete config._id
   delete config.password
+  config.marked_enable = config.marked.enable
+  config.marked_source = config.marked.source
+  config.highlight_enable = config.highlight.enable
+  config.highlight_source = config.highlight.source
+  config.highlight_theme = config.highlight.theme
+
+  delete config.marked
+  delete config.highlight
   return config
 }
 
@@ -199,11 +208,22 @@ async function GetConfig(params) {
 async function SaveConfig(params) {
   const { data, token } = params
 
+  // 修改密码处理
+  if (data.password) data.password = bcrypt.hashSync(data.password, 10)
+
   // 转换为数字类型
   data.limit = parseInt(data.limit)
   data.limitAll = parseInt(data.limitAll)
+  data.comment_count = parseInt(data.comment_count)
   data.site_url = data.site_url.replace(/\/$/, '')
-  if (data.password) data.password = bcrypt.hashSync(data.password, 10)
+
+  data.marked = {}
+  data.highlight = {}
+  data.marked.enable = data.marked_enable + '' == 'true' ? true : false
+  data.marked.source = data.marked_source
+  data.highlight.enable = data.highlight_enable + '' == 'true' ? true : false
+  data.highlight.source = data.highlight_source
+  data.highlight.theme = data.highlight_theme
 
   const { id } = jwt_verify(token, SECRET)
   if (id) {

@@ -300,7 +300,7 @@ export default {
       comments: [],
       counts: 0,
       pageNo: 1,
-      pageSize: 6,
+      pageSize: 0,
       pageCount: 1,
       pages: [],
 
@@ -363,6 +363,7 @@ export default {
         }
       }
       const { data } = await ajax(options)
+      this.pageSize = data.pageSize
       this.counts = data.counts
       this.pageCount = data.pageCount
       // 新增属性
@@ -541,14 +542,13 @@ export default {
 
 .D-admin-comment-search {
   display: flex;
-  height: 40px;
+  height: 30px;
 }
 .D-admin-comment-search input:hover {
   border-color: rgba(144, 147, 153, 0.5);
 }
 .D-admin-comment-search input {
   width: 100%;
-  height: 40px;
   line-height: 40px;
   outline: none;
   padding: 0 15px;

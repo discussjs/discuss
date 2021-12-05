@@ -1,5 +1,7 @@
 const Comment = require('../database/mongoose/model/Comment')
-const { GetAdmin, VerifyToken } = require('../utils/adminUtils')
+const axios = require('axios')
+const bcrypt = require('bcrypt')
+const { VerifyToken } = require('../utils/adminUtils')
 const {
   WordNumberLimit,
   WordNumberExceed,
@@ -7,24 +9,24 @@ const {
   limitPageNo,
   GetReplyComment,
   limitFilter,
-  CommitCommentHandler,
-  SendMailHandler
+  CommentHandler,
+  CommitCommentHandler
 } = require('../utils/commentUtils')
 const {
   IndexHandler,
   DeepColne,
   VerifyParams,
   akismet,
-  marked,
-  timeAgo,
-  SendMail
 } = require('../utils')
 
+// 获取评论
 async function GetComment(params) {
+  const config = global.config
+  const comment_count = config.comment_count
   // 处理index.html
   params.path = IndexHandler(params.path)
 
-  const { pageNo: currentPage, pageSize, path } = params
+  const { pageNo, path } = params
   // 查询条件
   let options = {
     pid: '',
@@ -35,7 +37,7 @@ async function GetComment(params) {
 
   // 查询置顶评论
   let commentsTop = []
-  if (currentPage == 1) {
+  if (pageNo == 1) {
     const optionsTop = DeepColne(options)
     optionsTop.stick = 'true'
     commentsTop = await Comment.find(optionsTop).lean()
@@ -44,15 +46,11 @@ async function GetComment(params) {
   const counts = await GetCommentCounts(options)
 
   // 限制页码
-  const { pageNo, pageCount } = await limitPageNo(
-    currentPage,
-    pageSize,
-    options
-  )
+  const { page, pageCount } = await limitPageNo(pageNo, comment_count, options)
 
   const comments = await Comment.find(options)
-    .skip((pageNo - 1) * pageSize)
-    .limit(pageSize)
+    .skip((page - 1) * comment_count)
+    .limit(comment_count)
     .sort({ created: -1 })
     .lean()
 
@@ -65,38 +63,19 @@ async function GetComment(params) {
   // 合并评论所有
   const commentsAll = [...commentsTop, ...comments, ...commentsReply]
 
-  const commentConfig = await GetAdmin({}, [
-    'word_number',
-    'avatar_cdn',
-    'marked',
-    'highlight'
-  ])
+  const wordNumber = WordNumberLimit(config.word_number)
 
-  const wordNumber = WordNumberLimit(commentConfig.word_number)
-  const avatarCdn = commentConfig.avatar_cdn
-  const isMarked = commentConfig.marked == 'true' ? true : false
-  const isHighlight = commentConfig.highlight == 'true' ? true : false
+  const markedOptions = {}
+  const highlightOptions = {}
+  markedOptions.enable = config.marked.enable + '' == 'true' ? true : false
+  markedOptions.source = config.marked.source
+  highlightOptions.enable =
+    config.highlight.enable + '' == 'true' ? true : false
+  highlightOptions.source = config.highlight.source
+  highlightOptions.theme = config.highlight.theme
 
-  for (const item of commentsAll) {
-    item.stick = item.stick == 'true' ? true : false
-
-    item.content = marked(item.content, isMarked, isHighlight)
-
-    // 处理头像
-    if (!/^http/.test(item.avatar)) {
-      item.avatar = avatarCdn + item.avatar
-    }
-
-    item.time = timeAgo(item.created)
-
-    // 删除多余信息
-    delete item.ip
-    delete item.mail
-    delete item.path
-    delete item.ua
-    delete item.status
-    delete item.created
-    delete item.updated
+  for (let item of commentsAll) {
+    item = CommentHandler(item)
   }
 
   const result = {
@@ -104,18 +83,19 @@ async function GetComment(params) {
     counts,
     pageCount,
     wordNumber,
-    marked: isMarked,
-    highlight: isHighlight
+    marked: markedOptions,
+    highlight: highlightOptions
   }
 
   return result
 }
 
+// 提交评论
 async function CommitComment(params) {
   // 验证评论信息是否合法
   VerifyParams(params, ['nick', 'mail', 'content', 'ua', 'path'])
 
-  const config = await GetAdmin({}, [])
+  const config = global.config
 
   const token = await VerifyToken(params.token)
 
@@ -157,37 +137,33 @@ async function CommitComment(params) {
   // 保存评论
   const result = await new Comment(data).save()
 
-  // 保存成功
-  if (result) {
-    // 没有配置邮件信息则直接结束
-    const condition = config.mail_from && config.mail_accept
-    if (!condition) return true
-
-    const commentConfig = await GetAdmin({}, [
-      'avatar_cdn',
-      'marked',
-      'highlight'
+  // 发送邮件通知请求
+  try {
+    // 验证邮件配置是否完整
+    VerifyParams(config, [
+      'mail_host',
+      'mail_port',
+      'mail_from',
+      'mail_accept',
+      'master_subject',
+      'reply_subject',
+      'mail_template'
     ])
-    const avatarCdn = commentConfig.avatar_cdn
-    const isMarked = commentConfig.marked == 'true' ? true : false
-    const isHighlight = commentConfig.highlight == 'true' ? true : false
 
-    data.stick = data.stick == 'true' ? true : false
+    data.type = 'PUSH_MAIL'
 
-    data.content = marked(data.content, isMarked, isHighlight)
+    // 加密生成token
+    const encrypted = config.username + config.password + config.mail
+    data.token = bcrypt.hashSync(encrypted, 10)
 
-    // 处理头像
-    if (!/^http/.test(data.avatar)) data.avatar = avatarCdn + data.avatar
-
-    // 邮件通知数据处理
-    const sends = await SendMailHandler(data, config, token)
-
-    for (const item of sends) {
-      await SendMail(item)
-    }
-    return true
+    const serverURLs = config.serverURLs
+    if (serverURLs) axios.post(serverURLs, data)
+  } catch (error) {
+    console.log('Mail ERROR: 邮箱配置信息错误')
+    console.log('邮箱错误配置详细:', error)
   }
 
+  if (result) return CommentHandler(data)
   return false
 }
 

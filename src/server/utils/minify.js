@@ -3,11 +3,10 @@ const { readFileSync, existsSync } = require('fs')
 
 /**
  * 压缩HTML
- * @param {String} path html文件地址
+ * @param {String} path html文件路 or html文本内容
  * @returns
  */
 function HtmlMinify(path) {
-  if (!existsSync(path)) return '这里什么都没有哦 OwO !'
   const options = {
     minifyJS: true,
     minifyCSS: true,
@@ -15,9 +14,15 @@ function HtmlMinify(path) {
     collapseWhitespace: true, // 删除多余空白处
     removeAttributeQuotes: true // 删除属性引号
   }
-  const content = readFileSync(path, { encoding: 'utf8' })
-  const result = minify(content, options)
-  return result
+
+  let content = ''
+  if (existsSync(path)) {
+    content = readFileSync(path, { encoding: 'utf8' })
+  } else {
+    content = path
+  }
+
+  return minify(content, options)
 }
 
 module.exports = {

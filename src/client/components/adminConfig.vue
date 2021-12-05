@@ -72,18 +72,6 @@ export default {
               value: ''
             },
             {
-              key: 'site_name',
-              desc: '网站名称',
-              placeholder: "例如：「Lete乐特 ' s Blog」",
-              value: ''
-            },
-            {
-              key: 'site_url',
-              desc: '网站地址',
-              placeholder: '例如：https://blog.imlete.cn',
-              value: ''
-            },
-            {
               key: 'domain',
               desc: '网站域名(安全域名)',
               placeholder: '可写多个,以英文逗号“,”做分割',
@@ -94,6 +82,12 @@ export default {
         {
           name: '评论处理',
           items: [
+            {
+              key: 'comment_count',
+              desc: '每次获取多少条评论',
+              placeholder: '默认: 6',
+              value: ''
+            },
             {
               key: 'word_number',
               desc: '字数限制：评论内容,昵称,邮箱,网址 (以英文逗号分割，只输入一个0代表所有不限制)',
@@ -125,15 +119,33 @@ export default {
               value: ''
             },
             {
-              key: 'marked',
+              key: 'marked_enable',
               desc: '是否开启markdown',
               placeholder: '默认: false',
               value: ''
             },
             {
-              key: 'highlight',
+              key: 'marked_source',
+              desc: 'marked资源链接',
+              placeholder: '默认: 最新版本marked',
+              value: ''
+            },
+            {
+              key: 'highlight_enable',
               desc: '是否开启代码高亮',
-              placeholder: '默认: false(开启的前提是开启marked)',
+              placeholder: '默认: false(前提是开启marked)',
+              value: ''
+            },
+            {
+              key: 'highlight_source',
+              desc: 'highlight资源路径',
+              placeholder: '默认: 最新版本highlight',
+              value: ''
+            },
+            {
+              key: 'highlight_theme',
+              desc: 'highlight主题资源路径',
+              placeholder: '默认: 默认主题',
               value: ''
             }
           ]
@@ -141,6 +153,18 @@ export default {
         {
           name: '邮件提醒',
           items: [
+            {
+              key: 'site_url',
+              desc: '网站地址',
+              placeholder: '例如：https://blog.imlete.cn',
+              value: ''
+            },
+            {
+              key: 'serverURLs',
+              desc: '评论系统服务端地址(与客户端的serverURLs一致)',
+              placeholder: '例如: https://discuss-doc.imlete.cn',
+              value: ''
+            },
             {
               key: 'mail_host',
               desc: '邮件主机',
@@ -179,8 +203,14 @@ export default {
               value: ''
             },
             {
-              key: 'mail_template',
-              desc: '邮件模板',
+              key: 'master_template',
+              desc: '博主邮件模板',
+              placeholder: '收到邮件通知的模板',
+              value: ''
+            },
+            {
+              key: 'reply_template',
+              desc: '回复邮件模板',
               placeholder: '收到邮件通知的模板',
               value: ''
             }
@@ -229,7 +259,7 @@ export default {
       if (this.config.password !== this.config.confirm_password) {
         this.saveMsg = '密码错误'
         ShakeError(this.$refs.password)
-        setTimeout(() => this.saveMsg = save, delay)
+        setTimeout(() => (this.saveMsg = save), delay)
         return
       }
 
@@ -243,10 +273,14 @@ export default {
           data: this.config
         }
       }
-      
+
       const { data } = await ajax(options)
       if (data) {
         this.saveMsg = '已保存'
+        this.isSave = false
+        setTimeout(() => (this.saveMsg = save), delay)
+      } else {
+        this.saveMsg = '保存失败'
         this.isSave = false
         setTimeout(() => (this.saveMsg = save), delay)
       }
