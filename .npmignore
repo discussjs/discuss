@@ -19,7 +19,6 @@ babel.config.js
 .editorconfig
 .gitignore
 public/index.html
-public/master.html
 
 # webpack
 webpack
