@@ -1,4 +1,3 @@
-
 /**
  * 处理错误头像
  * @param {Event} event

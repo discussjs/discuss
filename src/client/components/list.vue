@@ -44,7 +44,7 @@
           <D-submit
             v-if="replying === item._id"
             :ReplyID="{ pid: item._id, rid: '' }"
-            @GetComment="GetComment"
+            @comment="CommentFn"
           ></D-submit>
           <template v-for="citem in comments">
             <div
@@ -82,7 +82,7 @@
                 <D-submit
                   v-if="replying === citem._id"
                   :ReplyID="{ pid: item._id, rid: citem._id }"
-                  @GetComment="GetComment"
+                  @comment="CommentFn"
                 ></D-submit>
               </div>
             </div>
@@ -186,10 +186,15 @@ export default {
         this.moerDisabled = false
         this.loading = false
       }
+    },
+    CommentFn(data) {
+      // 处理子评论
+      this.comments.unshift(data)
     }
   },
   watch: {
     comment(newV, oldV) {
+      // 处理根评论
       this.comments.unshift(newV)
     }
   }

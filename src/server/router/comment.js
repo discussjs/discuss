@@ -12,12 +12,7 @@ const {
   CommentHandler,
   CommitCommentHandler
 } = require('../utils/commentUtils')
-const {
-  IndexHandler,
-  DeepColne,
-  VerifyParams,
-  akismet,
-} = require('../utils')
+const { IndexHandler, DeepColne, VerifyParams, akismet } = require('../utils')
 
 // 获取评论
 async function GetComment(params) {
@@ -129,8 +124,9 @@ async function CommitComment(params) {
   }
 
   if (token) params.status = 'accept'
-  else
+  else {
     params.status = await akismet(config.akismet, config.site_url, akismetData)
+  }
 
   const data = await CommitCommentHandler(params, token)
 
@@ -146,7 +142,7 @@ async function CommitComment(params) {
       'mail_from',
       'mail_accept',
       'master_subject',
-      'reply_subject',
+      'reply_subject'
     ])
 
     data.type = 'PUSH_MAIL'
@@ -156,11 +152,19 @@ async function CommitComment(params) {
     data.token = bcrypt.hashSync(encrypted, 10)
 
     const serverURLs = config.serverURLs
-    if (serverURLs) axios.post(serverURLs, data)
+    if (serverURLs) {
+      await Promise.race([
+        axios.post(serverURLs, data),
+        new Promise((resolve) => setTimeout(resolve, 500)) // 延迟0.5s后继续向下执行，不在等待
+      ])
+    }
   } catch (error) {
     console.log('Mail ERROR: 邮箱配置信息错误')
     console.log('邮箱错误配置详细:', error)
   }
+
+  delete data.token
+  delete data.type
 
   if (result) return CommentHandler(data)
   return false

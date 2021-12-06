@@ -1,9 +1,13 @@
 const { SendMail } = require('./utils/Mail')
+const { join } = require('path')
 const Admin = require('./database/mongoose/model/Admin')
 
+// 设置环境变量
+const envPath = join(process.cwd(), '.env')
+require('dotenv').config(envPath)
+
 // 连接数据库
-const mongoose = require('./database/mongoose')
-mongoose(process.env.DISCUSS_MONGODB)
+require('./database/mongoose')()
 
 const {
   init,

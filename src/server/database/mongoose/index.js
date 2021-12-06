@@ -1,5 +1,8 @@
-const mongoose = require("mongoose")
+const mongoose = require('mongoose')
 
-module.exports = (url) => {
-  mongoose.connect(url, { useUnifiedTopology: true, useNewUrlParser: true })
+module.exports = () => {
+  mongoose.connect(process.env.DISCUSS_MONGODB, {
+    useUnifiedTopology: true,
+    useNewUrlParser: true
+  })
 }

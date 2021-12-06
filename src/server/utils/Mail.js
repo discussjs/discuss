@@ -26,7 +26,6 @@ async function SendMail(comment) {
   const encrypted = config.username + config.password + config.mail
   const isToken = bcrypt.compareSync(encrypted, comment.token)
   if (isToken) {
-
     // 创建初始化Mail
     transporter = InitMail()
 

@@ -9,7 +9,7 @@ const defaultOptions = {
     gfm: true,
     breaks: true,
     smartLists: true,
-    smartypants: true,
+    smartypants: true
   }
 }
 

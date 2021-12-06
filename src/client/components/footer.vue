@@ -1,9 +1,12 @@
 <template>
-  <div class="D-footer">Powered by <a href="https://Discuss.js.org" target="_blank">Discuss</a> v{{ version }}</div>
+  <div class="D-footer">
+    Powered by <a href="https://Discuss.js.org" target="_blank">Discuss</a> v{{
+      version
+    }}
+  </div>
 </template>
 
 <script>
-
 import packages from '../../../package.json'
 const { version } = packages
 export default {
@@ -13,7 +16,6 @@ export default {
     }
   }
 }
-
 </script>
 
 <style scoped>

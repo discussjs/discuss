@@ -4,7 +4,7 @@ const Admin = require('../database/mongoose/model/Admin')
 
 async function CORSHandler(req, res) {
   // 设置安全域名
-  const {domain} = global.config||{}
+  const { domain } = global.config || {}
 
   res.setHeader('Access-Control-Allow-Origin', '*')
   res.setHeader('Access-Control-Allow-Methods', 'POST')
