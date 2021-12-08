@@ -154,7 +154,12 @@ async function CommitComment(params) {
     const serverURLs = config.serverURLs
     if (serverURLs) {
       await Promise.race([
-        axios.post(serverURLs, data),
+        axios({
+          url: serverURLs,
+          data,
+          method: 'post',
+          headers: { origin: config.site_url }
+        }),
         new Promise((resolve) => setTimeout(resolve, 500)) // 延迟0.5s后继续向下执行，不在等待
       ])
     }

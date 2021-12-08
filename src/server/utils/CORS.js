@@ -22,7 +22,7 @@ async function CORSHandler(req, res) {
 
   const isDomain = domain.indexOf(origin) != -1
 
-  return isDomain
+  return !isDomain
 }
 
 module.exports = CORSHandler

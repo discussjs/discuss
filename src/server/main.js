@@ -65,16 +65,23 @@ module.exports = async (req, res) => {
   let result = { msg: 'success' }
 
   try {
-    const isCors = await cors(req, res)
-    if (!isCors) {
-      res.end('请求遭到拒绝')
-      return
-    }
 
     body = await GetPostData(req)
     body.ua = req.headers['user-agent']
     body.ip = GetClientIP(req)
     console.log('body', body)
+
+    if(body.type==='PUSH_MAIL'){
+      result.data = await SendMail(body)
+      res.end(JSON.stringify(result))
+      return
+    }
+
+    const isCors = await cors(req, res)
+    if (isCors) {
+      res.end('请求遭到拒绝')
+      return
+    }
 
     switch (body.type) {
       case 'INIT':
