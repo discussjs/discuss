@@ -87,12 +87,12 @@ codeBlockExpand: # 是否开启代码块折叠
 ## 使用 || 分割
 ## setting: 点击设置按钮后显示   show: 直接显示
 ## 拥有3个属性：a标签属性|a标签描述|按钮图标
-## #- harf="javascript:(0)"id="darkmode"||深色/浅色||fas fa-moon
+## #- harf="javascript:"id="darkmode"||深色/浅色||fas fa-moon
 rightside:
   settings:
-    #- harf="javascript:(0)"id="darkmode"||深色/浅色||fas fa-moon ###渲染结果： <a harf="javascript:(0)" id="darkmode" title="深色/浅色"> <i class="fas fa-moon"></i> </a>
+    #- harf="javascript:"id="darkmode"||深色/浅色||fas fa-moon ###渲染结果： <a harf="javascript:" id="darkmode" title="深色/浅色"> <i class="fas fa-moon"></i> </a>
   show:
-    #- harf="javascript:(0)"id="darkmode"||深色/浅色||fas fa-moon ###渲染结果： <a harf="javascript:(0)" id="darkmode" title="深色/浅色"> <i class="fas fa-moon"></i> </a>
+    #- harf="javascript:"id="darkmode"||深色/浅色||fas fa-moon ###渲染结果： <a harf="javascript:" id="darkmode" title="深色/浅色"> <i class="fas fa-moon"></i> </a>
 
 # 文章版权
 copyright:
@@ -105,7 +105,57 @@ copyright:
 
 # 评论
 ## 注意大小写
-comments: waline # twikoo / waline / valine
+comments: discuss # twikoo / waline / valine
+
+# Discuss
+## https://discuss.js.org
+discuss:
+  source: https://cdn.jsdelivr.net/npm/discuss@latest/dist/Discuss.js
+  master: 博主
+  placeholder: 快来评论呀
+  serverURLs: https://discuss-demo.imlete.cn
+  path: location.pathname
+  emotMaps: {
+    OwO: {
+      type: 'text', items: {
+        '喵星人': '( =•ω•= )m',
+        'hi': 'Hi~ o(*￣▽￣*)ブ',
+        '啊啊': 'w(ﾟДﾟ)w',
+        '擦眼泪': ' (ノへ￣、)',
+        '不屑': ' (￣_,￣ )',
+        '好耶': 'ヽ(✿ﾟ▽ﾟ)ノ',
+        '棒': ' (๑•̀ㅂ•́)و✧',
+        '抽': '(￣ε(#￣)☆╰╮o(￣皿￣///)',
+        '亲': '（づ￣3￣）づ╭❤～',
+        '汗': 'Σ( ° △ °|||)︴',
+        '笨': '(～￣(OO)￣)ブ',
+        '擦': '凸(艹皿艹 )',
+        '啵啵': '(* ￣3)(ε￣ *)',
+        '挖鼻屎': '(*￣rǒ￣)',
+        '嗷': '┗|｀O′|┛ 嗷~~',
+        '飞': '︿(￣︶￣)︿',
+        '好滴': '(u‿ฺu✿ฺ)',
+        '啦啦': '♪(^∇^*)',
+        '拍桌': 'o(*≧▽≦)ツ┏━┓',
+        '惊喜': '╰(*°▽°*)╯',
+        '嘟嘴': '（○｀ 3′○）',
+        '愣住': '(°ー°〃)',
+        '哼哼': 'o(￣ヘ￣o＃)',
+        '崩溃': 'o(≧口≦)o',
+        '不是我': 'ㄟ( ▔, ▔ )ㄏ',
+        '呃呃呃': '(⊙﹏⊙)',
+        '切': '(ˉ▽￣～) 切~~',
+        '拜拜': 'ヾ(￣▽￣)Bye~Bye~',
+        '斜眼': '( ﹁ ﹁ ) ~→',
+        '美味': 'Ψ(￣∀￣)Ψ',
+        '闪': '',
+        '✧(≖ ◡ ≖✿)': '',
+        '淡定': '',
+        '━(￣ー￣*|||━━': '',
+        '太可怕了': 'ヽ(*。>Д<)o゜'
+      }
+    },
+  }
 
 # valine
 ## https://valine.js.org/
@@ -220,9 +270,9 @@ analytics:
 # 设置字体
 font:
   # 全局字体
-  html: 'Helvetica, Tahoma, Arial, "PingFang SC", "Hiragino Sans GB", "Heiti SC", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif'
+  html: consolas,Menlo,'PingFang SC','Microsoft YaHei',sans-serif
   # 代码块字体
-  code: 'Helvetica, Tahoma, Arial, "PingFang SC", "Hiragino Sans GB", "Heiti SC", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif'
+  code: consolas,Menlo,'PingFang SC','Microsoft YaHei',sans-serif
 
 # 主题的css与js引入
 ## 无特殊要求请勿更改

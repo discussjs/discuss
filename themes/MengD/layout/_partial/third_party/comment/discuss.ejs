@@ -2,7 +2,7 @@
 <div id="dcomment"></div>
 <script>
   function LoadDiscuss() {
-    getScript("<%- theme.discuss.source %>", function () {
+    getScript('<%- theme.discuss.source %>', function () {
     let initData = {
       el: '#dcomment',
       master: '<%- theme.discuss.master %>',
@@ -13,7 +13,7 @@
     }
     var option = <%- option %>;
     if (option) initData = Object.assign(initData, option)
-      Discuss(initData)
+    Discuss(initData)
     })
   }
   LoadDiscuss()
