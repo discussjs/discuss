@@ -8,6 +8,7 @@ const AdminSchema = new Schema(
     password: { type: String, default: '', require: true },
     mail: { type: String, default: '', require: true },
     domain: { type: String, default: '', require: true },
+    request_headers: { type: String, default: '', require: true },
 
     // 评论处理
     comment_count: { type: Number, default: 6, require: true },

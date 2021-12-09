@@ -74,7 +74,13 @@ export default {
             {
               key: 'domain',
               desc: '网站域名(安全域名)',
-              placeholder: '可写多个,以英文逗号“,”做分割',
+              placeholder: '可写多个以英文逗号“,”做分割',
+              value: ''
+            },
+            {
+              key: 'request_headers',
+              desc: '用于获取真实IP(如果你不清楚，就默认留空)',
+              placeholder: '可写多个以英文逗号“,”做分割',
               value: ''
             }
           ]
