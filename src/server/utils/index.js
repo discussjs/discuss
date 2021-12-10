@@ -1,3 +1,4 @@
+const GetUserIP = require('get-user-ip')
 const { readFileSync, existsSync } = require('fs')
 const { join } = require('path')
 const timeAgo = require('./timeAgo')
@@ -25,44 +26,12 @@ async function GetPostData(req) {
   })
 }
 
-/**
- * 动态获取属性值
- * @param {Object} obj 对象本身
- * @param {String} str 获取对象字符串
- * @returns
- */
-function GetProperty(obj, str) {
-  str = str.replace(/\[(\w+)\]/g, '.$1') // 处理数组下标
-  let arr = str.split('.')
-  for (let i in arr) {
-    obj = obj[arr[i]] || ''
-  }
-  return obj
-}
-
 //传入请求HttpRequest
 function GetClientIP(req) {
   // 获取自定义请求头IP，以逗号分隔为数组
   const request_headers = global.config.request_headers || ''
-  const globalIPs = request_headers.split(',') || []
-  const defaultIPs = [
-    'headers.x-real-ip',
-    'headers.x-forwarded-for',
-    'connection.remoteAddress',
-    'socket.remoteAddress',
-    'connection.socket.remoteAddress'
-  ]
-  // 合并默认请求头和自定义请求头IP
-  const ips = [...globalIPs, ...defaultIPs]
-
-  for (const item of ips) {
-    // 动态获取请求头信息
-    const ip = GetProperty(req, item)
-    if (ip) {
-      return ip.split(',')[0].trim()
-    }
-  }
-  return null
+  const headers = request_headers.split(',') || []
+  return GetUserIP(req, headers)
 }
 
 // 获取 favicon

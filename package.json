@@ -29,6 +29,7 @@
     "axios": "^0.22.0",
     "bcrypt": "^5.0.1",
     "dotenv": "^10.0.0",
+    "get-user-ip": "^1.0.0",
     "highlight.js": "^11.2.0",
     "html-minifier": "^4.0.0",
     "jsonwebtoken": "^8.5.1",
