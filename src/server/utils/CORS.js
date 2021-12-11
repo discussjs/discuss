@@ -1,5 +1,3 @@
-const Admin = require('../database/mongoose/model/Admin')
-
 // 拦截所有请求
 
 async function CORSHandler(req, res) {
@@ -14,7 +12,7 @@ async function CORSHandler(req, res) {
     'Origin,X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
   )
 
-  if (!domain) return true
+  if (!domain) return false
 
   // 获取请求域名(去除协议)
   let origin = req.headers.origin

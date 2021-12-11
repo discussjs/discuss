@@ -5,9 +5,9 @@ const { model, Schema } = mongoose
 const CounterSchema = new Schema(
   {
     time: { type: Number, default: 1, require: true },
-    path: { type: String, require: true },
-    createdDate: { type: String, require: true },
-    updatedDate: { type: String, require: true }
+    path: { type: String, default: '/', require: true },
+    createdDate: { type: Number, default: Date.now(), require: true },
+    updatedDate: { type: Number, default: Date.now(), require: true }
   },
   { versionKey: false }
 )

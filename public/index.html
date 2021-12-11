@@ -15,6 +15,10 @@
       padding: 20px;
     }
 
+    .Discuss-Visitors-Wrap {
+      text-align: center;
+    }
+
     @media screen and (max-width: 900px) {
       body {
         padding: 10px;
@@ -24,6 +28,10 @@
 </head>
 
 <body>
+  <div class="Discuss-Visitors-Wrap">
+    <span>访问量: </span>
+    <span id="Discuss-Visitors"></span>
+  </div>
   <div id="Discuss-Comments"></div>
   <script>
     const url = `//${location.hostname}:<%= htmlWebpackPlugin.options.port %>`

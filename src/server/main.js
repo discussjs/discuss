@@ -19,8 +19,9 @@ const {
   OperateComment
 } = require('./router/admin')
 const { GetComment, CommitComment } = require('./router/comment')
+const GetCounter = require('./router/counter')
 const {
-  cors,
+  CORS,
   GetPostData,
   GetClientIP,
   SetFavicon,
@@ -65,19 +66,18 @@ module.exports = async (req, res) => {
   let result = { msg: 'success' }
 
   try {
-
     body = await GetPostData(req)
     body.ua = req.headers['user-agent']
     body.ip = GetClientIP(req)
     console.log('body', body)
 
-    if(body.type==='PUSH_MAIL'){
+    if (body.type === 'PUSH_MAIL') {
       result.data = await SendMail(body)
       res.end(JSON.stringify(result))
       return
     }
 
-    const isCors = await cors(req, res)
+    const isCors = await CORS(req, res)
     if (isCors) {
       res.end('请求遭到拒绝')
       return
@@ -110,6 +110,9 @@ module.exports = async (req, res) => {
         break
       case 'SAVE_CONFIG':
         result.data = await SaveConfig(body)
+        break
+      case 'COUNTER':
+        result.data = await GetCounter(body)
         break
     }
   } catch (error) {

@@ -2,7 +2,7 @@ const GetUserIP = require('get-user-ip')
 const { readFileSync, existsSync } = require('fs')
 const { join } = require('path')
 const timeAgo = require('./timeAgo')
-const cors = require('./CORS')
+const CORS = require('./CORS')
 const VerifyParams = require('./verify')
 const akismet = require('./akismet')
 const marked = require('./marked')
@@ -75,7 +75,7 @@ module.exports = {
   SetFavicon,
   Discussjs,
   DeepColne,
-  cors,
+  CORS,
   VerifyParams,
   akismet,
   jwt_sign,
