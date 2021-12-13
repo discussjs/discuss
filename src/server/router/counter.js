@@ -1,5 +1,5 @@
 const Counter = require('../database/mongoose/model/Counter')
-const { VerifyParams } = require('../utils')
+const { VerifyParams, IndexHandler } = require('../utils')
 
 // 递增
 async function Increasing(path) {
@@ -17,7 +17,7 @@ async function Increasing(path) {
 
 module.exports = async (params) => {
   VerifyParams(params, ['path'])
-  const path = params.path
+  const path = IndexHandler(params.path)
 
   // 递归+1
   const isInc = await Increasing(path)

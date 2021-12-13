@@ -100,7 +100,7 @@
 </template>
 
 <script>
-import ajax from '../lib/request'
+import request from '../lib/request'
 import Clickoutside from '../lib/clickoutside'
 import marked from '../lib/marked'
 
@@ -327,7 +327,7 @@ export default {
       const token = localStorage.DiscussToken
       if (token) comment.token = token
 
-      const { data } = await ajax({
+      const { data } = await request({
         url: this.url,
         data: comment
       })

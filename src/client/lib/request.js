@@ -5,7 +5,7 @@
  * @returns {Promise}
  */
 
-function ajax(obj) {
+function request(obj) {
   return new Promise((resolve, reject) => {
     //设置是否异步，默认为true
     obj.async = obj.async || true
@@ -33,4 +33,4 @@ function ajax(obj) {
   })
 }
 
-export default ajax
+export default request

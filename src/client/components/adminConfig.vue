@@ -42,7 +42,7 @@ import incoSpinner from '@fortawesome/fontawesome-free/svgs/solid/spinner.svg'
 import iconLoading from '../assets/svg/loading.svg'
 
 import debounce from '../lib/debounce'
-import ajax from '../lib/request'
+import request from '../lib/request'
 import { ShakeError } from '../lib/utils'
 
 export default {
@@ -248,7 +248,7 @@ export default {
         url: this.url,
         data: { type: 'GET_CONFIG', token: localStorage.DiscussToken }
       }
-      const { data } = await ajax(options)
+      const { data } = await request(options)
       if (data) {
         this.config = data
         this.InitConfig()
@@ -280,7 +280,7 @@ export default {
         }
       }
 
-      const { data } = await ajax(options)
+      const { data } = await request(options)
       if (data) {
         this.saveMsg = '已保存'
         this.isSave = false

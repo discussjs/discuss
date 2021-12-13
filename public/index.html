@@ -35,7 +35,7 @@
   <div id="Discuss-Comments"></div>
   <script>
     const url = `//${location.hostname}:<%= htmlWebpackPlugin.options.port %>`
-    Discuss({
+    Discuss.init({
       el: '#Discuss-Comments',
       master: '博主',
       placeholder: '快来评论呀',

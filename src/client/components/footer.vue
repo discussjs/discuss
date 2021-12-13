@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import request from '../lib/request'
+import VisitStat from '../lib/VisitStat'
 
 import packages from '../../../package.json'
 const { version } = packages
@@ -18,26 +18,8 @@ export default {
       version
     }
   },
-  methods: {
-    async getCounter() {
-      const counterEle = document.getElementById('Discuss-Visitors')
-      if (!counterEle) return
-
-      const options = {
-        url: this.$D.serverURLs,
-        data: {
-          type: 'COUNTER',
-          path: this.$D.path
-        }
-      }
-
-      const { data } = await request(options)
-
-      if (data) counterEle.innerText = data
-    }
-  },
   mounted() {
-    this.getCounter()
+    VisitStat(this.$D.serverURLs, this.$D.path)
   }
 }
 </script>

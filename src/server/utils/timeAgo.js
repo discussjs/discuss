@@ -16,6 +16,28 @@ const timeAgo = (timestamp) => {
   else return Format(timestamp)
 }
 
+/**
+ * 获取某月共有多少天
+ * @param {Number} timestamp 时间戳
+ * @returns {Number}
+ */
+function GetMonthDay(timestamp) {
+  const date = new Date(timestamp)
+  return new Date(date.getFullYear(), date.getMonth(), 0).getDate()
+}
+
+/**
+ * 获取某年共有多少天
+ * @param {Number} timestamp 时间戳
+ * @returns {Number}
+ */
+function GetYearDay(timestamp) {
+  const year = new Date(timestamp).getFullYear()
+  const condition = (year % 4 == 0 && year % 100 !== 0) || year % 400 == 0
+  if (condition) return 366
+  else return 365
+}
+
 // padStart 如果长度达不到指定长度(2)使用指定字符(0)填充到内容前面(padEnd填充到后面)
 // 日期格式化
 const Format = (timestamp) => {

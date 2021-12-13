@@ -12,7 +12,7 @@ const { HtmlMinify } = require('./minify')
 const { jwt_sign, jwt_verify } = require('./jwt')
 
 function IndexHandler(params) {
-  let path = params.replace(/\/index\.html|\/$/gi, '')
+  let path = params.replace(/(\/index\.html|\/)*$/gi, '')
   if (path.length == 0) path += '/'
   return path
 }

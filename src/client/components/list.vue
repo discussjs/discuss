@@ -103,7 +103,7 @@
 
 <script>
 import DSubmit from './submit.vue'
-import ajax from '../lib/request'
+import request from '../lib/request'
 import lazyload from '../lib/lazyload'
 import onError from '../lib/errorImage'
 
@@ -154,7 +154,7 @@ export default {
           pageNo: this.pageNo
         }
       }
-      const { data } = await ajax(options)
+      const { data } = await request(options)
       if (!data) {
         console.error('Discuss [INFO]: 请求失败')
         return

@@ -273,7 +273,7 @@ import iconLastPage from '@fortawesome/fontawesome-free/svgs/solid/step-forward.
 
 import onError from '../lib/errorImage'
 import debounce from '../lib/debounce'
-import ajax from '../lib/request'
+import request from '../lib/request'
 export default {
   components: {},
   data() {
@@ -362,7 +362,7 @@ export default {
           status: this.activeTableName
         }
       }
-      const { data } = await ajax(options)
+      const { data } = await request(options)
       this.pageSize = data.pageSize
       this.counts = data.counts
       this.pageCount = data.pageCount
@@ -449,7 +449,7 @@ export default {
           id: arr
         }
       }
-      await ajax(options)
+      await request(options)
       this.onCheckedAll() // 取消选中
       this.onCloseMask('mask-batch', 'batchWaiting') // 关闭批量处理弹窗
       await this.GetComment() // 重新获取评论
@@ -474,7 +474,7 @@ export default {
         }
       }
 
-      await ajax(options)
+      await request(options)
       await this.GetComment()
       this.isEdit = false
     },

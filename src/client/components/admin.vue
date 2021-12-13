@@ -71,7 +71,7 @@ import DComment from './adminComment.vue'
 import DConfig from './adminConfig.vue'
 
 import iconLoading from '../assets/svg/loading.svg'
-import ajax from '../lib/request'
+import request from '../lib/request'
 import { ShakeError } from '../lib/utils'
 
 export default {
@@ -101,7 +101,7 @@ export default {
       if (token) {
         this.isLoading = true
         this.showLogin = false
-        const { data } = await ajax({
+        const { data } = await request({
           url: this.url,
           data: { type: 'LOGIN', token }
         })
@@ -126,7 +126,7 @@ export default {
         }
       }
       // 登录验证
-      const { data } = await ajax(params)
+      const { data } = await request(params)
       if (!data) {
         ShakeError(this.$refs.login)
         this.disabled = false

@@ -1,10 +1,16 @@
 import { createApp } from 'vue'
 import Main from './Main.vue'
+import VisitStat from './lib/VisitStat'
+
+const Discuss = {
+  init,
+  VisitStat
+}
 
 const defaultOptions = {
   master: '博主',
   placeholder: '快来评论呀',
-  path: window.location.pathname,
+  path: location.pathname,
   marked: {
     gfm: true,
     breaks: true,
@@ -13,7 +19,7 @@ const defaultOptions = {
   }
 }
 
-function Discuss(options) {
+function init(options = {}) {
   options.marked = options.marked || defaultOptions.marked
 
   // 挂载vue组件
@@ -22,5 +28,4 @@ function Discuss(options) {
   app.mount(options.el)
 }
 
-export default Discuss
 export { Discuss }
