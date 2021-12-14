@@ -18,7 +18,12 @@ const {
   SaveConfig,
   OperateComment
 } = require('./router/admin')
-const { GetComment, CommitComment } = require('./router/comment')
+const {
+  GetComment,
+  CommitComment,
+  RecentComment,
+  CommentCount
+} = require('./router/comment')
 const GetCounter = require('./router/counter')
 const {
   CORS,
@@ -41,7 +46,6 @@ async function FrontLoading(req, res) {
   if (favicon) return true
 
   if (req.method === 'GET') {
-    res.setHeader('Content-Type', 'text/plain; charset=utf-8')
     const isInit = await InitPage(req, res)
 
     if (isInit) {
@@ -57,6 +61,8 @@ async function FrontLoading(req, res) {
 module.exports = async (req, res) => {
   // 将配置信息锁定到全局
   global.config = await Admin.findOne().lean()
+
+  res.setHeader('Content-Type', 'text/plain; charset=utf-8')
 
   // 处理所有get请求
   const resultFL = await FrontLoading(req, res)
@@ -79,7 +85,9 @@ module.exports = async (req, res) => {
 
     const isCors = await CORS(req, res)
     if (isCors) {
-      res.end('请求遭到拒绝')
+      res.statusCode = 403
+      result.msg = '请求遭到拒绝'
+      res.end(JSON.stringify(result))
       return
     }
 
@@ -113,6 +121,12 @@ module.exports = async (req, res) => {
         break
       case 'COUNTER':
         result.data = await GetCounter(body)
+        break
+      case 'RECENT_COMMENT':
+        result.data = await RecentComment(body)
+        break
+      case 'COMMENT_COUNT':
+        result.data = await CommentCount(body)
         break
     }
   } catch (error) {

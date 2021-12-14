@@ -1,4 +1,4 @@
-import request from './request'
+import request from '../lib/request'
 
 /**
  * 访问量统计
@@ -6,6 +6,7 @@ import request from './request'
  * @param {String} path 请求路径
  */
 async function VisitStat(url, path) {
+  if (!url) return
   const counterEle = document.getElementById('Discuss-Visitors')
   if (!counterEle) return
   if (!path) path = location.pathname

@@ -140,9 +140,6 @@ function CommentHandler(data) {
   const marked_enable = config.marked.enable + '' == 'true' ? true : false
   const highlight_enable = config.highlight.enable + '' == 'true' ? true : false
 
-  data.stick = data.stick == 'true' ? true : false
-  data.master = data.master == 'true' ? true : false
-
   data.content = marked(data.content, marked_enable, highlight_enable)
 
   // 处理头像

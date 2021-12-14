@@ -1,10 +1,14 @@
 import { createApp } from 'vue'
 import Main from './Main.vue'
-import VisitStat from './lib/VisitStat'
+import VisitStat from './api/VisitStat'
+import RecentComment from './api/RecentComment'
+import CommentCount from './api/CommentCount'
 
 const Discuss = {
   init,
-  VisitStat
+  VisitStat,
+  RecentComment,
+  CommentCount
 }
 
 const defaultOptions = {

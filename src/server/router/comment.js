@@ -175,4 +175,52 @@ async function CommitComment(params) {
   return false
 }
 
-module.exports = { GetComment, CommitComment }
+// 获取最新评论
+async function RecentComment(params) {
+  const config = global.config
+  let query = { status: 'accept' }
+  if (params.reply === false) query.pid = ''
+
+  const comment = await Comment.find(query)
+    .sort({ created: -1 })
+    .limit(config.comment_count || 10)
+    .lean()
+
+  for (let item of comment) {
+    item = CommentHandler(item)
+  }
+
+  return comment
+}
+
+// 获取评论数
+async function CommentCount(params) {
+  VerifyParams(params, ['paths'])
+  if (!Array.isArray(params.paths)) return
+
+  // 处理index.html
+  const paths = params.paths.map((item) => IndexHandler(item))
+
+  // 处理查询项
+  const options = { path: { $in: paths } }
+  if (params.reply === false) options.pid = ''
+
+  const query = [
+    { $match: options },
+    { $group: { _id: '$path', count: { $sum: 1 } } }
+  ]
+  const resultArr = await Comment.aggregate(query)
+
+  // 格式化
+  const result = []
+  for (const item in paths) {
+    result.push({
+      path: paths[item],
+      count: resultArr[item] ? resultArr[item].count : 0
+    })
+  }
+
+  return result
+}
+
+module.exports = { GetComment, CommitComment, RecentComment, CommentCount }

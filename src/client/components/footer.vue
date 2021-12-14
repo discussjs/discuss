@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import VisitStat from '../lib/VisitStat'
+import VisitStat from '../api/VisitStat'
 
 import packages from '../../../package.json'
 const { version } = packages

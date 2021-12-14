@@ -6,8 +6,8 @@ const CounterSchema = new Schema(
   {
     time: { type: Number, default: 1, require: true },
     path: { type: String, default: '/', require: true },
-    createdDate: { type: Number, default: Date.now(), require: true },
-    updatedDate: { type: Number, default: Date.now(), require: true }
+    created: { type: Number, default: Date.now(), require: true },
+    updated: { type: Number, default: Date.now(), require: true }
   },
   { versionKey: false }
 )

@@ -7,7 +7,7 @@ async function Increasing(path) {
     { path },
     {
       $inc: { time: 1 },
-      $set: { updatedDate: Date.now() }
+      $set: { updated: Date.now() }
     }
   )
   if (result.matchedCount) return true
