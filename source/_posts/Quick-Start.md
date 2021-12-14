@@ -67,7 +67,13 @@ DISCUSS_SECRET='Discuss'
   ...
   <div id="Discuss-Comments"></div>
   <script>
-    Discuss({
+    // < 0.0.9 之前
+    // Discuss({
+    //   el: '#Discuss-Comments',
+    //   serverURL: '', // 服务端部署地址
+    // });
+    // > 0.0.9之后
+    Discuss.init({
       el: '#Discuss-Comments',
       serverURL: '', // 服务端部署地址
     });
