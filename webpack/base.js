@@ -1,34 +1,68 @@
 const webpack = require('webpack')
 const { join } = require('path')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
-// 最新的 vue-loader 中，VueLoaderPlugin 插件的位置有所改变
 const { VueLoaderPlugin } = require('vue-loader')
+
+const cleanCssLoader = {
+  loader: 'clean-css-loader',
+  options: {
+    skipWarn: false,
+    compatibility: 'ie9',
+    level: 2,
+    inline: ['remote']
+  }
+}
+
+const postCssLoader = {
+  loader: 'postcss-loader',
+  options: {
+    postcssOptions: {
+      plugins: [['postcss-preset-env']]
+    }
+  }
+}
 
 module.exports = {
   entry: join(__dirname, '../src/client/main.js'),
   output: {
     path: join(__dirname, '../dist'),
     filename: './Discuss.js',
+    chunkFilename: '[name].Discuss.js',
     libraryTarget: 'umd'
   },
   module: {
     rules: [
       {
         test: /\.vue$/,
-        use: ['vue-loader']
-      },
-      {
-        test: /\.css$/,
-        use: ['style-loader', 'css-loader']
+        loader: 'vue-loader'
       },
       {
         test: /\.svg$/,
-        loader: 'svg-inline-loader'
+        loader: 'svg-inline-loader',
+        options: {
+          removeSVGTagAttrs: false
+        }
       },
       {
         test: /\.js$/,
         exclude: /node_modules/, // 不编译node_modules下的文件
-        loader: 'babel-loader'
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: [['@babel/preset-env']],
+            plugins: ['@babel/plugin-transform-runtime']
+          }
+        }
+      },
+      {
+        test: /\.(css|scss)$/,
+        use: [
+          'style-loader',
+          'css-loader',
+          cleanCssLoader,
+          postCssLoader,
+          'sass-loader'
+        ]
       }
     ]
   },

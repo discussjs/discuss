@@ -9,16 +9,26 @@ vercel.json
 .vscode
 
 # project file
+node_modules
+docs
+public/index.html
 src/client
+
+.editorconfig
 .env
 .env.example
-node_modules
-package-lock.json
-babel.config.js
-.prettierrc.yml
-.editorconfig
+
+.eslintignore
+.eslintrc.yml
+
 .gitignore
-public/index.html
+
+.npmignore
+
+.prettierignore
+.prettierrc.yml
+
+package-lock.json
 
 # webpack
 webpack

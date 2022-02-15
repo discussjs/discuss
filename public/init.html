@@ -1,6 +1,7 @@
 <style>
   body {
-    background-color: #eaeaea;
+    color: #fff;
+    background: #13111c;
   }
 
   .title {
@@ -17,9 +18,7 @@
     margin-left: -10rem;
     padding: 1rem;
     width: 20rem;
-    background: #fff;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
+    background: #1f1c2c;
     box-sizing: border-box;
     border-radius: 10px;
   }
@@ -32,24 +31,30 @@
 
   input {
     border: 1px solid #000;
-    background-color: rgba(255, 255, 255, 0.2);
+    background: 0;
     border-radius: 3px;
     margin: 0 auto 10px;
-    box-sizing: content-box;
     display: block;
     text-align: center;
     font-weight: 300;
     appearance: none;
     outline: 0;
     padding: 10px 15px;
-    width: 250px;
     font-size: 18px;
-    transition-duration: 0.25s;
+
+    width: 100%;
+    color: #fff;
+    border: 1px solid #33323e;
+  }
+
+  input[type='button'] {
+    background: #f4645f;
+    opacity: 0.9;
   }
 
   input[type='button']:hover {
     cursor: pointer;
-    background-color: #f0f0f0;
+    opacity: 1;
   }
 
   input[disabled]:hover {
@@ -71,47 +76,58 @@
     animation-direction: normal;
     animation-fill-mode: none;
   }
+
   @keyframes shake-horizontal {
     0% {
       -webkit-transform: translateX(0);
       transform: translateX(0);
     }
+
     10% {
       -webkit-transform: translateX(-10px);
       transform: translateX(-10px);
     }
+
     20% {
       -webkit-transform: translateX(10px);
       transform: translateX(10px);
     }
+
     30% {
       -webkit-transform: translateX(-10px);
       transform: translateX(-10px);
     }
+
     40% {
       -webkit-transform: translateX(10px);
       transform: translateX(10px);
     }
+
     50% {
       -webkit-transform: translateX(-10px);
       transform: translateX(-10px);
     }
+
     60% {
       -webkit-transform: translateX(10px);
       transform: translateX(10px);
     }
+
     70% {
       -webkit-transform: translateX(-10px);
       transform: translateX(-10px);
     }
+
     80% {
       -webkit-transform: translateX(8px);
       transform: translateX(8px);
     }
+
     90% {
       -webkit-transform: translateX(-8px);
       transform: translateX(-8px);
     }
+
     100% {
       -webkit-transform: translateX(0);
       transform: translateX(0);
@@ -156,25 +172,30 @@
 
 <div class="init">
   <div class="title">Init Discuss</div>
-  <div class="description">初始化管理员身份</div>
+  <div class="description">Initialize administrator identity</div>
   <div class="login-status"></div>
   <ul class="init-info">
     <div class="input">
       <li>
-        <input placeholder="用户名" type="text" id="name" />
+        <input placeholder="Username" type="text" id="name" />
       </li>
       <li>
-        <input placeholder="密码" type="password" id="password" />
+        <input placeholder="Password" type="password" id="password" />
       </li>
       <li>
-        <input placeholder="确认密码" type="password" id="confirm" />
+        <input placeholder="Confirm Password" type="password" id="confirm" />
       </li>
       <li>
-        <input placeholder="邮件地址" type="email" id="mail" />
+        <input placeholder="Mail" type="email" id="mail" />
       </li>
     </div>
     <li>
-      <input type="button" class="submit" onclick="FormSubmit()" value="提交" />
+      <input
+        type="button"
+        class="submit"
+        onclick="FormSubmit()"
+        value="Submit"
+      />
     </li>
   </ul>
 </div>
@@ -195,7 +216,7 @@
       password === confirm &&
       reg.test(mail)
     if (isConform) {
-    submit.setAttribute('disabled', '')
+      submit.setAttribute('disabled', '')
       const { data: isInit } = await ajax({
         url: '/',
         data: {

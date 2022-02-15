@@ -1,4 +1,4 @@
-import request from '../lib/request'
+import request from 'xhr-ajax'
 
 /**
  * 访问量统计
@@ -13,6 +13,7 @@ async function VisitStat(url, path) {
 
   const options = {
     url,
+    method: 'post',
     data: {
       type: 'COUNTER',
       path

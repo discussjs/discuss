@@ -1,23 +1,24 @@
 const Comment = require('../database/mongoose/model/Comment')
-const axios = require('axios')
-const bcrypt = require('bcrypt')
 const { VerifyToken } = require('../utils/adminUtils')
 const {
   WordNumberLimit,
   WordNumberExceed,
+  SendMailHandler,
   GetCommentCounts,
   limitPageNo,
   GetReplyComment,
   limitFilter,
   CommentHandler,
+  VerufyMailANDSite,
   CommitCommentHandler
 } = require('../utils/commentUtils')
 const { IndexHandler, DeepColne, VerifyParams, akismet } = require('../utils')
 
+/* eslint-disable max-statements  */
 // 获取评论
 async function GetComment(params) {
   const config = global.config
-  const comment_count = config.comment_count
+  const commentCount = config.commentCount
   // 处理index.html
   params.path = IndexHandler(params.path)
 
@@ -27,25 +28,32 @@ async function GetComment(params) {
     pid: '',
     path,
     status: 'accept',
-    stick: { $ne: 'true' }
+    stick: { $ne: true }
   }
 
-  // 查询置顶评论
+  /*
+  查询置顶评论
+  只有在第一页的时候才会查询置顶评论(只查询一次置顶评论)
+  一次性查出所有置顶评论
+  */
   let commentsTop = []
-  if (pageNo == 1) {
+  if (pageNo === 1) {
     const optionsTop = DeepColne(options)
-    optionsTop.stick = 'true'
-    commentsTop = await Comment.find(optionsTop).lean()
+    optionsTop.stick = true
+    commentsTop = await Comment.find(optionsTop).sort({ created: -1 }).lean()
   }
 
-  const counts = await GetCommentCounts(options)
+  // 获取通过审核的评论数
+  const optionsCount = DeepColne(options)
+  delete optionsCount.stick
+  const counts = await GetCommentCounts(optionsCount)
 
   // 限制页码
-  const { page, pageCount } = await limitPageNo(pageNo, comment_count, options)
+  const { page, pageCount } = await limitPageNo(pageNo, commentCount, options)
 
   const comments = await Comment.find(options)
-    .skip((page - 1) * comment_count)
-    .limit(comment_count)
+    .skip((page - 1) * commentCount)
+    .limit(commentCount)
     .sort({ created: -1 })
     .lean()
 
@@ -53,33 +61,15 @@ async function GetComment(params) {
   const newComments = [...commentsTop, ...comments]
 
   // 置顶评论和普通评论一起查询回复评论
-  const commentsReply = await GetReplyComment(newComments)
+  const commentsAll = await GetReplyComment(newComments)
 
-  // 合并评论所有
-  const commentsAll = [...commentsTop, ...comments, ...commentsReply]
-
-  const wordNumber = WordNumberLimit(config.word_number)
-
-  const markedOptions = {}
-  const highlightOptions = {}
-  markedOptions.enable = config.marked.enable + '' == 'true' ? true : false
-  markedOptions.source = config.marked.source
-  highlightOptions.enable =
-    config.highlight.enable + '' == 'true' ? true : false
-  highlightOptions.source = config.highlight.source
-  highlightOptions.theme = config.highlight.theme
-
-  for (let item of commentsAll) {
-    item = CommentHandler(item)
-  }
+  const wordNumber = WordNumberLimit(config.wordNumber)
 
   const result = {
-    comments: commentsAll,
+    comments: CommentHandler(commentsAll),
     counts,
     pageCount,
-    wordNumber,
-    marked: markedOptions,
-    highlight: highlightOptions
+    wordNumber
   }
 
   return result
@@ -89,91 +79,57 @@ async function GetComment(params) {
 async function CommitComment(params) {
   // 验证评论信息是否合法
   VerifyParams(params, ['nick', 'mail', 'content', 'ua', 'path'])
+  // 验证邮箱和网址是否正确
+  VerufyMailANDSite(params.mail, params.site)
+
+  // 查询rid是否存在
+  const RplayComment = await Comment.findById(params.rid)
 
   const config = global.config
 
+  // 验证token是否正确
   const token = await VerifyToken(params.token)
-
-  if (!token) {
-    // 字数限制
-    const paramsWordNumber = {
-      content: params.content.length,
-      nick: params.nick.lenth,
-      mail: params.mail.length,
-      site: params.site.length
-    }
-    const isExceed = WordNumberExceed(config.word_number, paramsWordNumber)
-    if (isExceed) return '字数超出规定范围'
-  }
-
-  // 判断是否使用博主身份评论
-  const isAdmin = !token && config.mail === params.mail
-  if (isAdmin) return '请先登录，再使用博主身份评论'
-
-  // ip 限流
-  await limitFilter(params.ip)
-
-  const akismetData = {
-    ip: params.ip,
-    name: params.nick,
-    email: params.mail,
-    content: params.content,
-    url: params.site,
-    type: params.rid ? 'reply' : 'comment',
-    useragent: params.ua
-  }
 
   if (token) params.status = 'accept'
   else {
-    params.status = await akismet(config.akismet, config.site_url, akismetData)
+    // 判断是否使用博主身份评论
+    const isAdminStr = 'Please log in and then use the admin email to comment'
+    if (config.mail === params.mail) throw new Error(isAdminStr)
+    // ip 限流
+    await limitFilter(params.ip)
+    // 字数限制
+    const isExceed = WordNumberExceed(config.wordNumber, params)
+    if (isExceed) throw new Error('Word count exceeds the specified range !')
+
+    const akismetData = {
+      ip: params.ip,
+      name: params.nick,
+      email: params.mail,
+      content: params.content,
+      url: params.site,
+      type: params.rid ? 'reply' : 'comment',
+      useragent: params.ua
+    }
+    params.status = await akismet(config.akismet, config.siteUrl, akismetData)
   }
 
-  const data = await CommitCommentHandler(params, token)
+  const data = await CommitCommentHandler(params)
+
+  // 如果是回复评论则写入回复评论的昵称
+  if (RplayComment) data.rnick = RplayComment.nick
 
   // 保存评论
   const result = await new Comment(data).save()
 
-  // 发送邮件通知请求
-  try {
-    // 验证邮件配置是否完整
-    VerifyParams(config, [
-      'mail_host',
-      'mail_port',
-      'mail_from',
-      'mail_accept',
-      'master_subject',
-      'reply_subject'
-    ])
-
-    data.type = 'PUSH_MAIL'
-
-    // 加密生成token
-    const encrypted = config.username + config.password + config.mail
-    data.token = bcrypt.hashSync(encrypted, 10)
-
-    const serverURLs = config.serverURLs
-    if (serverURLs) {
-      await Promise.race([
-        axios({
-          url: serverURLs,
-          data,
-          method: 'post',
-          headers: { origin: config.site_url }
-        }),
-        new Promise((resolve) => setTimeout(resolve, 500)) // 延迟0.5s后继续向下执行，不在等待
-      ])
-    }
-  } catch (error) {
-    console.log('Mail ERROR: 邮箱配置信息错误')
-    console.log('邮箱错误配置详细:', error)
-  }
+  await SendMailHandler(config, data)
 
   delete data.token
   delete data.type
 
-  if (result) return CommentHandler(data)
+  if (result) return CommentHandler([data])
   return false
 }
+/* eslint-enable max-statements */
 
 // 获取最新评论
 async function RecentComment(params) {
@@ -183,7 +139,7 @@ async function RecentComment(params) {
 
   const comment = await Comment.find(query)
     .sort({ created: -1 })
-    .limit(config.comment_count || 10)
+    .limit(config.commentCount || 10)
     .lean()
 
   for (let item of comment) {

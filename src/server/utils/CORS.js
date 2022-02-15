@@ -7,18 +7,14 @@ async function CORSHandler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*')
   res.setHeader('Access-Control-Allow-Methods', 'POST')
   res.setHeader('Content-Type', 'application/json; charset=utf-8')
-  res.setHeader(
-    'Access-Control-Allow-Headers',
-    'Origin,X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
-  )
 
   if (!domain) return false
 
   // 获取请求域名(去除协议)
   let origin = req.headers.origin
-  if (origin) origin = origin.replace(/^http(s)?:\/\//, '').replace(/\/$/, '')
+  if (origin) origin = origin.replace(/^https?:\/\//, '').replace(/\/$/, '')
 
-  const isDomain = domain.indexOf(origin) != -1
+  const isDomain = domain.indexOf(origin) !== -1
 
   return !isDomain
 }

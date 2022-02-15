@@ -1,11 +1,12 @@
+const bcrypt = require('bcrypt')
+const axios = require('axios')
 const Comment = require('../database/mongoose/model/Comment')
 const {
   XSS,
   GetAvatar,
   DeepColne,
   IndexHandler,
-  marked,
-  timeAgo
+  VerifyParams
 } = require('./index')
 
 /**
@@ -14,21 +15,30 @@ const {
  * @returns {Object}
  */
 function WordNumberLimit(configWordNumber) {
-  let [contentWordNumber, nickWordNumber, mailWordNumber, siteWordNumber] =
-    configWordNumber.split(',').map((item) => parseInt(item))
+  let [content, nick, mail, site] = configWordNumber
+    .split(',')
+    .map((item) => parseInt(item))
 
-  contentWordNumber = contentWordNumber || 0
-  nickWordNumber = nickWordNumber || 0
-  mailWordNumber = mailWordNumber || 0
-  siteWordNumber = siteWordNumber || 0
+  nick = nick || 0
+  mail = mail || 0
+  site = site || 0
+  content = content || 0
 
   return {
-    contentWordNumber,
-    nickWordNumber,
-    mailWordNumber,
-    siteWordNumber
+    nick,
+    mail,
+    site,
+    content
   }
 }
+
+/* eslint-disable no-console */
+function WordExceedsOutput(text, content, wordNumber) {
+  console.log(text + ' word count:', content)
+  console.log(text + ' specified word count:', wordNumber)
+  console.log(text + ' exceeds word count:', content - wordNumber)
+}
+/* eslint-enable no-console */
 
 /**
  * 字数是否超出范围
@@ -36,42 +46,90 @@ function WordNumberLimit(configWordNumber) {
  * @param {Object} paramsWordNumber
  * @returns {Boolean}
  */
-function WordNumberExceed(configWordNumber, paramsWordNumber) {
-  const { contentWordNumber, nickWordNumber, mailWordNumber, siteWordNumber } =
-    WordNumberLimit(configWordNumber)
-  const { content, nick, mail, site } = paramsWordNumber
+/* eslint-disable max-statements */
+function WordNumberExceed(configWordNumber, params) {
+  // 自定义限制字数
+  const {
+    nick: nickWordNumber,
+    mail: mailWordNumber,
+    site: siteWordNumber,
+    content: contentWordNumber
+  } = WordNumberLimit(configWordNumber)
 
-  const contentExceed = contentWordNumber && content > contentWordNumber
+  // 实际输入字数
+  const nick = params.nick.length
+  const mail = params.mail.length
+  const site = params.site.length
+
+  // 去除规定的表情包表情包(img)标签
+  // 进行字数判断是否超出指定范围
+  /* eslint-disable max-len */
+  const regImage =
+    /<img class=(['"]?)D-comment-emot\1 src=\1([^'"]*)\1 alt=(['"]?)([^'"]*)\1\/?>/g
+  /* eslint-enable max-len */
+
+  const emotLen = params.content.match(regImage)?.length
+
+  const errorEmotStr = 'The number of emoji packs exceeds the specified range'
+  if (emotLen > 20) throw new Error(errorEmotStr)
+
+  const content = params.content.replace(regImage, '').length
+
   const nickExceed = nickWordNumber && nick > nickWordNumber
   const mailExceed = mailWordNumber && mail > mailWordNumber
   const siteExceed = siteWordNumber && site > siteWordNumber
+  const contentExceed = contentWordNumber && content > contentWordNumber
 
-  // #region 内容超出输出日志
-  if (contentExceed) {
-    console.log('内容字数:', content)
-    console.log('内容规定字数:', contentWordNumber)
-    console.log('内容超出字数:', content - contentWordNumber)
-  }
-  if (nickExceed) {
-    console.log('昵称字数:', content)
-    console.log('昵称规定字数:', nickExceed)
-    console.log('昵称超出字数:', content - nickExceed)
-  }
-  if (mailExceed) {
-    console.log('邮箱字数:', content)
-    console.log('邮箱规定字数:', mailExceed)
-    console.log('邮箱超出字数:', content - mailExceed)
-  }
-  if (siteExceed) {
-    console.log('网址字数:', content)
-    console.log('网址规定字数:', siteExceed)
-    console.log('网址超出字数:', content - siteExceed)
-  }
-  // #endregion
+  if (contentExceed) WordExceedsOutput('Content', content, contentWordNumber)
+  if (nickExceed) WordExceedsOutput('Nickname', nick, nickWordNumber)
+  if (mailExceed) WordExceedsOutput('Mail', mail, mailWordNumber)
+  if (siteExceed) WordExceedsOutput('Site', site, siteWordNumber)
 
   const condition = contentExceed || nickExceed || mailExceed || siteExceed
 
   return condition
+}
+/* eslint-enable max-statements */
+
+async function SendMailHandler(config, data) {
+  // 发送邮件通知请求
+  try {
+    // 验证邮件配置是否完整
+    VerifyParams(config, [
+      'mailHost',
+      'mailPort',
+      'mailFrom',
+      'mailAccept',
+      'masterSubject',
+      'replySubject'
+    ])
+
+    data.type = 'PUSH_MAIL'
+
+    // 加密生成token
+    const encrypted = config.username + config.password + config.mail
+    data.token = bcrypt.hashSync(encrypted, 10)
+
+    const serverURLs = config.serverURLs
+    if (serverURLs) {
+      await Promise.race([
+        axios({
+          url: serverURLs,
+          data,
+          method: 'post',
+          headers: { origin: config.siteUrl }
+        }),
+        new Promise((resolve) => setTimeout(resolve, 500)) // 延迟0.5s后继续向下执行，不在等待
+      ])
+    }
+  } catch (error) {
+    /* eslint-disable no-console */
+    console.error(
+      'Mail ERROR: Mail configuration information error cancel sending emails'
+    )
+    console.error(error)
+    /* eslint-enable no-console */
+  }
 }
 
 /**
@@ -85,8 +143,8 @@ async function UpdateComment(arr, exec, comment) {
   let data = { status: exec }
 
   // 修改为置顶
-  if (exec == 'stick') data = { stick: true }
-  if (exec == 'unstick') data = { stick: false }
+  if (exec === 'stick') data = { stick: true }
+  if (exec === 'unstick') data = { stick: false }
   // 判断是否为编辑的评论
   if (comment) data = comment
 
@@ -100,22 +158,28 @@ async function DeleteComment(arr) {
 
 // token 正确则不查询回复评论了
 async function GetReplyComment(comments) {
-  const commentsReply = []
   for (const item of comments) {
     const id = item._id.toString() // toString 将 new ObjectId() 转换为 id
     const replys = await Comment.find({ pid: id }).lean()
-    commentsReply.push(...replys)
+    // 处理回复评论
+    item.replys = CommentHandler(replys)
   }
-  return commentsReply
+  return comments
 }
 
-async function GetCommentCounts(options) {
-  const newOptions = DeepColne(options)
+/**
+ * 查询数量
+ * @param {Object} options json选项
+ * @param {Boolean} isClone 是否克隆 default: true
+ * @returns {Number}
+ */
+async function GetCommentCounts(options, isClone = true) {
+  const newOptions = isClone ? DeepColne(options) : options
   delete newOptions.pid
-  delete newOptions.stick
 
-  // 查询改path的所有评论(包含：父评论、子评论、置顶评论)
+  // 查询path的所有评论(包含：父评论、子评论、置顶评论)
   const counts = await Comment.find(newOptions).countDocuments().lean()
+
   return counts
 }
 
@@ -134,34 +198,46 @@ async function limitPageNo(page, pageSize, options) {
   return { page, pageCount }
 }
 
-function CommentHandler(data) {
-  const config = global.config
-  const avatarCdn = config.avatar_cdn
-  const marked_enable = config.marked.enable + '' == 'true' ? true : false
-  const highlight_enable = config.highlight.enable + '' == 'true' ? true : false
-
-  data.content = marked(data.content, marked_enable, highlight_enable)
-
-  // 处理头像
-  if (!/^http/.test(data.avatar)) {
-    data.avatar = avatarCdn + data.avatar
-  }
-
-  data.time = timeAgo(data.created)
-
-  // 删除多余信息
-  delete data.ip
-  delete data.mail
-  delete data.path
-  delete data.ua
-  delete data.status
-  delete data.created
-  delete data.updated
-
-  return data
+// 删除多余信息
+function DeleteRedundant(comment) {
+  delete comment.ip
+  delete comment.mail
+  delete comment.path
+  delete comment.ua
+  delete comment.status
+  delete comment.created
+  delete comment.updated
 }
 
-async function CommitCommentHandler(params, token) {
+function CommentHandler(comments) {
+  const config = global.config
+  const obj = {}
+  for (let comment of comments) {
+    const avatarCdn = config.avatarCdn
+
+    if (comment.mail === config.mail) comment.master = true
+
+    // 处理头像
+    if (!/^http/.test(comment.avatar)) {
+      comment.avatar = avatarCdn + comment.avatar
+    }
+
+    if (comment.replys) {
+      obj[comment._id] = comment
+      for (const reply of comment.replys) {
+        obj[reply._id] = reply
+        reply.rnick = obj[reply.rid].nick
+      }
+    }
+    comment.time = comment.created
+    DeleteRedundant(comment)
+  }
+  return comments
+}
+
+// 评论信息处理函数
+/* eslint-disable max-statements  */
+async function CommitCommentHandler(params) {
   const data = {}
   const timestamp = Date.now()
   const content = XSS(params.content)
@@ -170,9 +246,6 @@ async function CommitCommentHandler(params, token) {
   let path = IndexHandler(params.path)
 
   const avatar = await GetAvatar(params.mail)
-
-  // 验证是否是博主评论
-  if (token) data.master = true
 
   data.nick = params.nick
   data.mail = params.mail
@@ -189,6 +262,30 @@ async function CommitCommentHandler(params, token) {
   data.updated = updated
   return data
 }
+/* eslint-enable max-statements  */
+
+/**
+ * 验证邮箱和网站地址是否合法
+ * @param {*} mail 邮箱
+ * @param {*} site 网站
+ */
+function VerufyMailANDSite(mail, site) {
+  /*
+    source:
+        /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]{1,30}\.)+[A-Za-z\d]{2,5}$/
+  */
+  const redo = '[A-Za-z\\d]'
+  const domain = `(${redo}{1,30}\\.)+${redo}{2,5}$`
+  const mailReg = new RegExp(`^${redo}+([-_.]${redo}+)*@${domain}`)
+  const siteReg = new RegExp('^https?://' + domain)
+
+  const errorMail = 'Mail format does not meet the requirements!'
+  const errorSite = 'Site address format does not meet the requirements!'
+  if (!mailReg.test(mail)) throw new Error(errorMail)
+
+  const condition = site.length !== 0 && !siteReg.test(site)
+  if (condition) throw new Error(errorSite)
+}
 
 // 限流
 async function limitFilter(ip) {
@@ -203,7 +300,7 @@ async function limitFilter(ip) {
       created: { $gt: Date.now() - tenmin }
     })
     if (count >= limit) {
-      throw new Error('发言频率过高')
+      throw new Error('Commenting too frequently')
     }
   }
   // 10分钟内，所有的ip能评论多少条
@@ -212,7 +309,7 @@ async function limitFilter(ip) {
       created: { $gt: Date.now() - tenmin }
     })
     if (count >= limitAll) {
-      throw new Error('服务器繁忙，请稍后再试...')
+      throw new Error('Server is busy, please try again later...')
     }
   }
 }
@@ -220,6 +317,7 @@ async function limitFilter(ip) {
 module.exports = {
   WordNumberLimit,
   WordNumberExceed,
+  SendMailHandler,
   UpdateComment,
   DeleteComment,
   GetReplyComment,
@@ -227,5 +325,6 @@ module.exports = {
   limitPageNo,
   CommentHandler,
   CommitCommentHandler,
+  VerufyMailANDSite,
   limitFilter
 }

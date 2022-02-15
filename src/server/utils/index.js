@@ -1,37 +1,34 @@
-const GetUserIP = require('get-user-ip')
+const GetIP = require('get-user-ip')
 const { readFileSync, existsSync } = require('fs')
 const { join } = require('path')
-const timeAgo = require('./timeAgo')
 const CORS = require('./CORS')
 const VerifyParams = require('./verify')
 const akismet = require('./akismet')
-const marked = require('./marked')
 const XSS = require('./XSS')
 const GetAvatar = require('./avatar')
-const { HtmlMinify } = require('./minify')
-const { jwt_sign, jwt_verify } = require('./jwt')
+const HtmlMinify = require('./minify')
+const { jwtSign, jwtVerify } = require('./jwt')
+
+// 获取用户IP
+function GetUserIP(req) {
+  // 如果try没有报错返回try的return结果，反正返回方法底部的return结果
+  try {
+    // 获取自定义请求头IP，以逗号分隔为数组
+    const requestHeaders = global.config.requestHeaders || ''
+    const array = requestHeaders.split(',') || []
+
+    return GetIP(req, array)
+  } catch (error) {
+    // eslint-disable-next-line
+    console.log('GetUserIP:', error)
+  }
+  return GetIP(req)
+}
 
 function IndexHandler(params) {
   let path = params.replace(/(\/index\.html|\/)*$/gi, '')
-  if (path.length == 0) path += '/'
+  if (path.length === 0) path += '/'
   return path
-}
-
-// 获取请求数据
-async function GetPostData(req) {
-  return new Promise((resolve, reject) => {
-    req.on('data', (chunk) => {
-      resolve(JSON.parse(chunk))
-    })
-  })
-}
-
-//传入请求HttpRequest
-function GetClientIP(req) {
-  // 获取自定义请求头IP，以逗号分隔为数组
-  const request_headers = global.config.request_headers || ''
-  const headers = request_headers.split(',') || []
-  return GetUserIP(req, headers)
 }
 
 // 获取 favicon
@@ -39,25 +36,21 @@ function GetFavicon() {
   let path = join(process.cwd(), 'favicon.ico')
   if (!existsSync(path)) path = join(__dirname, '../../../public/favicon.ico')
   if (!existsSync(path)) return false
-  const content = readFileSync(path, 'binary')
-  return content
+  return readFileSync(path, 'binary')
 }
 
 // 设置 favicon
-function SetFavicon(req, res) {
-  if (req.url === '/favicon.ico') {
-    const content = GetFavicon()
-    if (!content) return false
-    res.setHeader('Content-Type', 'image/x-icon')
-    res.write(content, 'binary')
-    res.end()
-    return true
-  }
+function SetFavicon(res) {
+  const content = GetFavicon()
+  if (!content) return false
+  res.setHeader('Content-Type', 'image/x-icon')
+  res.write(content, 'binary')
+  return content
 }
 
-function Discussjs() {
-  const path = join(__dirname, '../../../dist/Discuss.js')
-  if (!existsSync(path)) return '这里什么都没有哦 OwO !'
+function Discussjs(url) {
+  const path = join(__dirname, '../../../dist', url)
+  if (!existsSync(path)) return false
   return readFileSync(path, { encoding: 'utf-8' })
 }
 
@@ -68,9 +61,8 @@ function DeepColne(options = {}) {
 }
 
 module.exports = {
+  GetUserIP,
   IndexHandler,
-  GetPostData,
-  GetClientIP,
   GetFavicon,
   SetFavicon,
   Discussjs,
@@ -78,11 +70,9 @@ module.exports = {
   CORS,
   VerifyParams,
   akismet,
-  jwt_sign,
-  jwt_verify,
-  marked,
+  jwtSign,
+  jwtVerify,
   XSS,
   GetAvatar,
-  timeAgo,
   HtmlMinify
 }

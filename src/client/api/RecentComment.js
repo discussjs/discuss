@@ -1,4 +1,4 @@
-import request from '../lib/request'
+import request from 'xhr-ajax'
 
 /**
  * 获取最新评论
@@ -10,6 +10,7 @@ async function RecentComment(url, reply) {
   if (!url) return
   const options = {
     url,
+    method: 'post',
     data: {
       type: 'RECENT_COMMENT',
       reply

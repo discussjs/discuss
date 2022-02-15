@@ -1,9 +1,9 @@
 /**
- *
+ * 图片懒加载
  * @param {*} img 需要懒加载的img元素(标签)
  * @param {*} attr 图片的真实url地址
  */
-export default function lazyload(img, attr) {
+export default (img = 'img[d-src]', attr = 'd-src') => {
   const imgLazyLoad = document.querySelectorAll(img)
   imgLazyLoad.forEach((target) => {
     const io = new IntersectionObserver((entries, Observer) => {

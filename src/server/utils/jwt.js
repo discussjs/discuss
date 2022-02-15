@@ -1,14 +1,15 @@
 const jwt = require('jsonwebtoken')
 
+/* eslint-disable max-len , no-console */
 module.exports = {
   /**
    * 将给定的签名和密钥计算出加密令牌字符串
-   * @param {} payload Payload to sign, could be an literal, buffer or string
+   * @param {*} payload Payload to sign, could be an literal, buffer or string
    * @param {*} secretOrPrivateKey Either the secret for HMAC algorithms, or the PEM encoded private key for RSA and ECDSA.
    * @param {*} options Options for the signature
    * @returns The JSON Web Token string
    */
-  jwt_sign(payload, secretOrPrivateKey, options) {
+  jwtSign(payload, secretOrPrivateKey, options) {
     return jwt.sign(payload, secretOrPrivateKey, options)
   },
   /**
@@ -19,15 +20,15 @@ module.exports = {
    * secretOrPublicKey can be a function that should fetch the secret or public key
    * @returns
    */
-  jwt_verify(token, secretOrPublicKey) {
+  jwtVerify(token, secretOrPublicKey) {
     return jwt.verify(token, secretOrPublicKey, (err, decoded) => {
       if (err) {
-        console.log('Token异常:', err)
+        console.log('Token exception')
         switch (err.name) {
           case 'TokenExpiredError':
-            return { msg: 'token过期' }
+            return { msg: 'Token overdue' }
           case 'JsonWebTokenError':
-            return { msg: 'token无效' }
+            return { msg: 'Token invalid' }
         }
       }
       return decoded

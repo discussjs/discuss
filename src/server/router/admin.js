@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt')
 const { existsSync } = require('fs')
 const { join } = require('path')
-const { jwt_sign, jwt_verify, DeepColne } = require('../utils')
+const { jwtSign, DeepColne } = require('../utils')
 const Admin = require('../database/mongoose/model/Admin')
 const Comment = require('../database/mongoose/model/Comment')
 
@@ -12,7 +12,7 @@ const {
   DeleteComment,
   UpdateComment
 } = require('../utils/commentUtils')
-const { marked, timeAgo, HtmlMinify, VerifyParams } = require('../utils')
+const { HtmlMinify, VerifyParams } = require('../utils')
 
 /**
  * 初始化
@@ -47,8 +47,8 @@ async function Login(params) {
   // 判断token是否有效
   if (token) {
     const isToken = await VerifyToken(token)
-    if (!isToken) throw new Error('Token已过期')
-    result.token = isToken
+    if (!isToken) throw new Error('Token expired')
+    result.token = token
     return result
   }
 
@@ -58,12 +58,9 @@ async function Login(params) {
   const isUsername = username === config.username
   const isPassword = bcrypt.compareSync(password, config.password)
   // 用户名密码是否正确
-  if (!isUsername || !isPassword) throw new Error('用户名或密码错误')
+  if (!isUsername || !isPassword) throw new Error('User name or password error')
 
-  if (isPassword) {
-    result.token = jwt_sign({ id: config._id }, SECRET, { expiresIn: '7d' })
-    return result
-  }
+  result.token = jwtSign({ id: config._id }, SECRET, { expiresIn: '7d' })
   return result
 }
 
@@ -87,6 +84,32 @@ async function InitPage(req, res) {
 }
 
 /**
+ * 模糊多条件查询
+ * @param {*} options
+ * @param {*} keyword
+ * @param {*} searchType
+ * @returns
+ */
+function FuzzyQueries(options, keyword, searchType) {
+  if (!keyword) return
+  const reg = new RegExp(keyword, 'i')
+  if (searchType !== 'all') {
+    options[searchType] = reg
+  } else {
+    options.$or = [
+      //多条件，数组
+      { nick: { $regex: reg } },
+      { mail: { $regex: reg } },
+      { site: { $regex: reg } },
+      { ip: { $regex: reg } },
+      { content: { $regex: reg } },
+      { path: { $regex: reg } }
+    ]
+  }
+}
+
+/* eslint-disable max-statements */
+/**
  * 管理员获取评论
  * @param {Object} params
  * @returns
@@ -95,15 +118,15 @@ async function AdminGetComments(params) {
   const config = global.config
 
   const token = await VerifyToken(params.token)
-  if (!token) return false
+  if (!token) throw new Error('Token exception')
 
   let { pageSize } = params
-  if (!pageSize) pageSize = config.comment_count
-  const { pageNo, keyword, status, current, path } = params
+  if (!pageSize) pageSize = config.commentCount
+  const { pageNo, keyword, searchType, status, path } = params
 
-  const options = { keyword, status }
+  const options = { status }
 
-  if (current) {
+  if (status === 'current') {
     options.path = path
     delete options.status
   }
@@ -111,10 +134,13 @@ async function AdminGetComments(params) {
   // 查询博主评论
   if (status === 'master') {
     delete options.status
-    options.master = 'true'
+    options.mail = config.mail
   }
 
-  const counts = await GetCommentCounts(options)
+  // 模糊查询
+  FuzzyQueries(options, keyword, searchType)
+
+  const counts = await GetCommentCounts(options, false)
 
   // 限制页码
   const { page, pageCount } = await limitPageNo(pageNo, pageSize, options)
@@ -125,35 +151,14 @@ async function AdminGetComments(params) {
     .sort({ created: -1 })
     .lean()
 
-  const avatarCdn = config.avatar_cdn
-
-  const markedOptions = {}
-  const highlightOptions = {}
-  markedOptions.enable = config.marked.enable + '' == 'true' ? true : false
-  markedOptions.source = config.marked.source
-  highlightOptions.enable =
-    config.highlight.enable + '' == 'true' ? true : false
-  highlightOptions.source = config.highlight.source
-  highlightOptions.theme = config.highlight.theme
-
+  const avatarCdn = config.avatarCdn
   for (const item of comments) {
-    item.stick = item.stick == 'true' ? true : false
-    item.master = item.master == 'true' ? true : false
-
-    item.OriginalContent = item.content
-
-    item.content = marked(
-      item.content,
-      markedOptions.enable,
-      highlightOptions.enable
-    )
-
     // 处理头像
     if (!/^http/.test(item.avatar)) {
       item.avatar = avatarCdn + item.avatar
     }
 
-    item.time = timeAgo(item.created)
+    item.time = item.created
 
     // 删除多余信息
     delete item.status
@@ -166,6 +171,8 @@ async function AdminGetComments(params) {
   return result
 }
 
+/* eslint-enable max-statements  */
+
 /**
  * 操作评论
  * @param {Array} id
@@ -176,31 +183,23 @@ async function AdminGetComments(params) {
  */
 async function OperateComment({ id, exec, token, comment }) {
   // 判断是否为管理员身份
-  const isAdmin = await VerifyToken(token)
-  if (!isAdmin) return false
+  const isToken = await VerifyToken(token)
+  if (!isToken) throw new Error('Token exception')
 
   // 判断操作是否为删除，如果不是则为修改
-  if (exec == 'delete') return await DeleteComment(id)
+  if (exec === 'delete') return await DeleteComment(id)
 
   return await UpdateComment(id, exec, comment)
 }
 
 // 获取配置信息
-async function GetConfig(params) {
-  const token = await VerifyToken(params.token)
-  if (!token) return false
+async function GetConfig({ token }) {
+  const isToken = await VerifyToken(token)
+  if (!isToken) throw new Error('Token exception')
 
   const config = DeepColne(global.config)
   delete config._id
   delete config.password
-  config.marked_enable = config.marked.enable
-  config.marked_source = config.marked.source
-  config.highlight_enable = config.highlight.enable
-  config.highlight_source = config.highlight.source
-  config.highlight_theme = config.highlight.theme
-
-  delete config.marked
-  delete config.highlight
   return config
 }
 
@@ -208,29 +207,20 @@ async function GetConfig(params) {
 async function SaveConfig(params) {
   const { data, token } = params
 
+  const isToken = await VerifyToken(token)
+  if (!isToken) throw new Error('Token exception')
+
   // 修改密码处理
   if (data.password) data.password = bcrypt.hashSync(data.password, 10)
 
   // 转换为数字类型
   data.limit = parseInt(data.limit)
   data.limitAll = parseInt(data.limitAll)
-  data.comment_count = parseInt(data.comment_count)
-  data.site_url = data.site_url.replace(/\/$/, '')
+  data.commentCount = parseInt(data.commentCount)
+  data.siteUrl = data.siteUrl?.replace(/\/$/, '')
 
-  data.marked = {}
-  data.highlight = {}
-  data.marked.enable = data.marked_enable + '' == 'true' ? true : false
-  data.marked.source = data.marked_source
-  data.highlight.enable = data.highlight_enable + '' == 'true' ? true : false
-  data.highlight.source = data.highlight_source
-  data.highlight.theme = data.highlight_theme
-
-  const { id } = jwt_verify(token, SECRET)
-  if (id) {
-    await Admin.updateOne({ _id: id }, data)
-    return true
-  }
-  return false
+  const { _id } = global.config
+  await Admin.updateOne({ _id }, data)
 }
 
 module.exports = {

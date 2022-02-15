@@ -25,6 +25,4 @@ function HtmlMinify(path) {
   return minify(content, options)
 }
 
-module.exports = {
-  HtmlMinify
-}
+module.exports = HtmlMinify

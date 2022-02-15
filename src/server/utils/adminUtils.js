@@ -1,5 +1,5 @@
 const Admin = require('../database/mongoose/model/Admin')
-const { jwt_verify } = require('./jwt')
+const { jwtVerify } = require('./jwt')
 
 const SECRET = process.env.DISCUSS_SECRET || 'Discuss'
 
@@ -19,7 +19,7 @@ async function isInit() {
  * @returns
  */
 async function VerifyToken(token) {
-  const { msg, id } = jwt_verify(token, SECRET)
+  const { msg, id } = jwtVerify(token, SECRET)
   if (msg) return false
   if (id) {
     const condition = id === global.config._id.toString()
@@ -28,27 +28,4 @@ async function VerifyToken(token) {
   }
 }
 
-// 后台查询评论
-async function AdminGetComments(params) {
-  const { token, status, keyword } = params
-  const options = { status: 'accept' }
-
-  // 如果token验证成功则可以定义查询评论状态
-  const isAdmin = await VerifyToken({ token })
-  if (isAdmin) {
-    options.status = status
-    const reg = new RegExp(keyword, 'i')
-    options['$or'] = [
-      //多条件，数组
-      { nick: { $regex: reg } },
-      { mail: { $regex: reg } },
-      { site: { $regex: reg } },
-      { ip: { $regex: reg } },
-      { content: { $regex: reg } },
-      { path: { $regex: reg } }
-    ]
-  }
-  return { options, isAdmin }
-}
-
-module.exports = { SECRET, isInit, VerifyToken, AdminGetComments }
+module.exports = { SECRET, isInit, VerifyToken }

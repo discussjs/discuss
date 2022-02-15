@@ -1,36 +1,110 @@
 <div
-  style="font-family: consolas, Menlo, pingfang sc, microsoft yahei, sans-serif;font-weight: bold;display: flex;justify-content: center;margin-top: 40px;">
+  style="
+    font-family: consolas, Menlo, pingfang sc, microsoft yahei, sans-serif;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+    word-break: break-word;
+    hyphens: auto;
+  "
+>
   <div
-    style="box-shadow:0 0 30px 0 rgb(219 216 214);border-radius:5px;border-left: 4px solid #e58a8a;border-right: 4px solid #e58a8a;width:640px;max-width:100%;">
-    <div style="line-height:180%;padding: 20px;color:#555;font-size:12px;margin-bottom:0;">
-      <h2 style="border-bottom:1px solid #ddd;font-size:14px;font-weight:400;padding-bottom: 14px;margin: 0;">
-        <span style="color:#e58a8a;font-weight:700">&gt;&gt;&gt; </span>
+    style="
+      box-shadow: 0 0 30px 0 rgb(219 216 214);
+      border-radius: 5px;
+      border-left: 4px solid #e58a8a;
+      border-right: 4px solid #e58a8a;
+      width: 640px;
+      max-width: 100%;
+    "
+  >
+    <div
+      style="
+        line-height: 180%;
+        padding: 20px;
+        color: #555;
+        font-size: 12px;
+        margin-bottom: 0;
+      "
+    >
+      <h2
+        style="
+          border-bottom: 1px solid #ddd;
+          font-size: 14px;
+          font-weight: 400;
+          padding-bottom: 14px;
+          margin: 0;
+        "
+      >
+        <span style="color: #e58a8a; font-weight: 700">&gt;&gt;&gt; </span>
         ${subject}
       </h2>
-      <div style="padding:0 12px 0 12px;margin-top:18px">
+      <div style="padding: 0 12px 0 12px; margin-top: 18px">
         <div>
           <p><strong>${nick}</strong> 评论：</p>
-          <div style="display: flex;margin-bottom: 5px">
-            <div style="width: auto;flex: none">
-              <img src="${avatar}" style="width: 40px;height: 40px;border-radius: 5px">
+          <div style="display: flex; margin-bottom: 5px">
+            <div style="width: auto; flex: none">
+              <img
+                src="${avatar}"
+                style="width: 40px; height: 40px; border-radius: 5px"
+              />
             </div>
-            <div style="position: relative;margin-left: 10px">
+            <div style="position: relative; margin-left: 10px">
               <span
-                style="width: 0;height: 0;border-top: 8px solid transparent;border-bottom: 8px solid transparent;border-right: 8px solid;border-right-color: #f4f4f4;left: -7px;right: auto;top: 12px;position: absolute">
+                style="
+                  width: 0;
+                  height: 0;
+                  border-top: 8px solid transparent;
+                  border-bottom: 8px solid transparent;
+                  border-right: 8px solid;
+                  border-right-color: #f1f3fa;
+                  left: -7px;
+                  right: auto;
+                  top: 6px;
+                  position: absolute;
+                "
+              >
               </span>
-              <div style="background-color:#f1f3fa;padding: 1px 10px;border-radius:9px;">${content}</div>
+              <div
+                style="
+                  background-color: #f1f3fa;
+                  padding: 4px 10px;
+                  border-radius: 9px;
+                "
+              >
+                ${content}
+              </div>
             </div>
           </div>
         </div>
         <p>其他信息：</p>
-        <p style="background-color:#f5f5f5;border:0 solid #ddd;padding:10px 15px;margin:18px 0">IP：${ip}
-          <br>邮箱：
+        <p
+          style="
+            background-color: #f5f5f5;
+            border: 0 solid #ddd;
+            padding: 10px 15px;
+            margin: 18px 0;
+          "
+        >
+          IP：${ip} <br />邮箱：
           <a href="mailto:${mail}">${mail}</a>
         </p>
       </div>
-      <div style="text-align:center">
-        <a style="text-decoration:none;color:#fff;background:#e58a8a;padding:5px 20px;border-radius:4px;margin-top:10px;"
-          href="${url}" target="_blank">查看</a>
+      <div style="text-align: center">
+        <a
+          style="
+            text-decoration: none;
+            color: #fff;
+            background: #e58a8a;
+            padding: 5px 20px;
+            border-radius: 4px;
+            margin-top: 10px;
+          "
+          href="${url}"
+          target="_blank"
+          >查看</a
+        >
       </div>
     </div>
   </div>

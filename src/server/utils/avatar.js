@@ -4,8 +4,7 @@ const md5 = require('md5')
 const QQMail = /^([1-9][0-9]{5,10})@qq.com$/i
 
 async function QQAvatar(mail) {
-  mail.replace(QQMail, '')
-  const QQ = RegExp.$1
+  const QQ = mail.match(QQMail)[1]
 
   let url = `https://ptlogin2.qq.com/getface?appid=1006102&uin=${QQ}&imgtype=3`
 
