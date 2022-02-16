@@ -1,6 +1,4 @@
 const bcrypt = require('bcrypt')
-const { existsSync } = require('fs')
-const { join } = require('path')
 const { jwtSign, DeepColne } = require('../utils')
 const Admin = require('../database/mongoose/model/Admin')
 const Comment = require('../database/mongoose/model/Comment')
@@ -12,7 +10,7 @@ const {
   DeleteComment,
   UpdateComment
 } = require('../utils/commentUtils')
-const { HtmlMinify, VerifyParams } = require('../utils')
+const { VerifyParams } = require('../utils')
 
 /**
  * 初始化
@@ -62,25 +60,6 @@ async function Login(params) {
 
   result.token = jwtSign({ id: config._id }, SECRET, { expiresIn: '7d' })
   return result
-}
-
-/**
- *  打开初始化页面(返回html页面)
- * @param {Request} req Request
- * @param {Response} res Response
- * @returns
- */
-async function InitPage(req, res) {
-  const isinit = await isInit()
-  if (isinit) return isinit
-
-  const path = join(__dirname, '../../../public/init.html')
-
-  if (!existsSync(path)) return true
-  const result = HtmlMinify(path)
-  res.setHeader('Content-Type', 'text/html; charset=utf-8')
-  res.end(result)
-  return false
 }
 
 /**
@@ -224,7 +203,6 @@ async function SaveConfig(params) {
 }
 
 module.exports = {
-  InitPage,
   init,
   Login,
   AdminGetComments,

@@ -3,9 +3,9 @@ const bodyData = require('body-data')
 const { join } = require('path')
 const { existsSync } = require('fs')
 const SendMail = require('../utils/Mail')
+const { isInit } = require('../utils/adminUtils')
 const {
   init,
-  InitPage,
   Login,
   AdminGetComments,
   GetConfig,
@@ -36,19 +36,23 @@ async function Resource(req, res) {
   // 设置favicon
   if (req.url === '/favicon.ico') return SetFavicon(res)
 
+  // 处理get请求
   if (req.method === 'GET') {
-    // true: 判断根目录是否存在index.html文件
-    //    有: 返回该文件页面
-    //    没有： 返回{msg:'Not Found'}
-    // false: 返回初始化页面
-    const isInit = await InitPage(req, res)
-    if (isInit) {
-      const path = join(process.cwd(), 'index.html')
-      if (!existsSync(path)) return JSON.stringify(NotFound)
-      const result = HtmlMinify(path)
+    // 判断是否已经初始化管理员用户，如果结果为false，则响应初始化页面
+    const is = await isInit()
+    if (!is) {
+      const path = join(__dirname, '../../../public/init.html')
+      const html = HtmlMinify(path)
       res.setHeader('Content-Type', 'text/html; charset=utf-8')
-      return result
+      return html
     }
+
+    // 如果已经初始化管理员用户，则查看根目录是否存在index.html文件
+    // 存在: 返回该html页面，不存在: 返回{msg:'Not Found'}
+    const path = join(process.cwd(), 'index.html')
+    if (!existsSync(path)) return JSON.stringify(NotFound)
+    res.setHeader('Content-Type', 'text/html; charset=utf-8')
+    return HtmlMinify(path)
   }
 }
 

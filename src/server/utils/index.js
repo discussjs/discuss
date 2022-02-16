@@ -14,8 +14,11 @@ function GetUserIP(req) {
   // 如果try没有报错返回try的return结果，反正返回方法底部的return结果
   try {
     // 获取自定义请求头IP，以逗号分隔为数组
-    const requestHeaders = global.config.requestHeaders || ''
-    const array = requestHeaders.split(',') || []
+    let requestHeaders
+    if (global && global.config) {
+      requestHeaders = global.config.requestHeaders || ''
+    }
+    const array = requestHeaders?.split(',') || []
 
     return GetIP(req, array)
   } catch (error) {
