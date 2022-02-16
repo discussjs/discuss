@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>API Docs</title>
+    <meta name="generator" content="VuePress 1.9.7">
+    <link rel="icon" href="/img/favicon.ico">
+    <meta name="description" content="Discuss 评论系统文档">
+    
+    <link rel="preload" href="/assets/css/0.styles.1a433fb1.css" as="style"><link rel="preload" href="/assets/js/app.29967ab9.js" as="script"><link rel="preload" href="/assets/js/6.e75f745a.js" as="script"><link rel="preload" href="/assets/js/2.9f8a3367.js" as="script"><link rel="preload" href="/assets/js/8.93adc059.js" as="script"><link rel="prefetch" href="/assets/js/10.808463ca.js"><link rel="prefetch" href="/assets/js/11.891dc90e.js"><link rel="prefetch" href="/assets/js/12.0dc2104c.js"><link rel="prefetch" href="/assets/js/13.b7b5e1dc.js"><link rel="prefetch" href="/assets/js/3.fb243ef2.js"><link rel="prefetch" href="/assets/js/4.5915a6cb.js"><link rel="prefetch" href="/assets/js/5.5cd78ba4.js"><link rel="prefetch" href="/assets/js/7.2fae852e.js"><link rel="prefetch" href="/assets/js/9.e8c8e855.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.1a433fb1.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/" class="home-link router-link-active"></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"> <a href="https://github.com/Lete114/Discuss" target="_blank" rel="noopener noreferrer" class="repo-link">
+    GitHub
+    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"> <a href="https://github.com/Lete114/Discuss" target="_blank" rel="noopener noreferrer" class="repo-link">
+    GitHub
+    <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></nav>  <ul class="sidebar-links"><li><a href="/" aria-current="page" class="sidebar-link">简介</a></li><li><a href="/Quick-Start.html" class="sidebar-link">快速开始</a></li><li><a href="/Get-MongoDB-DataBase.html" class="sidebar-link">获取 MongoDB 数据库</a></li><li><a href="/Vercel-ServerLess-Deploy.html" class="sidebar-link">部署 Vercel 无服务器平台</a></li><li><a href="/API-Docs.html" aria-current="page" class="active sidebar-link">API Docs</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/API-Docs.html#visit-stat" class="sidebar-link">Visit Stat</a></li><li class="sidebar-sub-header"><a href="/API-Docs.html#recent-comment" class="sidebar-link">Recent Comment</a></li><li class="sidebar-sub-header"><a href="/API-Docs.html#comment-count" class="sidebar-link">Comment Count</a></li><li class="sidebar-sub-header"><a href="/API-Docs.html#总结" class="sidebar-link">总结</a></li></ul></li><li><a href="/Hexo.html" class="sidebar-link">在 Hexo 中使用</a></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><p>Discuss API 与 Discuss 本身并没有直接的关系，你可以随时调用，并不需要初始化 Discuss 即可使用 API</p> <h2 id="visit-stat"><a href="#visit-stat" class="header-anchor">#</a> Visit Stat</h2> <p>访问量统计</p> <p>例子:</p> <div class="language-html line-numbers-mode"><pre class="language-html"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">&quot;</span>https://cdn.jsdelivr.net/npm/discuss@latest/dist/Discuss.js<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+  <span class="token comment">/**
+   * 访问量统计
+   * @param {String} url 请求地址
+   * @param {String} path 请求路径
+   * @returns {Number}
+   */</span>
+  Discuss<span class="token punctuation">.</span><span class="token function">VisitStat</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+    <span class="token literal-property property">url</span><span class="token operator">:</span> <span class="token string">&quot;&quot;</span><span class="token punctuation">,</span> <span class="token comment">// 服务端请求地址</span>
+    <span class="token literal-property property">path</span><span class="token operator">:</span> location<span class="token punctuation">.</span>pathname<span class="token punctuation">,</span> <span class="token comment">// 页面的唯一标识符</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">data</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 返回数量</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br></div></div><h2 id="recent-comment"><a href="#recent-comment" class="header-anchor">#</a> Recent Comment</h2> <p>获取最新评论</p> <p>例子:</p> <div class="language-html line-numbers-mode"><pre class="language-html"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">&quot;</span>https://cdn.jsdelivr.net/npm/discuss@latest/dist/Discuss.js<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+  <span class="token comment">/**
+   * 获取最新评论
+   * @param {String} url 请求地址
+   * @param {Boolean} reply 是否请求回复评论 默认: true
+   * @returns {Array}
+   */</span>
+  Discuss<span class="token punctuation">.</span><span class="token function">RecentComment</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+    <span class="token literal-property property">url</span><span class="token operator">:</span> <span class="token string">&quot;&quot;</span><span class="token punctuation">,</span> <span class="token comment">// 服务端请求地址</span>
+    <span class="token literal-property property">reply</span><span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span> <span class="token comment">// 不需要回复评论</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">data</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 返回的 Array</span>
+    <span class="token comment">// [</span>
+    <span class="token comment">//   {</span>
+    <span class="token comment">//     _id: &quot;61a45c3d521411b101113b96&quot;,</span>
+    <span class="token comment">//     nick: &quot;Test&quot;,</span>
+    <span class="token comment">//     site: &quot;&quot;,</span>
+    <span class="token comment">//     content: &quot;&lt;p&gt;Test API&lt;/p&gt;&quot;,</span>
+    <span class="token comment">//     pid: &quot;&quot;,</span>
+    <span class="token comment">//     rid: &quot;&quot;,</span>
+    <span class="token comment">//     stick: false,</span>
+    <span class="token comment">//     master: false,</span>
+    <span class="token comment">//     avatar: &quot;https://thirdqq.qlogo.cn/g?b=sdk&amp;k=k26Ec8NWH58mHCww4XBVyQ&amp;s=140&amp;t=0&quot;,</span>
+    <span class="token comment">//     time: &quot;2021-11-11&quot;,</span>
+    <span class="token comment">//   }</span>
+    <span class="token comment">// ]</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br></div></div><h2 id="comment-count"><a href="#comment-count" class="header-anchor">#</a> Comment Count</h2> <p>获取评论数量</p> <p>例子:</p> <div class="language-html line-numbers-mode"><pre class="language-html"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">src</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">&quot;</span>https://cdn.jsdelivr.net/npm/discuss@latest/dist/Discuss.js<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span><span class="token script"></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">&gt;</span></span><span class="token script"><span class="token language-javascript">
+  <span class="token comment">/**
+   * 请求评论数量
+   * @param {String} url 请求地址
+   * @param {Array} paths 请求的标识符(网站path)
+   * @param {Boolean} reply 是否请求回复评论 默认: true
+   * @returns {Array}
+   */</span>
+  Discuss<span class="token punctuation">.</span><span class="token function">CommentCount</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+    <span class="token literal-property property">url</span><span class="token operator">:</span> <span class="token string">&quot;&quot;</span><span class="token punctuation">,</span> <span class="token comment">// 服务端请求地址</span>
+    <span class="token literal-property property">paths</span><span class="token operator">:</span> <span class="token punctuation">[</span>location<span class="token punctuation">.</span>pathname<span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token comment">// 页面的唯一标识符</span>
+    <span class="token literal-property property">reply</span><span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span> <span class="token comment">// 不需要回复评论</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">data</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment">// 返回的 Array</span>
+    <span class="token comment">// [</span>
+    <span class="token comment">//   { url: &quot;/About.html&quot;, count: 10 },</span>
+    <span class="token comment">//   { url: &quot;/Quick-Start.html&quot;, count: 11 },</span>
+    <span class="token comment">//   { url: &quot;/Get-MongoDB-DataBase.html&quot;, count: 20 },</span>
+    <span class="token comment">// ];</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">&gt;</span></span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br></div></div><h2 id="总结"><a href="#总结" class="header-anchor">#</a> 总结</h2> <blockquote><p>对应的请求类型如下</p> <p>访问量统计: COUNTER</p> <p>获取最新评论: RECENT_COMMENT</p> <p>获取评论数量: COMMENT_COUNT</p></blockquote> <p>你也可以自定义请求，并非需要 Discuss 的请求方法去请求
+例如使用<code>axios</code></p> <div class="language-js line-numbers-mode"><pre class="language-js"><code><span class="token keyword">const</span> url <span class="token operator">=</span> <span class="token string">&quot;https://discuss-doc.imlete.cn&quot;</span><span class="token punctuation">;</span>
+<span class="token keyword">const</span> options <span class="token operator">=</span> <span class="token punctuation">{</span>
+  <span class="token literal-property property">type</span><span class="token operator">:</span> <span class="token string">&quot;COUNTER&quot;</span><span class="token punctuation">,</span>
+  <span class="token literal-property property">path</span><span class="token operator">:</span> location<span class="token punctuation">.</span>pathname<span class="token punctuation">,</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token comment">// 请求访问量统计</span>
+axios<span class="token punctuation">.</span><span class="token function">post</span><span class="token punctuation">(</span>url<span class="token punctuation">,</span> options<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">data</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 直接返回数量</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br></div></div></div> <footer class="page-edit"><div class="edit-link"><a href="https://github.com/Lete114/Discuss/edit/docs/docs/API-Docs.md" target="_blank" rel="noopener noreferrer">帮助我们改善此页面！</a> <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></div> <div class="last-updated"><span class="prefix">Last Updated:</span> <span class="time">2/16/2022, 6:35:37 PM</span></div></footer> <div class="page-nav"><p class="inner"><span class="prev">
+      ←
+      <a href="/Vercel-ServerLess-Deploy.html" class="prev">
+        部署 Vercel 无服务器平台
+      </a></span> <span class="next"><a href="/Hexo.html">
+        在 Hexo 中使用
+      </a>
+      →
+    </span></p></div> <div class="page-edit"><div id="Discuss-wrap"></div> <script src="https://cdn.jsdelivr.net/npm/discuss/dist/Discuss.js"></script></div></main></div><div class="global-ui"></div></div>
+    <script src="/assets/js/app.29967ab9.js" defer></script><script src="/assets/js/6.e75f745a.js" defer></script><script src="/assets/js/2.9f8a3367.js" defer></script><script src="/assets/js/8.93adc059.js" defer></script>
+  </body>
+</html>

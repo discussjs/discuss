@@ -1,28 +1,16 @@
 {
-  "name": "hexo-site",
-  "version": "0.0.0",
-  "private": true,
+  "name": "discuss-docs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "build": "hexo generate",
-    "clean": "hexo clean",
-    "deploy": "hexo deploy",
-    "server": "hexo server"
+    "docs:dev": "vuepress dev docs",
+    "docs:build": "vuepress build docs"
   },
-  "hexo": {
-    "version": "5.4.0"
-  },
-  "dependencies": {
-    "hexo": "^5.0.0",
-    "hexo-abbrlink": "^2.2.1",
-    "hexo-generator-archive": "^1.0.0",
-    "hexo-generator-category": "^1.0.0",
-    "hexo-generator-index": "^2.0.0",
-    "hexo-generator-search": "^2.4.3",
-    "hexo-generator-tag": "^1.0.0",
-    "hexo-minify": "^1.1.0",
-    "hexo-renderer-ejs": "^1.0.0",
-    "hexo-renderer-marked": "^4.0.0",
-    "hexo-renderer-stylus": "^2.0.0",
-    "hexo-server": "^2.0.0"
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "vuepress": "^1.9.7"
   }
 }
