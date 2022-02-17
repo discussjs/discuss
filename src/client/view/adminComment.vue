@@ -212,7 +212,6 @@
 import iconSearch from '../../../assets/svg/Search.svg'
 import iconLoading from '../../../assets/svg/Loading.svg'
 import timeAgo from '../lib/timeAgo'
-import dialog from '../lib/dialog'
 import { translate } from '../i18n/language'
 
 const adminStr = 'admin.'
@@ -298,7 +297,7 @@ export default {
     }
   },
   mounted() {
-    dialog(translate(adminManageCommentStr + 'msg'), 2000)
+    this.$dialog(translate(adminManageCommentStr + 'msg'), 2000)
     this.GetComment()
   },
   updated() {
@@ -340,7 +339,7 @@ export default {
       }
 
       const { data, msg } = await this.$ajax(options)
-      if (!data) dialog(msg)
+      if (!data) this.$dialog(msg)
       this.pageSize = data.pageSize
       this.counts = data.counts
       this.pageCount = data.pageCount
@@ -378,7 +377,7 @@ export default {
       // 如果未选择，则提示并且结束当前方法
       const checked = this.checkedAll
       const msg = translate(batchStr + operateStr + 'Msg')
-      if (checked.length < 1) return dialog(msg, 2000) // 输出错误提示框
+      if (checked.length < 1) return this.$dialog(msg, 2000) // 输出错误提示框
 
       this.onOperate(this.operateType)
       this.onCheckedAll() // 取消选中
@@ -410,7 +409,7 @@ export default {
         }
       }
       const { msg } = await this.$ajax(options)
-      dialog(msg) // 弹出提示信息
+      this.$dialog(msg) // 弹出提示信息
       await this.GetComment() // 重新获取评论
     },
     async onEditSend(comment) {

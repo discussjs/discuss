@@ -17,6 +17,7 @@ export default {
     days: '天前'
   },
   more: '更多评论',
+  commentsError:'获取评论失败~',
   settingMsg: '正在加载管理面板...',
   refreshMsg: '正在刷新评论...',
   admin: {
@@ -81,7 +82,7 @@ export default {
         msg: '自动获取配置中...',
         text: '配置管理',
         save: '保存',
-        pwdErr: '密码不一致',
+        passwordError: '密码不一致',
         settings: {
           basic: {
             name: '基本配置',

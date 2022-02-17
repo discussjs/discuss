@@ -4,8 +4,8 @@ let language
  * 设置语言
  * @param {String} lang 语言 默认: zh_CN
  */
-async function setLanguage(lang = 'zh_CN') {
-  let useLang = lang
+async function setLanguage(lang) {
+  let useLang = lang || 'zh_CN'
   const resultLanguage = await import(
     /* webpackChunkName: "[request]" */ './' + useLang
   )

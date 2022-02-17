@@ -17,6 +17,7 @@ export default {
     days: 'Days ago'
   },
   more: 'More Comments',
+  commentsError: 'Failed to get comments~',
   settingMsg: 'Loading admin panel...',
   refreshMsg: 'Refreshing comments...',
   admin: {
@@ -81,7 +82,7 @@ export default {
         msg: 'Automatic get configuration...',
         text: 'Configuration',
         save: 'Save',
-        pwdErr: 'Inconsistent passwords',
+        passwordError: 'Inconsistent passwords',
         settings: {
           basic: {
             name: 'Basic',

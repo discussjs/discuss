@@ -51,8 +51,6 @@ import iconComment from '../../../assets/svg/Comment.svg'
 import iconMail from '../../../assets/svg/Mail.svg'
 import iconPassword from '../../../assets/svg/Password.svg'
 
-import dialog from '../lib/dialog'
-
 import { translate } from '../i18n/language'
 
 // 用于翻译(处理translate重复字段，减少打包容量)
@@ -242,7 +240,7 @@ export default {
   },
   mounted() {
     this.group = this.settings[0].name
-    dialog(translate(adminManageConfigStr + 'msg'), 2000)
+    this.$dialog(translate(adminManageConfigStr + 'msg'), 2000)
     this.GetConfig()
   },
   methods: {
@@ -267,7 +265,7 @@ export default {
       this.ForConfig((item) => (this.config[item.key] = item.value))
 
       if (this.config.password !== this.config.confirm_password) {
-        dialog(translate(adminManageConfigStr + 'pwdErr'))
+        this.$dialog(translate(adminManageConfigStr + 'passwordError'))
         return
       }
 
@@ -284,7 +282,7 @@ export default {
 
       const { msg } = await this.$ajax(options)
       this.isSave = false
-      dialog(msg)
+      this.$dialog(msg)
     },
     InitConfig() {
       this.ForConfig((item) => {

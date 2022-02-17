@@ -35,7 +35,7 @@ import DComment from './comment.vue'
 export default {
   props: { submitComment: Array },
   components: { DSubmit, DComment },
-  emits: ['wordNumber', 'success'],
+  emits: ['onComments'],
   data() {
     return {
       iconLoading,
@@ -81,9 +81,10 @@ export default {
         // 将字数限制发送到顶部评论框,同时传给子组件comment.vue
         // 子组件comment.vue继续传给子组件(自身调用自身)
         // 最后传入子组件的submit.vue
-        this.$emit('wordNumber', this.wordNumber)
-        this.$emit('success')
+        this.$emit('onComments', this.wordNumber)
       } catch (error) {
+        this.$emit('onComments')
+        this.$dialog(translate('commentsError'))
         console.error('Request failed', error)
       }
 

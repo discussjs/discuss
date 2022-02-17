@@ -12,8 +12,7 @@
       ref="comment"
       v-if="isRefreshComments"
       :submitComment="comment"
-      @wordNumber="wordNumberFn"
-      @success="success"
+      @onComments="onComments"
     />
     <div
       class="D-loading-comments"
@@ -63,14 +62,18 @@ export default {
       // 调用admin组件的onCloseAdmin方法用来隐藏
       this.$refs.admin?.onCloseAdmin()
     },
+
     submitComment(data) {
       this.comment = data
     },
-
-    wordNumberFn(data) {
-      this.wordNumber = data
+    onComments(wordNumber) {
+      this.wordNumber = wordNumber || {}
+      const loadingStyle = this.$refs.loading.style
+      loadingStyle.removeProperty(width)
+      loadingStyle.removeProperty(height)
+      this.isLoading = false
     },
-    success() {
+    onIsLoading() {
       const loadingStyle = this.$refs.loading.style
       loadingStyle.removeProperty(width)
       loadingStyle.removeProperty(height)

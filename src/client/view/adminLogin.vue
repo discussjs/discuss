@@ -42,7 +42,6 @@
 import iconLogo from '../../../assets/svg/Logo.svg'
 import iconLoading from '../../../assets/svg/Loading.svg'
 
-import dialog from '../lib/dialog'
 import { translate } from '../i18n/language'
 
 const adminLoginStr = 'admin.login.'
@@ -90,7 +89,7 @@ export default {
       this.isToken = TRUE
       this.isSend = TRUE
       this.send()
-      dialog(translate(adminLoginStr + 'msg'), 2000)
+      this.$dialog(translate(adminLoginStr + 'msg'), 2000)
     },
     onLogin() {
       if (this.isSend) return
@@ -112,7 +111,7 @@ export default {
       this.isSend = FALSE
 
       // 弹窗提示
-      if (!data) dialog(msg)
+      if (!data) this.$dialog(msg)
 
       // 登录成功，跳转评论管理页面
       if (data?.token) {
