@@ -79,14 +79,14 @@ DISCUSS_SECRET='Discuss'
   <script>
     // 初始化
     Discuss.init({
-      el: "#Discuss-Comments",   // 将评论挂载到某个DOM上
-      serverURL: "",             // 服务端部署地址
-      master: "",                // 博主标签占位符，默认: 博主
-      placeholder: "",           // 评论框占位符，默认: 评论你的想法~
-      path: "",                  // 网站的唯一标识符，评论会根据该标识返回评论，默认: location.pathname
-      lang: "",                  // 评论语言，默认: zh_CN ，可选: [zh_CN , en_US]
-      visitStat: true ,          // 是否开启访问统计，默认: true
-      imgLoading: '' ,           // 评论图片懒加载，加载动画，默认为1像素白色base64图
+      el: "#Discuss-Comments",   // [必填]将评论挂载到某个DOM上
+      serverURLs: "",            // [必填]服务端部署地址
+      path: "",                  // [必填]网站的唯一标识符，评论会根据该标识返回评论，默认: location.pathname
+      // master: "",                // 博主标签占位符，默认: 博主
+      // placeholder: "",           // 评论框占位符，默认: 评论你的想法~
+      // lang: "",                  // 评论语言，默认: zh_CN ，可选: [zh_CN , en_US]
+      // visitStat: true ,          // 是否开启访问统计，默认: true
+      // imgLoading: ''             // 评论图片懒加载，加载动画，默认为1像素白色base64图
     });
   </script>
 </body>
