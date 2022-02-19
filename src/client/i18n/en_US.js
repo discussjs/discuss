@@ -190,13 +190,13 @@ export default {
             Msubject: {
               title: 'Mail Title(Administrator)',
               desc: 'Title of the comment email received by the administrator',
-              ph: 'There are new comments on "Lete\'s Blog"!'
+              ph: 'You have a new review on "Discuss Official Website"!'
             },
             // replySubject
             Rsubject: {
               title: 'Mail title (commenter)',
               desc: 'Title of comments received by others',
-              ph: 'You have a new comment on "Lete\'s Blog"!'
+              ph: 'You have a new comment on "Discuss Official Website"!'
             },
             // masterTemplate
             Mtemplate: {

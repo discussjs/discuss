@@ -371,7 +371,7 @@ export default {
         if (data instanceof Array) {
           this.$emit('submitComment', data, this.pid)
           this.metas.content.value = ''
-          this.onPreview()
+          this.isPreview = false
         }
       } catch (error) {
         console.error('Comment failure:', error)

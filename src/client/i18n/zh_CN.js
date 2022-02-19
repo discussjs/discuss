@@ -17,7 +17,7 @@ export default {
     days: '天前'
   },
   more: '更多评论',
-  commentsError:'获取评论失败~',
+  commentsError: '获取评论失败~',
   settingMsg: '正在加载管理面板...',
   refreshMsg: '正在刷新评论...',
   admin: {
@@ -184,13 +184,13 @@ export default {
             Msubject: {
               title: '邮件标题(管理员)',
               desc: '管理员收到的评论邮件标题',
-              ph: "「Lete乐特 ' s Blog」上有新的评论啦！"
+              ph: '您在「Discuss 官网」上有新的评论啦！'
             },
             // replySubject
             Rsubject: {
               title: '邮件标题(评论者)',
               desc: '其他人收到的评论标题',
-              ph: "您在「Lete乐特 ' s Blog」上有新的评论回复啦！"
+              ph: '您在「Discuss 官网」上有新的评论回复啦！'
             },
             // masterTemplate
             Mtemplate: {
