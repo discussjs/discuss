@@ -16,14 +16,11 @@ Discuss API 与 Discuss 本身并没有直接的关系，你可以随时调用�
 <script>
   /**
    * 访问量统计
-   * @param {String} url 请求地址
-   * @param {String} path 请求路径
+   * @param {String} url 服务端请求地址
+   * @param {String} path 页面的唯一标识符 如：location.pathname
    * @returns {Number}
    */
-  Discuss.VisitStat({
-    url: "", // 服务端请求地址
-    path: location.pathname, // 页面的唯一标识符
-  }).then((data) => {
+  Discuss.VisitStat(url, path).then((data) => {
     console.log(data); // 返回数量
   });
 </script>
@@ -45,10 +42,7 @@ Discuss API 与 Discuss 本身并没有直接的关系，你可以随时调用�
    * @param {Boolean} reply 是否请求回复评论 默认: true
    * @returns {Array}
    */
-  Discuss.RecentComment({
-    url: "", // 服务端请求地址
-    reply: false, // 不需要回复评论
-  }).then((data) => {
+  Discuss.RecentComment(url, reply).then((data) => {
     console.log(data);
     // 返回的 Array
     // [
@@ -82,15 +76,11 @@ Discuss API 与 Discuss 本身并没有直接的关系，你可以随时调用�
   /**
    * 请求评论数量
    * @param {String} url 请求地址
-   * @param {Array} paths 请求的标识符(网站path)
+   * @param {Array} paths 请求的标识符(网站path) 如：[location.pathname]
    * @param {Boolean} reply 是否请求回复评论 默认: true
    * @returns {Array}
    */
-  Discuss.CommentCount({
-    url: "", // 服务端请求地址
-    paths: [location.pathname], // 页面的唯一标识符
-    reply: false, // 不需要回复评论
-  }).then((data) => {
+  Discuss.CommentCount(url, paths, reply).then((data) => {
     console.log(data);
     // 返回的 Array
     // [
