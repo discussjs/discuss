@@ -26,7 +26,8 @@ export default {
       close: 'Close',
       username: 'Username',
       password: 'Password',
-      msg: 'Automatic login in progress...'
+      msg: 'Automatic login in progress...',
+      loginError: 'User name or password error'
     },
     manage: {
       comment: {
@@ -80,6 +81,7 @@ export default {
       },
       config: {
         msg: 'Automatic get configuration...',
+        error: 'Failed to get configuration',
         text: 'Configuration',
         save: 'Save',
         passwordError: 'Inconsistent passwords',

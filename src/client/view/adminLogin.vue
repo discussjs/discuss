@@ -96,34 +96,35 @@ export default {
       this.send()
     },
     async send() {
-      this.isSend = TRUE
-      const params = {
-        url: this.$D.serverURLs,
-        data: { type: 'LOGIN' }
-      }
-      if (this.token) params.data.token = this.token
-      if (!this.isNull) {
-        params.data.username = this.inputs[0].model
-        params.data.password = this.inputs[1].model
-      }
-      // 登录验证
-      const { data, msg } = await this.$ajax(params)
-      this.isSend = FALSE
+      try {
+        this.isSend = TRUE
+        const params = {
+          url: this.$D.serverURLs,
+          data: { type: 'LOGIN' }
+        }
+        params.data.token = this.token || ''
+        if (!this.isNull) {
+          params.data.username = this.inputs[0].model
+          params.data.password = this.inputs[1].model
+        }
+        // 登录验证
+        const { data, msg } = await this.$ajax(params)
+        if (!data) throw new Error(msg)
 
-      // 弹窗提示
-      if (!data) this.$dialog(msg)
-
-      // 登录成功，跳转评论管理页面
-      if (data?.token) {
-        localStorage.DToken = data.token
-        this.$emit('isLogin', TRUE)
-        return
+        // 登录成功，跳转评论管理页面
+        if (data?.token) {
+          localStorage.DToken = data.token
+          this.$emit('isLogin', TRUE)
+        }
+      } catch (error) {
+        console.error(error)
+        this.$dialog(translate(adminLoginStr + 'loginError'), 2000)
+        // 登录失败
+        this.isSend = FALSE
+        this.isToken = FALSE
+        localStorage.DToken = ''
+        this.token = ''
       }
-
-      // 登录失败，直接结束当前方法，不在往下执行
-      this.isToken = FALSE
-      localStorage.DToken = ''
-      this.token = ''
     },
     onInput() {
       if (this.inputs[0].model && this.inputs[1].model) this.isNull = FALSE

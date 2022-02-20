@@ -322,38 +322,41 @@ export default {
       this.pages = pages
     },
     async GetComment() {
-      this.CleanChecked()
-
-      const options = {
-        url: this.url,
-        data: {
-          type: 'GET_COMMENT_ADMIN',
-          token: this.token,
-          path: this.$D.path,
-          pageNo: this.pageNo,
-          pageSize: this.pageSize,
-          keyword: this.keyword,
-          searchType: this.searchType,
-          status: this.status
+      try {
+        this.CleanChecked()
+        const options = {
+          url: this.url,
+          data: {
+            type: 'GET_COMMENT_ADMIN',
+            token: this.token,
+            path: this.$D.path,
+            pageNo: this.pageNo,
+            pageSize: this.pageSize,
+            keyword: this.keyword,
+            searchType: this.searchType,
+            status: this.status
+          }
         }
+
+        const { data } = await this.$ajax(options)
+        this.pageSize = data.pageSize
+        this.counts = data.counts
+        this.pageCount = data.pageCount
+        // 新增属性
+        data.comments.forEach((item) => {
+          item.isEdit = false
+          item.editContent = item.content
+          item.editNick = item.nick
+          item.editMail = item.mail
+          item.editSite = item.site
+        })
+        this.comments = data.comments
+
+        this.GeneratePages()
+      } catch (error) {
+        console.error(error)
+        this.$dialog(translate('commentsError'))
       }
-
-      const { data, msg } = await this.$ajax(options)
-      if (!data) this.$dialog(msg)
-      this.pageSize = data.pageSize
-      this.counts = data.counts
-      this.pageCount = data.pageCount
-      // 新增属性
-      data.comments.forEach((item) => {
-        item.isEdit = false
-        item.editContent = item.content
-        item.editNick = item.nick
-        item.editMail = item.mail
-        item.editSite = item.site
-      })
-      this.comments = data.comments
-
-      this.GeneratePages()
     },
     CleanChecked() {
       // 清理已选中的评论

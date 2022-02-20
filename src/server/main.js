@@ -1,10 +1,5 @@
-const { join } = require('path')
 const Admin = require('./database/mongoose/model/Admin')
 const { Resource, Router } = require('./router/router')
-
-// 设置环境变量
-const envPath = join(process.cwd(), '.env')
-require('dotenv').config(envPath)
 
 // 连接数据库
 require('./database/mongoose')()

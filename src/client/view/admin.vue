@@ -6,23 +6,33 @@
         <div class="logo" v-html="iconLogo"></div>
         <nav>
           <span
-            v-for="(nav, key) in navs"
-            :key="key"
-            v-text="nav.text"
-            @click="onActiveTab(key, nav.text)"
-          ></span>
-          <span
             class="D-menu"
             v-show="tab == 'config'"
             v-html="iconMenu"
             @click="open = true"
           ></span>
-          <span class="D-close" v-html="iconClose" @click="onCloseAdmin"></span>
+          <span
+            class="D-refresh"
+            @click="onRefresh"
+            v-html="iconRefresh"
+          ></span>
+          <span
+            class="D-comment"
+            @click="onActiveTab('comment')"
+            v-html="iconComment"
+          ></span>
+          <span
+            class="D-config"
+            @click="onActiveTab('config')"
+            v-html="iconConfig"
+          ></span>
+          <span class="D-exit" @click="onExit" v-html="iconExit"></span>
+          <span class="D-close" @click="onCloseAdmin" v-html="iconClose"></span>
         </nav>
       </header>
 
       <h1 class="D-title" v-text="title"></h1>
-      <div class="D-main-container">
+      <div class="D-main-container" v-if="isRefresh">
         <D-comment v-if="tab == 'comment'" />
         <D-config v-if="tab == 'config'" :open="open" @onClose="onClose" />
       </div>
@@ -33,6 +43,10 @@
 <script>
 import iconLogo from '../../../assets/svg/Logo.svg'
 import iconMenu from '../../../assets/svg/Menu.svg'
+import iconRefresh from '../../../assets/svg/Refresh.svg'
+import iconComment from '../../../assets/svg/Comment.svg'
+import iconConfig from '../../../assets/svg/Config.svg'
+import iconExit from '../../../assets/svg/Exit.svg'
 import iconClose from '../../../assets/svg/Close.svg'
 import iconSearch from '../../../assets/svg/Search.svg'
 import { translate } from '../i18n/language'
@@ -51,11 +65,16 @@ export default {
       translate,
       iconLogo,
       iconMenu,
+      iconRefresh,
+      iconComment,
+      iconConfig,
+      iconExit,
       iconClose,
       iconSearch,
 
       isShow: true,
       isLogin: false,
+      isRefresh: true,
 
       // nav
       navs: translate(commentManageStr),
@@ -63,7 +82,10 @@ export default {
 
       // main
       title: '',
-      tab: 'comment'
+      tab: '',
+
+      comment: 'comment',
+      config: 'config'
     }
   },
   computed: {
@@ -72,21 +94,26 @@ export default {
     }
   },
   mounted() {
-    this.init()
+    this.onActiveTab()
   },
   methods: {
-    init() {
-      const key = 'comment'
-      const title = translate(commentManageStr + '.' + key + '.text')
-      this.onActiveTab(key, title)
+    onRefresh() {
+      this.isRefresh = false
+      this.$nextTick(() => (this.isRefresh = true))
     },
-    onActiveTab(key, title) {
+    onActiveTab(key = this.comment) {
+      const title = translate(commentManageStr + '.' + key + '.text')
       this.tab = key
       this.title = title
     },
     onLogin(is) {
       this.isLogin = is
       if (!is) this.$emit('isAdmin', is)
+    },
+    onExit() {
+      this.isLogin = false
+      localStorage.DToken = ''
+      this.onCloseAdmin()
     },
     onClose(value) {
       this.open = value
@@ -150,12 +177,15 @@ export default {
 
   nav {
     margin-right: 1em;
-    cursor: pointer;
     display: flex;
     color: #878593;
     font-weight: 600;
     font-size: 0.875em /* 14/16 */;
     align-items: center;
+
+    span {
+      cursor: pointer;
+    }
 
     span + span {
       margin-left: 1.25em /* 20/16 */;
@@ -163,11 +193,6 @@ export default {
   }
   .D-menu {
     display: none;
-  }
-
-  .D-menu,
-  .D-close {
-    line-height: 0;
   }
 
   .D-title {

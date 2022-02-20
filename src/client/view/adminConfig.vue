@@ -248,14 +248,20 @@ export default {
       this.$emit('onClose', false)
     },
     async GetConfig() {
-      const options = {
-        url: this.url,
-        data: { type: 'GET_CONFIG', token: this.token }
-      }
-      const { data } = await this.$ajax(options)
-      if (data) {
-        this.config = data
-        this.InitConfig()
+      try {
+        const options = {
+          url: this.url,
+          data: { type: 'GET_CONFIG', token: this.token }
+        }
+        const { data, msg } = await this.$ajax(options)
+        if (!data) this.$dialog(msg)
+        if (data) {
+          this.config = data
+          this.InitConfig()
+        }
+      } catch (error) {
+        console.error(error)
+        this.$dialog(translate(adminManageConfigStr + 'error'), 2000)
       }
     },
     async SaveConfig() {

@@ -26,7 +26,8 @@ export default {
       close: '关闭',
       username: '用户名',
       password: '密码',
-      msg: '自动登录中...'
+      msg: '自动登录中...',
+      loginError: '用户名或密码错误'
     },
     manage: {
       comment: {
@@ -80,6 +81,7 @@ export default {
       },
       config: {
         msg: '自动获取配置中...',
+        error: '获取配置失败',
         text: '配置管理',
         save: '保存',
         passwordError: '密码不一致',

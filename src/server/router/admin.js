@@ -10,7 +10,7 @@ const {
   DeleteComment,
   UpdateComment
 } = require('../utils/commentUtils')
-const { VerifyParams } = require('../utils')
+const { VerifyParams, IndexHandler } = require('../utils')
 
 /**
  * 初始化
@@ -106,7 +106,7 @@ async function AdminGetComments(params) {
   const options = { status }
 
   if (status === 'current') {
-    options.path = path
+    options.path = IndexHandler(path)
     delete options.status
   }
 
