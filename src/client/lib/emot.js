@@ -259,35 +259,35 @@ export default {
         'heo-泪奔':
           'https://cdn.jsdelivr.net/gh/zhheo/Sticker-Heo@main/Sticker-100/泪奔.png',
         'heo-EDG':
-          'https://cdn.jsdelivr.net/gh/zhheo/Sticker-Heo@main/Sticker-100/EDG.png"',
+          'https://cdn.jsdelivr.net/gh/zhheo/Sticker-Heo@main/Sticker-100/EDG.png',
         'heo-傻笑':
-          'https://cdn.jsdelivr.net/gh/zhheo/Sticker-Heo@main/Sticker-100/傻笑.png"',
+          'https://cdn.jsdelivr.net/gh/zhheo/Sticker-Heo@main/Sticker-100/傻笑.png',
         'heo-拜托':
-          'https://cdn.jsdelivr.net/gh/zhheo/Sticker-Heo@main/Sticker-100/拜托.png"',
+          'https://cdn.jsdelivr.net/gh/zhheo/Sticker-Heo@main/Sticker-100/拜托.png',
         'heo-这是啥':
-          'https://cdn.jsdelivr.net/gh/zhheo/Sticker-Heo@main/Sticker-100/这是啥.png"',
+          'https://cdn.jsdelivr.net/gh/zhheo/Sticker-Heo@main/Sticker-100/这是啥.png',
         'heo-波吉':
-          'https://cdn.jsdelivr.net/gh/zhheo/Sticker-Heo@main/Sticker-100/波吉.png"',
+          'https://cdn.jsdelivr.net/gh/zhheo/Sticker-Heo@main/Sticker-100/波吉.png',
         'heo-惬意':
-          'https://cdn.jsdelivr.net/gh/zhheo/Sticker-Heo@main/Sticker-100/惬意.png"',
+          'https://cdn.jsdelivr.net/gh/zhheo/Sticker-Heo@main/Sticker-100/惬意.png',
         'heo-没招':
-          'https://cdn.jsdelivr.net/gh/zhheo/Sticker-Heo@main/Sticker-100/没招.png"',
+          'https://cdn.jsdelivr.net/gh/zhheo/Sticker-Heo@main/Sticker-100/没招.png',
         'heo-放鞭炮':
-          'https://cdn.jsdelivr.net/gh/zhheo/Sticker-Heo@main/Sticker-100/放鞭炮.png"',
+          'https://cdn.jsdelivr.net/gh/zhheo/Sticker-Heo@main/Sticker-100/放鞭炮.png',
         'heo-财神红包':
-          'https://cdn.jsdelivr.net/gh/zhheo/Sticker-Heo@main/Sticker-100/财神红包.png"',
+          'https://cdn.jsdelivr.net/gh/zhheo/Sticker-Heo@main/Sticker-100/财神红包.png',
         'heo-痛哭':
-          'https://cdn.jsdelivr.net/gh/zhheo/Sticker-Heo@main/Sticker-100/痛哭.png"',
+          'https://cdn.jsdelivr.net/gh/zhheo/Sticker-Heo@main/Sticker-100/痛哭.png',
         'heo-尬笑':
-          'https://cdn.jsdelivr.net/gh/zhheo/Sticker-Heo@main/Sticker-100/尬笑.png"',
+          'https://cdn.jsdelivr.net/gh/zhheo/Sticker-Heo@main/Sticker-100/尬笑.png',
         'heo-流汗微笑':
-          'https://cdn.jsdelivr.net/gh/zhheo/Sticker-Heo@main/Sticker-100/流汗微笑.png"',
+          'https://cdn.jsdelivr.net/gh/zhheo/Sticker-Heo@main/Sticker-100/流汗微笑.png',
         'heo-整理发型':
-          'https://cdn.jsdelivr.net/gh/zhheo/Sticker-Heo@main/Sticker-100/整理发型.png"',
+          'https://cdn.jsdelivr.net/gh/zhheo/Sticker-Heo@main/Sticker-100/整理发型.png',
         'heo-击剑':
-          'https://cdn.jsdelivr.net/gh/zhheo/Sticker-Heo@main/Sticker-100/击剑.png"',
+          'https://cdn.jsdelivr.net/gh/zhheo/Sticker-Heo@main/Sticker-100/击剑.png',
         'heo-缺牙笑':
-          'https://cdn.jsdelivr.net/gh/zhheo/Sticker-Heo@main/Sticker-100/缺牙笑.png"'
+          'https://cdn.jsdelivr.net/gh/zhheo/Sticker-Heo@main/Sticker-100/缺牙笑.png'
       }
     }
 }
