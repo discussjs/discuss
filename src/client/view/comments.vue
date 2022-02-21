@@ -167,7 +167,7 @@ export default {
   }
 }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .D-comments-settings {
   width: 20px;
   display: flex;

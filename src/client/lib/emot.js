@@ -257,7 +257,37 @@ export default {
         'heo-抬眼镜':
           'https://cdn.jsdelivr.net/gh/zhheo/Sticker-Heo@main/Sticker-100/抬眼镜.png',
         'heo-泪奔':
-          'https://cdn.jsdelivr.net/gh/zhheo/Sticker-Heo@main/Sticker-100/泪奔.png'
+          'https://cdn.jsdelivr.net/gh/zhheo/Sticker-Heo@main/Sticker-100/泪奔.png',
+        'heo-EDG':
+          '<img src="https://cdn.jsdelivr.net/gh/zhheo/Sticker-Heo@main/Sticker-100/EDG.png">',
+        'heo-傻笑':
+          '<img src="https://cdn.jsdelivr.net/gh/zhheo/Sticker-Heo@main/Sticker-100/傻笑.png">',
+        'heo-拜托':
+          '<img src="https://cdn.jsdelivr.net/gh/zhheo/Sticker-Heo@main/Sticker-100/拜托.png">',
+        'heo-这是啥':
+          '<img src="https://cdn.jsdelivr.net/gh/zhheo/Sticker-Heo@main/Sticker-100/这是啥.png">',
+        'heo-波吉':
+          '<img src="https://cdn.jsdelivr.net/gh/zhheo/Sticker-Heo@main/Sticker-100/波吉.png">',
+        'heo-惬意':
+          '<img src="https://cdn.jsdelivr.net/gh/zhheo/Sticker-Heo@main/Sticker-100/惬意.png">',
+        'heo-没招':
+          '<img src="https://cdn.jsdelivr.net/gh/zhheo/Sticker-Heo@main/Sticker-100/没招.png">',
+        'heo-放鞭炮':
+          '<img src="https://cdn.jsdelivr.net/gh/zhheo/Sticker-Heo@main/Sticker-100/放鞭炮.png">',
+        'heo-财神红包':
+          '<img src="https://cdn.jsdelivr.net/gh/zhheo/Sticker-Heo@main/Sticker-100/财神红包.png">',
+        'heo-痛哭':
+          '<img src="https://cdn.jsdelivr.net/gh/zhheo/Sticker-Heo@main/Sticker-100/痛哭.png">',
+        'heo-尬笑':
+          '<img src="https://cdn.jsdelivr.net/gh/zhheo/Sticker-Heo@main/Sticker-100/尬笑.png">',
+        'heo-流汗微笑':
+          '<img src="https://cdn.jsdelivr.net/gh/zhheo/Sticker-Heo@main/Sticker-100/流汗微笑.png">',
+        'heo-整理发型':
+          '<img src="https://cdn.jsdelivr.net/gh/zhheo/Sticker-Heo@main/Sticker-100/整理发型.png">',
+        'heo-击剑':
+          '<img src="https://cdn.jsdelivr.net/gh/zhheo/Sticker-Heo@main/Sticker-100/击剑.png">',
+        'heo-缺牙笑':
+          '<img src="https://cdn.jsdelivr.net/gh/zhheo/Sticker-Heo@main/Sticker-100/缺牙笑.png">'
       }
     }
 }

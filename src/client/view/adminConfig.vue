@@ -304,7 +304,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .D-main-container {
   .D-sidebar {
     z-index: 1;

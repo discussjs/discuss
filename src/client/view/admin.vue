@@ -124,7 +124,7 @@ export default {
   }
 }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .D-admin-container {
   top: 0;
   right: 0;
@@ -137,11 +137,11 @@ export default {
   position: fixed;
   background: #13111c;
 
-  * {
+  :deep(*) {
     font-size: 0.95em;
   }
 
-  .D-input {
+  :deep(.D-input) {
     width: 100%;
     height: 2.25em /* 36/16 */;
     color: #fff;
@@ -203,8 +203,8 @@ export default {
     padding: 0 0 1.2em;
   }
 
-  .D-manage,
-  .D-main {
+  :deep(.D-manage),
+  :deep(.D-main) {
     display: flex;
     flex-direction: column;
     align-items: center;

@@ -120,7 +120,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .D-comments-headers {
   display: flex;
   justify-content: space-between;

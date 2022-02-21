@@ -16,6 +16,8 @@ export default {
     hours: 'Hours ago',
     days: 'Days ago'
   },
+  pleaseLogin: 'Please log in and then use the admin email to comment',
+  sendError: 'Comment failed~',
   more: 'More Comments',
   commentsError: 'Failed to get comments~',
   settingMsg: 'Loading admin panel...',

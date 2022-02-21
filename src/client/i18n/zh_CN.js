@@ -16,6 +16,8 @@ export default {
     hours: '小时前',
     days: '天前'
   },
+  pleaseLogin: '请登录后再使用管理员邮箱评论',
+  sendError: '评论失败~',
   more: '更多评论',
   commentsError: '获取评论失败~',
   settingMsg: '正在加载管理面板...',

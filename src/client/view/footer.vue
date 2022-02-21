@@ -25,7 +25,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .D-footer {
   text-align: right;
   font-size: 0.75em;

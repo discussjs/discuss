@@ -137,7 +137,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .D-login-warp {
   position: fixed;
   z-index: 40;

@@ -93,8 +93,7 @@ async function CommitComment(params) {
   if (token) params.status = 'accept'
   else {
     // 判断是否使用博主身份评论
-    const isAdminStr = 'Please log in and then use the admin email to comment'
-    if (config.mail === params.mail) throw new Error(isAdminStr)
+    if (config.mail === params.mail) throw new Error('login')
     // ip 限流
     await limitFilter(params.ip)
     // 字数限制

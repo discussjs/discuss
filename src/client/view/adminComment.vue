@@ -474,7 +474,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .D-admin-container .D-main-container .D-manage {
   padding: 1.25em /* 20/16 */;
   align-items: baseline;
@@ -679,6 +679,8 @@ export default {
     .D-avatar {
       width: 1.875em /* 30/16 */;
       height: 1.875em;
+      margin-right: 10px;
+      border-radius: 50%;
     }
 
     .D-stick {

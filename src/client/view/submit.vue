@@ -129,6 +129,8 @@ const mailStr = 'mail'
 const siteStr = 'site'
 const contentStr = 'content'
 
+const delay2s = 2000
+
 export default {
   props: { cancel: Boolean, pid: String, rid: String, wordNumber: Object },
   emits: ['onCancel', 'onSetting', 'onRefresh', 'submitComment'],
@@ -301,7 +303,7 @@ export default {
           this.emotMaps = defaultEmot.default
         }
 
-        this.$lazy()
+        this.$nextTick(() => this.$lazy())
       } catch (error) {
         console.log(error)
       }
@@ -363,10 +365,14 @@ export default {
 
         const token = localStorage.DToken
         if (token) comment.token = token
-        const { data } = await this.$ajax({
+        const { data, msg } = await this.$ajax({
           url: this.$D.serverURLs,
           data: comment
         })
+
+        if (!data && msg.includes('login')) {
+          this.$dialog(translate('pleaseLogin'))
+        }
 
         if (data instanceof Array) {
           this.$emit('submitComment', data, this.pid)
@@ -374,6 +380,7 @@ export default {
           this.isPreview = false
         }
       } catch (error) {
+        this.$dialog(translate('sendError'))
         console.error('Comment failure:', error)
       } finally {
         this.sending = false
@@ -413,7 +420,7 @@ export default {
     },
     onSetting() {
       const msg = translate('settingMsg')
-      if (!this.isSetting) this.$dialog(msg, 2000)
+      if (!this.isSetting) this.$dialog(msg, delay2s)
       this.isSetting = true
       this.$emit('onSetting', true)
     },
@@ -433,7 +440,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 /* submit */
 .D-submit {
   margin: 10px 0;
@@ -619,7 +626,7 @@ export default {
     padding: 0 10px;
     cursor: pointer;
 
-    img {
+    :deep(img) {
       width: 20px;
       position: relative;
       top: 5px;
