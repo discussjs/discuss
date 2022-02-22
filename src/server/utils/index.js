@@ -5,7 +5,7 @@ const CORS = require('./CORS')
 const VerifyParams = require('./verify')
 const akismet = require('./akismet')
 const XSS = require('./XSS')
-const GetAvatar = require('./avatar')
+const { GetAvatar, SetAvatar } = require('./avatar')
 const HtmlMinify = require('./minify')
 const { jwtSign, jwtVerify } = require('./jwt')
 
@@ -77,5 +77,6 @@ module.exports = {
   jwtVerify,
   XSS,
   GetAvatar,
+  SetAvatar,
   HtmlMinify
 }

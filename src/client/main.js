@@ -18,7 +18,8 @@ const Discuss = {
 function defaultOptions() {
   return {
     master: translate('master'),
-    placeholder: translate('content'),
+    stick: translate('stick'),
+    ph: translate('content'),
     path: location.pathname,
     visitStat: true,
     imgLoading:

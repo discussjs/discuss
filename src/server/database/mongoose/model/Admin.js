@@ -18,7 +18,7 @@ const AdminSchema = new Schema(
     akismet: { type: String, default: '', require: true },
     avatarCdn: {
       type: String,
-      default: 'https://cn.gravatar.com/avatar/',
+      default: 'https://cravatar.cn/avatar/',
       require: true
     },
 

@@ -3,10 +3,11 @@ const axios = require('axios')
 const Comment = require('../database/mongoose/model/Comment')
 const {
   XSS,
-  GetAvatar,
+  SetAvatar,
   DeepColne,
   IndexHandler,
-  VerifyParams
+  VerifyParams,
+  GetAvatar
 } = require('./index')
 
 /**
@@ -213,14 +214,10 @@ function CommentHandler(comments) {
   const config = global.config
   const obj = {}
   for (let comment of comments) {
-    const avatarCdn = config.avatarCdn
-
     if (comment.mail === config.mail) comment.master = true
 
     // 处理头像
-    if (!/^http/.test(comment.avatar)) {
-      comment.avatar = avatarCdn + comment.avatar
-    }
+    comment.avatar = GetAvatar(comment.avatar)
 
     if (comment.replys) {
       obj[comment._id] = comment
@@ -245,7 +242,7 @@ async function CommitCommentHandler(params) {
   const updated = timestamp
   let path = IndexHandler(params.path)
 
-  const avatar = await GetAvatar(params.mail)
+  const avatar = await SetAvatar(params.mail)
 
   data.nick = params.nick
   data.mail = params.mail

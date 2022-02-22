@@ -90,8 +90,8 @@ export default {
     return {
       translate,
       timeAgo,
-      master: this.$D.master || translate('master'),
-      stick: this.$D.stick || translate('stick'),
+      master: this.$D.master,
+      stick: this.$D.stick,
       pid: '',
       rid: '',
       showReply: false

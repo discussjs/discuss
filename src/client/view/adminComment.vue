@@ -252,9 +252,7 @@ export default {
       pageCount: 1,
       pages: [],
 
-      stick:
-        this.$D.stick ||
-        translate(adminManageCommentStr + operateStr + '.stick'),
+      stick: this.$D.stick,
 
       isEdit: false,
       operate: translate(adminManageCommentStr + operateStr),

@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt')
-const { jwtSign, DeepColne } = require('../utils')
+const { jwtSign, DeepColne, GetAvatar } = require('../utils')
 const Admin = require('../database/mongoose/model/Admin')
 const Comment = require('../database/mongoose/model/Comment')
 
@@ -130,12 +130,9 @@ async function AdminGetComments(params) {
     .sort({ created: -1 })
     .lean()
 
-  const avatarCdn = config.avatarCdn
   for (const item of comments) {
     // 处理头像
-    if (!/^http/.test(item.avatar)) {
-      item.avatar = avatarCdn + item.avatar
-    }
+    item.avatar = GetAvatar(item.avatar)
 
     item.time = item.created
 

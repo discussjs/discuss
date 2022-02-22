@@ -108,7 +108,7 @@ export default {
             },
             headers: {
               title: '请求头优先级',
-              desc: '为确保获取的用户IP是真实性(多个使用逗号分隔)',
+              desc: '为确保获取的用户IP的真实性(多个使用逗号分隔)',
               ph: 'headers.cf-connecting-ip'
             }
           },

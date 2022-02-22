@@ -3,15 +3,13 @@ const bcrypt = require('bcrypt')
 const Comment = require('../database/mongoose/model/Comment')
 const { join } = require('path')
 const HtmlMinify = require('./minify')
+const { GetAvatar } = require('./avatar')
 
 let config = global.config
 let transporter
 
 function parse(comment) {
-  const avatarCdn = config.avatarCdn
-  // 处理头像
-  const condition = /^http/.test(comment.avatar)
-  if (!condition) comment.avatar = avatarCdn + comment.avatar
+  comment.avatar = GetAvatar(comment.avatar)
   return comment
 }
 

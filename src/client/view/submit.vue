@@ -290,22 +290,26 @@ export default {
       }
       this.isSend = nick.is && mail.is && site.is && content.is
     },
+    async defaultEmotMaps() {
+      if (!this.emotMaps) {
+        const defaultEmot = await import(
+          /* webpackChunkName: "emot" */ '../lib/emot'
+        )
+        this.emotMaps = defaultEmot.default
+      }
+    },
     async getEmot() {
       try {
+        await this.defaultEmotMaps()
         if (/^https?:\/\//.test(this.emotMaps)) {
           const options = { url: this.emotMaps, method: 'get', headers: {} }
           this.emotMaps = await this.$ajax(options)
         }
-        if (!this.emotMaps) {
-          const defaultEmot = await import(
-            /* webpackChunkName: "emot" */ '../lib/emot'
-          )
-          this.emotMaps = defaultEmot.default
-        }
-
-        this.$nextTick(() => this.$lazy())
       } catch (error) {
+        await this.defaultEmotMaps()
         console.log(error)
+      } finally {
+        this.$nextTick(() => this.$lazy())
       }
     },
     getEmotAll() {

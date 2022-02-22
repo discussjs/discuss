@@ -22,10 +22,24 @@ function Avatar(mail) {
   return md5(mail)
 }
 
-async function GetAvatar(mail) {
+async function SetAvatar(mail) {
+  mail = String(mail).trim().toLowerCase()
   if (QQMail.test(mail)) return await QQAvatar(mail)
 
   return Avatar(mail)
 }
 
-module.exports = GetAvatar
+function GetAvatar(avatar) {
+  const config = global.config
+  const avatarCdn = config.avatarCdn
+
+  if (/^http/.test(avatar)) return avatar
+
+  const str = '${avatar}'
+  const condition = avatarCdn.includes(str)
+  if (condition) return avatarCdn.replace(str, avatar)
+
+  return avatarCdn + avatar
+}
+
+module.exports = { GetAvatar, SetAvatar }
