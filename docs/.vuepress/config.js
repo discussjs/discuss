@@ -8,14 +8,40 @@ module.exports = {
     lineNumbers: true,
   },
   themeConfig: {
-    sidebar: [
-      "/",
-      "/Quick-Start",
-      "/Get-MongoDB-DataBase",
-      "/Vercel-ServerLess-Deploy",
-      "/API-Docs",
-      "/Hexo",
+    nav: [
+      { text: "快速开始", link: "/Quick-Start" },
+      {
+        text: "免费部署",
+        items: [{ text: "Vercel", link: "/deploy/Vercel-ServerLess-Deploy" }],
+      },
+      {
+        text: "更多",
+        items: [
+          {
+            text: "API 文档",
+            link: "/guide/API-Docs",
+          },
+          {
+            text: "获取MongoDB数据库",
+            link: "/guide/Get-MongoDB-DataBase",
+          },
+        ],
+      },
+      {
+        text: "支持",
+        items: [
+          {
+            text: "有哪些网站在使用",
+            link: "/support/Site",
+          },
+          {
+            text: "在 Hexo 博客中使用",
+            link: "/support/Hexo",
+          },
+        ],
+      },
     ],
+    sidebar: "auto",
     lastUpdated: true,
     searchMaxSuggestoins: 10,
     // 假定是 GitHub. 同时也可以是一个完整的 GitLab URL

@@ -28,9 +28,7 @@ export default {
           el: "#Discuss-wrap",
           master: "管理员",
           stick: "TOP",
-          ph: "快来评论呀",
           serverURLs: "https://discuss-doc.imlete.cn/",
-          path: location.pathname,
         });
       } catch (error) {}
     },
