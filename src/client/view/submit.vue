@@ -197,7 +197,9 @@ export default {
   methods: {
     InitInfo() {
       try {
-        this.storage = JSON.parse(this.storage || '{}')
+        const defaultDraft = { nick: '', mail: '', site: '', content: '' }
+        const json = JSON.parse(this.storage || '{}')
+        this.storage = Object.assign(defaultDraft, json)
         if (Object.keys(this.storage).length === 0) return
         this.metas.nick.value = this.storage.nick
         this.metas.mail.value = this.storage.mail
