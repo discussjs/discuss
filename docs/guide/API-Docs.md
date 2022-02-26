@@ -56,7 +56,7 @@ Discuss API 与 Discuss 本身并没有直接的关系，你可以随时调用�
     //     stick: false,
     //     master: false,
     //     avatar: "https://thirdqq.qlogo.cn/g?b=sdk&k=k26Ec8NWH58mHCww4XBVyQ&s=140&t=0",
-    //     time: "2021-11-11",
+    //     time: "1645448647421",
     //   }
     // ]
   });
@@ -84,9 +84,9 @@ Discuss API 与 Discuss 本身并没有直接的关系，你可以随时调用�
     console.log(data);
     // 返回的 Array
     // [
-    //   { url: "/About.html", count: 10 },
-    //   { url: "/Quick-Start.html", count: 11 },
-    //   { url: "/Get-MongoDB-DataBase.html", count: 20 },
+    //   { path: "/About.html", count: 10 },
+    //   { path: "/Quick-Start.html", count: 11 },
+    //   { path: "/Get-MongoDB-DataBase.html", count: 20 },
     // ];
   });
 </script>
