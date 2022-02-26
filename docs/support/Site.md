@@ -12,3 +12,4 @@ sidebar: false
 | 博主 | 链接 | 
 | ---- | ---- | 
 | Lete乐特 | [Lete乐特 's Blog](https://blog.imlete.cn/) |
+| CC | [CC's Blog](https://blog.ccknbc.cc) |
