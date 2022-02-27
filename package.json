@@ -1,6 +1,6 @@
 {
   "name": "discuss",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "一个简单，安全，免费的评论系统 | A simple, safe, free comment system",
   "main": "index.js",
   "scripts": {
@@ -33,8 +33,8 @@
   "dependencies": {
     "akismet-api": "^5.2.1",
     "axios": "^0.22.0",
-    "bcrypt": "^5.0.1",
-    "body-data": "^1.0.1",
+    "bcryptjs": "^2.4.3",
+    "body-data": "^1.0.2",
     "core-js": "^3.21.0",
     "dotenv": "^10.0.0",
     "get-user-ip": "^1.0.0",

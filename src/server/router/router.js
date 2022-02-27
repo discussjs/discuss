@@ -93,9 +93,6 @@ async function Router(req, res) {
       case 'COMMIT_COMMENT':
         result.data = await CommitComment(body)
         break
-      case 'PUSH_MAIL':
-        result.data = await SendMail(body)
-        break
       case 'GET_COMMENT_ADMIN':
         result.data = await AdminGetComments(body)
         break
@@ -126,7 +123,7 @@ async function Router(req, res) {
   } catch (error) {
     console.error('Request param', body)
     console.error('ERROR:', error)
-    result.msg = error?.toString()
+    result.msg = error === null || error === void 0 ? void 0 : error.toString()
   }
   res.end(JSON.stringify(result))
 }

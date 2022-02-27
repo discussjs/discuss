@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 const { jwtSign, DeepColne, GetAvatar } = require('../utils')
 const Admin = require('../database/mongoose/model/Admin')
 const Comment = require('../database/mongoose/model/Comment')
@@ -193,7 +193,9 @@ async function SaveConfig(params) {
   data.limit = parseInt(data.limit)
   data.limitAll = parseInt(data.limitAll)
   data.commentCount = parseInt(data.commentCount)
-  data.siteUrl = data.siteUrl?.replace(/\/$/, '')
+
+  const siteUrl = data.siteUrl === null || data.siteUrl === void 0
+  data.siteUrl = siteUrl ? void 0 : data.siteUrl.replace(/\/$/, '')
 
   const { _id } = global.config
   await Admin.updateOne({ _id }, data)

@@ -10,17 +10,30 @@
 
 <script>
 import pkg from '../../../package.json'
-import VisitStat from '../api/VisitStat'
 
 export default {
-  components: {},
   data() {
     return {
       version: pkg.version
     }
   },
   mounted() {
-    if (this.$D.visitStat) VisitStat(this.$D.serverURLs, this.$D.path)
+    if (this.$D.visitStat) this.VisitStat()
+  },
+  methods: {
+    async VisitStat() {
+      const counterEle = document.getElementById('Discuss-Visitors')
+      if (!counterEle) return
+
+      const options = {
+        url: this.$D.serverURLs,
+        data: { type: 'COUNTER', path: this.$D.path }
+      }
+
+      const { data } = await this.$ajax(options)
+
+      if (data) counterEle.innerText = data
+    }
   }
 }
 </script>

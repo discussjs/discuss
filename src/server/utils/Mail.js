@@ -1,5 +1,5 @@
 const nodemailer = require('nodemailer')
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 const Comment = require('../database/mongoose/model/Comment')
 const { join } = require('path')
 const HtmlMinify = require('./minify')

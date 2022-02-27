@@ -1,5 +1,4 @@
 import request from 'xhr-ajax'
-
 /**
  * 获取最新评论
  * @param {String} url 请求地址
@@ -7,7 +6,7 @@ import request from 'xhr-ajax'
  * @returns {Array}
  */
 async function RecentComment(url, reply) {
-  if (!url) return
+  if (!url) throw new Error('"url" cannot be empty')
   const options = {
     url,
     method: 'post',
@@ -18,6 +17,7 @@ async function RecentComment(url, reply) {
   }
 
   const { data } = await request(options)
+
   return data
 }
 

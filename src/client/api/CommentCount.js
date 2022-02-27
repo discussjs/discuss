@@ -8,7 +8,7 @@ import request from 'xhr-ajax'
  * @returns {Array}
  */
 async function CommentCount(url, paths, reply) {
-  if (!url || !paths) return
+  if (!url || !paths) throw new Error('"url" or "paths" cannot be empty')
   const options = {
     url,
     method: 'post',

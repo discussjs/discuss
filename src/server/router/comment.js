@@ -136,22 +136,18 @@ async function RecentComment(params) {
   let query = { status: 'accept' }
   if (params.reply === false) query.pid = ''
 
-  const comment = await Comment.find(query)
+  const comments = await Comment.find(query)
     .sort({ created: -1 })
     .limit(config.commentCount || 10)
     .lean()
 
-  for (let item of comment) {
-    item = CommentHandler(item)
-  }
-
-  return comment
+  return CommentHandler(comments)
 }
 
 // 获取评论数
 async function CommentCount(params) {
   VerifyParams(params, ['paths'])
-  if (!Array.isArray(params.paths)) return
+  if (!Array.isArray(params.paths)) throw new Error('"paths" is not an array')
 
   // 处理index.html
   const paths = params.paths.map((item) => IndexHandler(item))

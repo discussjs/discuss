@@ -6,10 +6,7 @@ import request from 'xhr-ajax'
  * @param {String} path 请求路径
  */
 async function VisitStat(url, path) {
-  if (!url) return
-  const counterEle = document.getElementById('Discuss-Visitors')
-  if (!counterEle) return
-  if (!path) path = location.pathname
+  if (!url || !path) throw new Error('"url" or "path" cannot be empty')
 
   const options = {
     url,
@@ -22,7 +19,7 @@ async function VisitStat(url, path) {
 
   const { data } = await request(options)
 
-  if (data) counterEle.innerText = data
+  return data
 }
 
 export default VisitStat

@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 const axios = require('axios')
 const Comment = require('../database/mongoose/model/Comment')
 const {
@@ -69,7 +69,8 @@ function WordNumberExceed(configWordNumber, params) {
     /<img class=(['"]?)D-comment-emot\1 src=\1([^'"]*)\1 alt=(['"]?)([^'"]*)\1\/?>/g
   /* eslint-enable max-len */
 
-  const emotLen = params.content.match(regImage)?.length
+  const emot = params.content.match(regImage)
+  const emotLen = emot === null || emot === void 0 ? void 0 : emot.length
 
   const errorEmotStr = 'The number of emoji packs exceeds the specified range'
   if (emotLen > 20) throw new Error(errorEmotStr)
