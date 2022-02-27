@@ -16,6 +16,11 @@ module.exports = {
   markdown: {
     lineNumbers: true,
   },
+  plugins: {
+    sitemap: {
+      hostname: "https://discuss.js.org",
+    },
+  },
   themeConfig: {
     nav: [
       { text: "快速开始", link: "/Quick-Start" },
