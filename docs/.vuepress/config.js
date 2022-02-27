@@ -3,7 +3,16 @@ module.exports = {
   description: "Discuss 评论系统文档",
   dest: "./dist",
   port: "6872",
-  head: [["link", { rel: "icon", href: "/img/favicon.ico" }]],
+  head: [
+    ["link", { rel: "icon", href: "/img/favicon.ico" }],
+    [
+      "meta",
+      {
+        name: "google-site-verification",
+        content: "uPApgr9zH7JO36gqOf48_UpfbFRRJ6zCf4cQd-s80eA",
+      },
+    ],
+  ],
   markdown: {
     lineNumbers: true,
   },
