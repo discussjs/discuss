@@ -8,6 +8,13 @@ Discuss API 与 Discuss 本身并没有直接的关系，你可以随时调用�
 
 访问量统计
 
+<em>当前页被访问 <i id="Discuss-Visitors" style="color:#00c4b6;font-weight:bold">0</i> 次数</em>
+
+::: tip 提示
+
+如果你的页面已经初始化 (即执行了`Discuss.init()`) 则会自动寻找当前页面时候存在 id 为`Discuss-Visitors`的 DOM 元素有则自动统计
+:::
+
 例子:
 
 ```html
