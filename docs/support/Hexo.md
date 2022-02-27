@@ -1,5 +1,5 @@
 ---
-title: 在 Hexo 中使用 Discuss 评论系统
+title: 支持 Discuss 评论系统
 ---
 
 
