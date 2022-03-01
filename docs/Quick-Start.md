@@ -52,26 +52,26 @@ Discuss.main(); // 无服务器使用 (ServerLess)
 # Discuss environment Config
 
 # 数据库连接地址
-DISCUSS_MONGODB='mongodb://localhost:27017/Discuss'
+DISCUSS_MONGODB=mongodb://localhost:27017/Discuss
 
 # 启动的端口号
-DISCUSS_PORT='6870'
+DISCUSS_PORT=6870
 
 # 加密的密钥字符串(自定义，未填写则默认为:Disucss)
-DISCUSS_SECRET='Discuss'
+DISCUSS_SECRET=Discuss
 ```
 
 最后使用`nodejs`执行执行`index.js`文件，即：`node index.js`
 
-启动成功后，你需要初始化管理员账户，访问服务端地址，进行初始化
-
-假设服务端地址为: https://discuss.example.com 访问后填入基本信息提交即可
-
 ::: tip 提示
-初始化管理员账户后，页面会自动刷新，这时会返回`{"msg":"Not Found"}`，因为 get 请求并未返回任何信息则默认返回此参数
+启动成功后，请前往页面打开控制台，登录并修改用户名和密码
 
-当然这个返回结果是可以自定义的，你可以在`index.js `和`.env`同级目录下新建一个`index.html`文件，这时如果访问服务端地址就会返回该 html 文件，`favicon.ico`同 index.html 一样设置(如果已在 html 中使用了外链图标，则无需设置 icon ，否则会默认返回`Discuss`logo)
+默认用户名: `admin`
+
+默认密码: `111111`
 :::
+![Change Password](/img/Quick-Start/Change-Password.png)
+
 
 ### 配置管理
 
