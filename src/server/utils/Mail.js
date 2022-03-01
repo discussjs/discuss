@@ -5,7 +5,7 @@ const { join } = require('path')
 const HtmlMinify = require('./minify')
 const { GetAvatar } = require('./avatar')
 
-let config = global.config
+let config = global.Dconfig
 let transporter
 
 function parse(comment) {
@@ -166,7 +166,7 @@ async function noticeHandler(comment, type, rComment) {
 }
 
 module.exports = async (comment) => {
-  config = global.config
+  config = global.Dconfig
 
   // 计算Token
   const encrypted = config.username + config.password + config.mail

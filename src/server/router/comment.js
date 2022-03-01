@@ -17,7 +17,7 @@ const { IndexHandler, DeepColne, VerifyParams, akismet } = require('../utils')
 /* eslint-disable max-statements  */
 // 获取评论
 async function GetComment(params) {
-  const config = global.config
+  const config = global.Dconfig
   const commentCount = config.commentCount
   // 处理index.html
   params.path = IndexHandler(params.path)
@@ -85,7 +85,7 @@ async function CommitComment(params) {
   // 查询rid是否存在
   const RplayComment = await Comment.findById(params.rid)
 
-  const config = global.config
+  const config = global.Dconfig
 
   // 验证token是否正确
   const token = await VerifyToken(params.token)
@@ -132,7 +132,7 @@ async function CommitComment(params) {
 
 // 获取最新评论
 async function RecentComment(params) {
-  const config = global.config
+  const config = global.Dconfig
   let query = { status: 'accept' }
   if (params.reply === false) query.pid = ''
 

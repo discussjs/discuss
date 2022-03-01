@@ -3,7 +3,7 @@ const { jwtSign, DeepColne, GetAvatar } = require('../utils')
 const Admin = require('../database/mongoose/model/Admin')
 const Comment = require('../database/mongoose/model/Comment')
 
-const { SECRET, VerifyToken, isInit } = require('../utils/adminUtils')
+const { SECRET, VerifyToken } = require('../utils/adminUtils')
 const {
   GetCommentCounts,
   limitPageNo,
@@ -13,20 +13,15 @@ const {
 const { VerifyParams, IndexHandler } = require('../utils')
 
 /**
- * 初始化
- * @param {String} username 用户名
- * @param {String} password 密码
- * @param {String} mail 邮箱
- * @returns
+ * 初始化管理员，并将信息发送到全局
  */
-async function init({ username, password, mail }) {
-  password = bcrypt.hashSync(password, 10)
-  const isinit = await isInit()
-  if (isinit) return isinit
-
-  const init = await new Admin({ username, password, mail }).save()
-  if (init) return true
-  return false
+async function init() {
+  global.Dconfig = await Admin.findOne().lean()
+  // 如果已有则直接退出
+  if (global.Dconfig) return
+  const password = bcrypt.hashSync('111111', 10)
+  await new Admin({ username: 'admin', password }).save()
+  global.Dconfig = await Admin.findOne().lean()
 }
 
 /**
@@ -37,7 +32,7 @@ async function init({ username, password, mail }) {
  * @returns
  */
 async function Login(params) {
-  const config = global.config
+  const config = global.Dconfig
 
   const { username, password, token } = params
   const result = {}
@@ -94,7 +89,7 @@ function FuzzyQueries(options, keyword, searchType) {
  * @returns
  */
 async function AdminGetComments(params) {
-  const config = global.config
+  const config = global.Dconfig
 
   const token = await VerifyToken(params.token)
   if (!token) throw new Error('Token exception')
@@ -173,7 +168,7 @@ async function GetConfig({ token }) {
   const isToken = await VerifyToken(token)
   if (!isToken) throw new Error('Token exception')
 
-  const config = DeepColne(global.config)
+  const config = DeepColne(global.Dconfig)
   delete config._id
   delete config.password
   return config
@@ -197,8 +192,9 @@ async function SaveConfig(params) {
   const siteUrl = data.siteUrl === null || data.siteUrl === void 0
   data.siteUrl = siteUrl ? void 0 : data.siteUrl.replace(/\/$/, '')
 
-  const { _id } = global.config
+  const { _id } = global.Dconfig
   await Admin.updateOne({ _id }, data)
+  global.Dconfig = await Admin.findOne().lean()
 }
 
 module.exports = {

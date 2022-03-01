@@ -30,7 +30,7 @@ async function SetAvatar(mail) {
 }
 
 function GetAvatar(avatar) {
-  const config = global.config
+  const config = global.Dconfig
   const avatarCdn = config.avatarCdn
 
   if (/^http/.test(avatar)) return avatar

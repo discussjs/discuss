@@ -1,7 +1,5 @@
 // 设置环境变量
-const envPath = require('path').join(process.cwd(), '.env')
-require('dotenv').config(envPath)
-
+require('dotenv').config()
 const server = require('./src/server')
 const main = require('./src/server/main')
 

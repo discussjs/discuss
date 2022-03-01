@@ -212,7 +212,7 @@ function DeleteRedundant(comment) {
 }
 
 function CommentHandler(comments) {
-  const config = global.config
+  const config = global.Dconfig
   const obj = {}
   for (let comment of comments) {
     if (comment.mail === config.mail) comment.master = true
@@ -289,7 +289,7 @@ function VerufyMailANDSite(mail, site) {
 async function limitFilter(ip) {
   const tenmin = 600000 // 10分钟
 
-  const { limit, limitAll } = global.config
+  const { limit, limitAll } = global.Dconfig
 
   // 10分钟内，相同的ip能评论多少条(默认10)
   if (parseInt(limit)) {

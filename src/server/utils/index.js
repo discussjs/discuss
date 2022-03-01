@@ -15,8 +15,8 @@ function GetUserIP(req) {
   try {
     // 获取自定义请求头IP，以逗号分隔为数组
     let requestHeaders = ''
-    if (global && global.config) {
-      requestHeaders = global.config.requestHeaders || ''
+    if (global && global.Dconfig) {
+      requestHeaders = global.Dconfig.requestHeaders || ''
     }
 
     const array = requestHeaders.split(',') || []
@@ -46,7 +46,7 @@ function GetFavicon() {
 // 设置 favicon
 function SetFavicon(res) {
   const content = GetFavicon()
-  if (!content) return false
+  if (!content) return
   res.setHeader('Content-Type', 'image/x-icon')
   res.write(content, 'binary')
   return content
@@ -54,7 +54,7 @@ function SetFavicon(res) {
 
 function Discussjs(url) {
   const path = join(__dirname, '../../../dist', url)
-  if (!existsSync(path)) return false
+  if (!existsSync(path)) return
   return readFileSync(path, { encoding: 'utf-8' })
 }
 
