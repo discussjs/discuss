@@ -68,5 +68,11 @@ module.exports = {
     editLinks: true,
     // 默认为 "Edit this page"
     editLinkText: "帮助我们改善此页面！",
+    algolia: {
+      // 如果 Algolia 没有为你提供 `appId` ，使用 `BH4D9OD16A` 或者移除该配置项
+      appId: "0WRG6B7JL7",
+      apiKey: "53b4a54024cc3e704b003b1c1435021b",
+      indexName: "discuss-js",
+    },
   },
 };
