@@ -12,3 +12,4 @@ sidebar: false
 | 博主 | 链接 | 
 | ---- | ---- | 
 | Lete乐特 | [Lete乐特 's Blog](https://blog.imlete.cn/) |
+| 暗影 | [暗影博客](https://dsanying.github.io/) |
