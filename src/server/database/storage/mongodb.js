@@ -1,4 +1,5 @@
 const {
+  D_MONGO_URL,
   D_MONGO_HOST,
   D_MONGO_PORT,
   D_MONGO_DB,
@@ -9,12 +10,44 @@ const {
   D_MONGO_SSL
 } = process.env
 
+// 自动拼接
+const parseOpt = {}
+if (D_MONGO_URL) {
+  const urls = D_MONGO_URL.split(',')
+  const url1 = new URL(urls[0])
+  const url2 = new URL(urls[1])
+  const url3 = new URL(urls[2])
+
+  // url1
+  parseOpt.host = []
+  parseOpt.host.push(url1.hostname)
+  parseOpt.port = []
+  parseOpt.port.push(url1.port)
+
+  parseOpt.user = url1.username
+  parseOpt.password = url1.password
+
+  // url2
+  parseOpt.host.push(url2.href.replace(/:\d+$/, ''))
+  parseOpt.port.push(url2.pathname)
+
+  // url3
+  parseOpt.host.push(url3.protocol.replace(/:$/, ''))
+  const [port, db] = url3.pathname.split('/')
+  parseOpt.port.push(port)
+  parseOpt.database = db
+
+  parseOpt.options = {}
+  const params = url3.searchParams.entries()
+  for (const i of params) parseOpt.options[i[0]] = i[1]
+}
+
 const dbOptions = {}
 if (D_MONGO_REPLICASET) dbOptions.replicaset = D_MONGO_REPLICASET
 if (D_MONGO_AUTHSOURCE) dbOptions.authSource = D_MONGO_AUTHSOURCE
 if (D_MONGO_SSL) dbOptions.ssl = D_MONGO_SSL
 
-module.exports = {
+let options = {
   host: D_MONGO_HOST
     ? D_MONGO_HOST.startsWith('[')
       ? JSON.parse(D_MONGO_HOST) // 如果是 [xxx, xxx] 数组格式则解析为数组，否则不解析
@@ -30,3 +63,7 @@ module.exports = {
   password: D_MONGO_PASSWORD,
   options: dbOptions
 }
+
+if (JSON.stringify(parseOpt) !== '{}') options = parseOpt
+
+module.exports = options
