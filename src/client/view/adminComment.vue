@@ -71,11 +71,7 @@
       </div>
     </div>
     <div class="D-tbody">
-      <div
-        class="D-comment-list"
-        v-for="comment in comments"
-        :key="comment._id"
-      >
+      <div class="D-comment-list" v-for="comment in comments" :key="comment.id">
         <div class="D-comment-edit-wrap" v-show="comment.isEdit">
           <div class="D-comment-edit-info">
             <input class="D-input" type="text" v-model="comment.editNick" />
@@ -103,7 +99,7 @@
           </div>
         </div>
         <div class="D-comment-body-wrap" v-show="!comment.isEdit">
-          <input type="checkbox" :value="comment._id" v-model="checkedAll" />
+          <input type="checkbox" :value="comment.id" v-model="checkedAll" />
           <div class="D-comment-info">
             <div class="D-comment-author">
               <img
@@ -158,7 +154,7 @@
                   v-if="!comment.pid || key !== 'stick'"
                   :class="'D-operate-' + key"
                   v-text="item"
-                  @click="onOperate(key, comment._id, comment)"
+                  @click="onOperate(key, comment.id, comment)"
                 ></span>
               </template>
             </div>
@@ -366,7 +362,7 @@ export default {
     onCheckedAll() {
       // 全选/反选/单选/多选
       if (this.checked) {
-        this.comments.forEach((item) => this.checkedAll.push(item._id))
+        this.comments.forEach((item) => this.checkedAll.push(item.id))
       } else {
         this.checkedAll = []
       }
@@ -422,7 +418,7 @@ export default {
           type: 'OPERATE_COMMENT',
           token: this.token,
           exec: editStr,
-          id: [comment._id],
+          id: [comment.id],
           comment: {
             nick: comment.editNick,
             mail: comment.editMail,

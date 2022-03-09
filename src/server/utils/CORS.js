@@ -2,7 +2,7 @@
 
 async function CORSHandler(req) {
   // 设置安全域名
-  const { domain } = global.Dconfig
+  const { domain } = global.Dconfig || {}
 
   if (!domain) return false
 

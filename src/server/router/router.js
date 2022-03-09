@@ -1,7 +1,9 @@
+const { join } = require('path')
 const bodyData = require('body-data')
 const SendMail = require('../utils/Mail')
 
 const {
+  init,
   Login,
   AdminGetComments,
   GetConfig,
@@ -15,7 +17,7 @@ const {
   CommentCount
 } = require('./comment')
 const GetCounter = require('./counter')
-const { GetUserIP, CORS } = require('../utils')
+const { GetUserIP, CORS, HtmlMinify } = require('../utils')
 
 const NotFound = { msg: 'Not Found' }
 
@@ -25,10 +27,28 @@ async function Router(req, res) {
   let result = { msg: 'success' }
 
   try {
+    // 将配置信息放置到全局
+    if (!global.Dconfig) {
+      const { Admin } = global.DiscussDB
+      global.Dconfig = (await Admin.select({}))[0]
+    }
+
+    // 获取请求参数
     body = await bodyData(req)
+    // 获取 UA
     body.ua = req.headers['user-agent']
+    // 获取 IP
     body.ip = GetUserIP(req)
     console.log('body', body)
+
+    // 返回初始化页面
+    if (!global.Dconfig && body.type !== 'INIT') {
+      const path = join(__dirname, '../../../public/init.html')
+      const html = HtmlMinify(path)
+      res.setHeader('Content-Type', 'text/html; charset=utf-8')
+      res.end(html)
+      return
+    }
 
     // 邮件通知
     if (body.type === 'PUSH_MAIL') {
@@ -47,6 +67,9 @@ async function Router(req, res) {
     }
 
     switch (body.type) {
+      case 'INIT':
+        result.data = await init(body)
+        break
       case 'GET_COMMENT':
         result.data = await GetComment(body)
         break

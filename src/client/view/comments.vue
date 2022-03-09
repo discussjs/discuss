@@ -121,7 +121,7 @@ export default {
              (详细看组件comment.vue的class属性为：D-comments-child)
           5. 假设现在点击了子评论的回复按钮
              点击后会执行‘onReply()’传入三个参数(id,pid,rid)
-                source: onReply(comment._id, comment.pid, comment.rid)
+                source: onReply(comment.id, comment.pid, comment.rid)
              评论框有个判断，只有第一个参数id等于‘replying’时才会显示评论框
              目前‘replying’仍处于空字符串的状态
              当点击了回复按钮后执行‘onReply()’传入了当前评论id
@@ -152,7 +152,7 @@ export default {
      */
     submitCommentFn(comment, pid) {
       for (const item of this.comments) {
-        if (item._id === pid) {
+        if (item.id === pid) {
           item.replys = [...comment, ...item.replys]
           break
         }

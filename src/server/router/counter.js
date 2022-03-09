@@ -1,31 +1,27 @@
-const Counter = require('../database/mongoose/model/Counter')
 const { VerifyParams, IndexHandler } = require('../utils')
 
-// 递增
-async function Increasing(path) {
-  const result = await Counter.updateOne(
-    { path },
-    {
-      $inc: { time: 1 },
-      $set: { updated: Date.now() }
-    }
-  )
-  if (result.matchedCount) return true
-
-  return false
-}
-
 module.exports = async (params) => {
+  const { Counter } = global.DiscussDB
+
+  // 验证 path 是否存在
   VerifyParams(params, ['path'])
+
+  // 处理/index.html
   const path = IndexHandler(params.path)
 
-  // 递归+1
-  const isInc = await Increasing(path)
+  // 查询
+  let result = (await Counter.select({ path }))[0]
 
-  // 新增
-  if (!isInc) await new Counter({ path }).save()
+  // 判断是否有统计记录
+  // 有: 自增1
+  // 没有: 新增记录
+  if (result) {
+    const options = { time: ++result.time, updated: Date.now() }
+    await Counter.update(options, { path })
+  } else {
+    const options = { path, time: 1, created: Date.now(), updated: Date.now() }
+    await Counter.add(options)
+  }
 
-  const record = await Counter.findOne({ path })
-
-  return record.time || 1
+  return result.time || 1
 }

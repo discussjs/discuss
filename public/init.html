@@ -1,0 +1,233 @@
+<style>
+  body {
+    color: #fff;
+    background: #13111c;
+  }
+
+  .title {
+    font-size: 2em;
+    font-weight: 800;
+    margin-bottom: 10px;
+  }
+
+  .init {
+    text-align: center;
+    position: fixed;
+    top: 5rem;
+    left: 50%;
+    margin-left: -10rem;
+    padding: 1rem;
+    width: 20rem;
+    background: #1f1c2c;
+    box-sizing: border-box;
+    border-radius: 10px;
+  }
+
+  .msg {
+    display: none;
+    margin: 10px 0;
+    padding: 10px 4px;
+    color: #67c23a;
+    border-radius: 6px;
+    border: 1px solid #b3e19d;
+    background-color: #d5f5c5;
+  }
+
+  .error {
+    color: #f56c6c;
+    border: 1px solid #fab6b6;
+    background-color: #f8cccc;
+  }
+
+  .init-info {
+    list-style: none;
+    margin: 1em 0;
+    padding: 0;
+  }
+
+  input {
+    border: 1px solid #000;
+    background: 0;
+    border-radius: 3px;
+    margin: 0 auto 10px;
+    display: block;
+    text-align: center;
+    font-weight: 300;
+    appearance: none;
+    outline: 0;
+    padding: 10px 15px;
+    font-size: 18px;
+
+    width: 100%;
+    color: #fff;
+    border: 1px solid #33323e;
+  }
+
+  input[type='button'] {
+    background: #f4645f;
+    opacity: 0.9;
+  }
+
+  input[type='button']:hover {
+    cursor: pointer;
+    opacity: 1;
+  }
+
+  input[disabled]:hover {
+    cursor: not-allowed;
+  }
+
+  .login-status {
+    color: red;
+    margin-top: 10px;
+    display: none;
+  }
+
+  .shake {
+    animation-name: shake-horizontal;
+    animation-duration: 1s;
+    animation-timing-function: ease;
+    animation-delay: 0s;
+    animation-iteration-count: 1;
+    animation-direction: normal;
+    animation-fill-mode: none;
+  }
+
+  @keyframes shake-horizontal {
+    0% {
+      -webkit-transform: translateX(0);
+      transform: translateX(0);
+    }
+
+    10% {
+      -webkit-transform: translateX(-10px);
+      transform: translateX(-10px);
+    }
+
+    20% {
+      -webkit-transform: translateX(10px);
+      transform: translateX(10px);
+    }
+
+    30% {
+      -webkit-transform: translateX(-10px);
+      transform: translateX(-10px);
+    }
+
+    40% {
+      -webkit-transform: translateX(10px);
+      transform: translateX(10px);
+    }
+
+    50% {
+      -webkit-transform: translateX(-10px);
+      transform: translateX(-10px);
+    }
+
+    60% {
+      -webkit-transform: translateX(10px);
+      transform: translateX(10px);
+    }
+
+    70% {
+      -webkit-transform: translateX(-10px);
+      transform: translateX(-10px);
+    }
+
+    80% {
+      -webkit-transform: translateX(8px);
+      transform: translateX(8px);
+    }
+
+    90% {
+      -webkit-transform: translateX(-8px);
+      transform: translateX(-8px);
+    }
+
+    100% {
+      -webkit-transform: translateX(0);
+      transform: translateX(0);
+    }
+  }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/xhr-ajax/dist/ajax.js"></script>
+
+<div class="init">
+  <div class="title">Init Discuss</div>
+  <div class="description">Initialize administrator identity</div>
+  <div class="msg"></div>
+  <div class="login-status"></div>
+  <ul class="init-info">
+    <div class="input">
+      <li>
+        <input placeholder="Username" type="text" id="name" />
+      </li>
+      <li>
+        <input placeholder="Password" type="password" id="password" />
+      </li>
+      <li>
+        <input placeholder="Confirm Password" type="password" id="confirm" />
+      </li>
+      <li>
+        <input placeholder="Mail" type="email" id="mail" />
+      </li>
+    </div>
+    <li>
+      <input
+        type="button"
+        class="submit"
+        onclick="FormSubmit()"
+        value="Submit"
+      />
+    </li>
+  </ul>
+</div>
+
+<script>
+  async function FormSubmit() {
+    const submit = document.querySelector('.submit')
+
+    const reg = /^([a-z0-9-])*[^-]@([a-z0-9-])+[^-]*(\.[a-z]{2,5})+$/
+    const username = document.querySelector('#name').value
+    const password = document.querySelector('#password').value
+    const confirm = document.querySelector('#confirm').value
+    const mail = document.querySelector('#mail').value
+
+    const isConform =
+      username.length >= 2 &&
+      password.length >= 6 &&
+      password === confirm &&
+      reg.test(mail)
+    if (!isConform) {
+      const init = document.querySelector('.input')
+      init.classList.add('shake')
+      setTimeout(() => init.classList.remove('shake'), 1000)
+      return
+    }
+
+    submit.setAttribute('disabled', '')
+    const data = await ajax({
+      url: '/',
+      data: {
+        type: 'INIT',
+        mail,
+        username,
+        password
+      }
+    })
+    const msg = document.querySelector('.msg')
+    msg.style.display = 'block'
+    msg.innerText = data.msg
+
+    if (data.msg !== 'success') {
+      msg.classList.add('error')
+    }
+
+    setTimeout(() => {
+      msg.innerText = ''
+      msg.style.display = 'none'
+      msg.classList.remove('error')
+      submit.removeAttribute('disabled')
+    }, 6000)
+  }
+</script>

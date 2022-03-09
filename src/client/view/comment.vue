@@ -2,8 +2,8 @@
   <div
     class="D-comments"
     v-for="comment in comments"
-    :key="comment._id"
-    :id="comment._id"
+    :key="comment.id"
+    :id="comment.id"
   >
     <div class="D-comment">
       <img
@@ -48,11 +48,11 @@
     </div>
     <div
       class="D-reply"
-      @click="onReply(comment._id, comment.pid)"
+      @click="onReply(comment.id, comment.pid)"
       v-text="translate('reply')"
     ></div>
     <D-Submit
-      v-if="replying === comment._id"
+      v-if="replying === comment.id"
       :cancel="true"
       :pid="pid"
       :rid="rid"

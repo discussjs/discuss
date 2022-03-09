@@ -233,8 +233,9 @@ export default {
     },
     MetasChange(dom, key) {
       dom = dom.target || dom
-      dom.style = ''
-      const borderColor = 'border-color:var(--D-main-Color)'
+      // 如果没有内容，则直接退出
+      if (JSON.stringify(dom) === '{}') return
+      dom.classList.remove('error')
 
       const nick = this.metas.nick
       const mail = this.metas.mail
@@ -244,7 +245,7 @@ export default {
       function borderColorFn(result, value) {
         if (result) value.is = true
         else {
-          dom.style = borderColor
+          dom.classList.add('error')
           value.is = false
         }
       }
@@ -460,6 +461,11 @@ export default {
   }
 }
 .D-input {
+  :deep(.error) {
+    border-radius: 6px;
+    border-color: var(--D-main-Color);
+    background: rgba(244, 100, 95, 0.1);
+  }
   input {
     padding: 6px;
     width: calc((100% - 1rem) / 3);

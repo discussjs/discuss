@@ -8,10 +8,10 @@ const SECRET = process.env.DISCUSS_SECRET || 'Discuss'
  * @returns
  */
 async function VerifyToken(token) {
-  const { msg, id } = jwtVerify(token, SECRET)
-  if (msg) return false
-  if (id) {
-    const condition = id === global.Dconfig._id.toString()
+  const data = jwtVerify(token, SECRET)
+  if (data.msg) return false
+  if (data.id) {
+    const condition = data.id === global.Dconfig.id.toString()
     if (condition) return true
     return false
   }

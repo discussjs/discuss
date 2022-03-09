@@ -1,6 +1,5 @@
 const nodemailer = require('nodemailer')
 const bcrypt = require('bcryptjs')
-const Comment = require('../database/mongoose/model/Comment')
 const { join } = require('path')
 const HtmlMinify = require('./minify')
 const { GetAvatar } = require('./avatar')
@@ -69,6 +68,8 @@ async function Send(options) {
 
 // 查询(父|回复)评论信息
 async function PRComment(comment) {
+  const { Comment } = global.DiscussDB
+
   let ids = []
   let pComment = {}
   let rComment = {}
@@ -78,7 +79,7 @@ async function PRComment(comment) {
     if (comment.pid === comment.rid) ids.push(comment.pid)
     else ids = [comment.rid, comment.pid]
 
-    const comments = await Comment.find({ _id: { $in: ids } })
+    const comments = await Comment.select({ id: ['IN', ids] })
     for (const item of comments) {
       pComment = item.id === comment.pid ? parse(item) : pComment
       rComment = item.id === comment.rid ? parse(item) : rComment
@@ -101,7 +102,7 @@ async function noticeMaster(comment, { pComment, rComment }) {
 
 // 楼主评论通知处理
 async function noticeLandlord(comment, { pComment, rComment }) {
-  if (!pComment._id || !rComment._id) return
+  if (!pComment.id || !rComment.id) return
   // (根)自己回复自己，取消通知
   if (comment.mail === pComment.mail) return
   // (子)如果自己是自己的子评论，当被回复时，取消楼主通知(将通知转让给Reply处理)
@@ -112,7 +113,7 @@ async function noticeLandlord(comment, { pComment, rComment }) {
 
 // 回复评论通知处理
 async function noticeReply(comment, { pComment, rComment }) {
-  if (!pComment._id || !rComment._id) return
+  if (!pComment.id || !rComment.id) return
   // (根)自己回复自己，取消通知
   if (comment.mail === pComment.mail) return
   // (子)自己回复自己，取消通知

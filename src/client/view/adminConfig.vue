@@ -121,7 +121,7 @@ export default {
           icon: iconComment,
           items: [
             {
-              key: 'comment',
+              key: 'commentCount',
               title: translate(commentHandleStr + 'count' + title),
               desc: translate(commentHandleStr + 'count' + desc),
               ph: translate(commentHandleStr + 'count' + ph)

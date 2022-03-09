@@ -1,12 +1,16 @@
 const Router = require('./router/router')
-const { init } = require('./router/admin')
 const { SetFavicon, Discussjs } = require('./utils')
-// 连接数据库
-require('./database/mongoose')()
 
+require('output-line')()
+/* eslint-disable */
 module.exports = async (req, res) => {
-  // 将配置信息锁定到全局
-  if (!global.Dconfig) await init()
+  // 将数据库信息锁定到全局
+  if (!global.DiscussDB) {
+    const result = require('./database/adapter')()
+    // 如果未返回信息，则表示连接错误，直接结束请求
+    if (!result) return
+    global.DiscussDB = result
+  }
 
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
   res.setHeader('Access-Control-Allow-Origin', '*')

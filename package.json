@@ -1,6 +1,6 @@
 {
   "name": "discuss",
-  "version": "0.1.11",
+  "version": "0.2.0",
   "description": "一个简单，安全，免费的评论系统 | A simple, safe, free comment system",
   "main": "index.js",
   "scripts": {
@@ -24,7 +24,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/lete114/Discuss"
+    "url": "https://github.com/Lete114/Discuss"
   },
   "author": {
     "name": "Lete乐特",
@@ -34,14 +34,14 @@
     "akismet-api": "^5.2.1",
     "axios": "^0.22.0",
     "bcryptjs": "^2.4.3",
-    "body-data": "^1.0.2",
+    "body-data": "^1.0.3",
     "core-js": "^3.21.0",
+    "dittorm": "^1.0.0-alpha.2",
     "dotenv": "^10.0.0",
     "get-user-ip": "^1.0.0",
     "html-minifier": "^4.0.0",
     "jsonwebtoken": "^8.5.1",
     "md5": "^2.3.0",
-    "mongoose": "^6.0.12",
     "nodemailer": "^6.7.0",
     "vue": "^3.1.1",
     "xhr-ajax": "^0.0.2",
@@ -58,7 +58,7 @@
     "css-loader": "^5.2.6",
     "eslint": "^8.9.0",
     "nodemon": "^2.0.15",
-    "output-line": "^1.0.0",
+    "output-line": "^1.0.1",
     "postcss": "^8.4.5",
     "postcss-loader": "^6.2.1",
     "postcss-preset-env": "^7.1.0",

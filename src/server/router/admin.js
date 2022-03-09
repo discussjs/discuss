@@ -1,7 +1,5 @@
 const bcrypt = require('bcryptjs')
 const { jwtSign, DeepColne, GetAvatar } = require('../utils')
-const Admin = require('../database/mongoose/model/Admin')
-const Comment = require('../database/mongoose/model/Comment')
 
 const { SECRET, VerifyToken } = require('../utils/adminUtils')
 const {
@@ -15,13 +13,41 @@ const { VerifyParams, IndexHandler } = require('../utils')
 /**
  * 初始化管理员，并将信息发送到全局
  */
-async function init() {
-  global.Dconfig = await Admin.findOne().lean()
+async function init(body) {
+  const { Admin } = global.DiscussDB
+  global.Dconfig = (await Admin.select({}))[0]
   // 如果已有则直接退出
   if (global.Dconfig) return
-  const password = bcrypt.hashSync('111111', 10)
-  await new Admin({ username: 'admin', password }).save()
-  global.Dconfig = await Admin.findOne().lean()
+  const { username, password, mail } = body
+  VerifyParams(body, ['username', 'password', 'mail'])
+  const options = {
+    username,
+    password: bcrypt.hashSync(password, 10),
+    mail,
+    domain: '',
+    requestHeaders: '',
+
+    // 评论处理
+    commentCount: 6,
+    wordNumber: '0',
+    limit: 0,
+    limitAll: 0,
+    akismet: '',
+    avatarCdn: 'https://cravatar.cn/avatar/',
+
+    // 邮件提醒
+    siteUrl: '',
+    serverURLs: '',
+    mailHost: '',
+    mailPort: '',
+    mailFrom: '',
+    mailAccept: '',
+    masterSubject: '',
+    masterTemplate: '',
+    replySubject: '',
+    replyTemplate: ''
+  }
+  global.Dconfig = await Admin.add(options)
 }
 
 /**
@@ -53,7 +79,7 @@ async function Login(params) {
   // 用户名密码是否正确
   if (!isUsername || !isPassword) throw new Error('User name or password error')
 
-  result.token = jwtSign({ id: config._id }, SECRET, { expiresIn: '7d' })
+  result.token = jwtSign({ id: config.id }, SECRET, { expiresIn: '7d' })
   return result
 }
 
@@ -66,19 +92,18 @@ async function Login(params) {
  */
 function FuzzyQueries(options, keyword, searchType) {
   if (!keyword) return
-  const reg = new RegExp(keyword, 'i')
-  if (searchType !== 'all') {
-    options[searchType] = reg
+
+  // 默认查询全部字段
+  if (searchType === 'all') {
+    delete options.path
+    options._complex = { _logic: 'OR' }
+    const arr = ['nick', 'mail', 'site', 'ip', 'content', 'path']
+    for (const i of arr) {
+      options._complex[i] = ['LIKE', `%${keyword}%`]
+    }
   } else {
-    options.$or = [
-      //多条件，数组
-      { nick: { $regex: reg } },
-      { mail: { $regex: reg } },
-      { site: { $regex: reg } },
-      { ip: { $regex: reg } },
-      { content: { $regex: reg } },
-      { path: { $regex: reg } }
-    ]
+    // 指定字段
+    options[searchType] = ['LIKE', `%${keyword}%`]
   }
 }
 
@@ -89,6 +114,7 @@ function FuzzyQueries(options, keyword, searchType) {
  * @returns
  */
 async function AdminGetComments(params) {
+  const { Comment } = global.DiscussDB
   const config = global.Dconfig
 
   const token = await VerifyToken(params.token)
@@ -119,11 +145,12 @@ async function AdminGetComments(params) {
   // 限制页码
   const { page, pageCount } = await limitPageNo(pageNo, pageSize, options)
 
-  const comments = await Comment.find(options)
-    .skip((page - 1) * pageSize)
-    .limit(pageSize)
-    .sort({ created: -1 })
-    .lean()
+  // 分页查询
+  const comments = await Comment.select(options, {
+    offset: (page - 1) * pageSize,
+    limit: pageSize,
+    desc: 'created'
+  })
 
   for (const item of comments) {
     // 处理头像
@@ -169,13 +196,15 @@ async function GetConfig({ token }) {
   if (!isToken) throw new Error('Token exception')
 
   const config = DeepColne(global.Dconfig)
-  delete config._id
+  delete config.id
   delete config.password
   return config
 }
 
 // 保存配置信息
 async function SaveConfig(params) {
+  const { Admin } = global.DiscussDB
+
   const { data, token } = params
 
   const isToken = await VerifyToken(token)
@@ -192,9 +221,8 @@ async function SaveConfig(params) {
   const siteUrl = data.siteUrl === null || data.siteUrl === void 0
   data.siteUrl = siteUrl ? void 0 : data.siteUrl.replace(/\/$/, '')
 
-  const { _id } = global.Dconfig
-  await Admin.updateOne({ _id }, data)
-  global.Dconfig = await Admin.findOne().lean()
+  const { id } = global.Dconfig
+  global.Dconfig = (await Admin.update(data, { id }))[0]
 }
 
 module.exports = {
