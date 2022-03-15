@@ -175,7 +175,7 @@ export default {
   border-color: var(--D-main-Color);
   background-color: var(--D-main-Color);
 }
-.D-disabled-click {
+#Discuss .D-disabled-click {
   cursor: not-allowed;
   cursor: no-drop;
 }

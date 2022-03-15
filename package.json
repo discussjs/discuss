@@ -1,6 +1,6 @@
 {
   "name": "discuss",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "一个简单，安全，免费的评论系统 | A simple, safe, free comment system",
   "main": "index.js",
   "scripts": {
@@ -36,7 +36,7 @@
     "bcryptjs": "^2.4.3",
     "body-data": "^1.0.3",
     "core-js": "^3.21.0",
-    "dittorm": "^1.0.0-alpha.2",
+    "dittorm": "^1.0.0-alpha.5",
     "dotenv": "^10.0.0",
     "get-user-ip": "^1.0.0",
     "html-minifier": "^4.0.0",

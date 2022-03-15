@@ -10,10 +10,23 @@ const {
   D_MONGO_SSL
 } = process.env
 
-// 自动拼接
+// 自动拆分
 const parseOpt = {}
 if (D_MONGO_URL) {
-  const urls = D_MONGO_URL.split(',')
+  const protocol = 'mongodb://'
+  let split = D_MONGO_URL.split(',')
+
+  // 正则: ^mongodb:\/\/.*
+  const reg = new RegExp('^' + protocol + '.*')
+
+  // 加协议
+  const urls = []
+  for (let i of split) {
+    if (reg.test(i)) urls.push(i)
+    else urls.push(protocol + i)
+  }
+
+  // 解析
   const url1 = new URL(urls[0])
   const url2 = new URL(urls[1])
   const url3 = new URL(urls[2])
@@ -28,14 +41,13 @@ if (D_MONGO_URL) {
   parseOpt.password = url1.password
 
   // url2
-  parseOpt.host.push(url2.href.replace(/:\d+$/, ''))
-  parseOpt.port.push(url2.pathname)
+  parseOpt.host.push(url2.hostname)
+  parseOpt.port.push(url2.port)
 
   // url3
-  parseOpt.host.push(url3.protocol.replace(/:$/, ''))
-  const [port, db] = url3.pathname.split('/')
-  parseOpt.port.push(port)
-  parseOpt.database = db
+  parseOpt.host.push(url3.hostname)
+  parseOpt.port.push(url3.port)
+  parseOpt.database = url3.pathname.replace(/^\//, '')
 
   parseOpt.options = {}
   const params = url3.searchParams.entries()

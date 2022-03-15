@@ -1,4 +1,4 @@
-const { VerifyParams, IndexHandler } = require('../utils')
+const { Unique, VerifyParams, IndexHandler } = require('../utils')
 
 module.exports = async (params) => {
   const { Counter } = global.DiscussDB
@@ -16,11 +16,17 @@ module.exports = async (params) => {
   // 有: 自增1
   // 没有: 新增记录
   if (result) {
-    const options = { time: ++result.time, updated: Date.now() }
-    await Counter.update(options, { path })
+    const data = { time: ++result.time, updated: Date.now() }
+    result = (await Counter.update(data, { path }))[0]
   } else {
-    const options = { path, time: 1, created: Date.now(), updated: Date.now() }
-    await Counter.add(options)
+    const created = Date.now()
+    const updated = Date.now()
+    const data = { path, time: 1, created, updated }
+
+    const _idDB = ['mysql', 'github', 'postgresql', 'sqlite']
+    if (_idDB.includes(process.env.DISCUSS_DB_TYPE)) data.id = Unique()
+
+    result = await Counter.add(data)
   }
 
   return result.time || 1

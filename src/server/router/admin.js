@@ -1,5 +1,5 @@
 const bcrypt = require('bcryptjs')
-const { jwtSign, DeepColne, GetAvatar } = require('../utils')
+const { Unique, jwtSign, DeepColne, GetAvatar } = require('../utils')
 
 const { SECRET, VerifyToken } = require('../utils/adminUtils')
 const {
@@ -47,6 +47,8 @@ async function init(body) {
     replySubject: '',
     replyTemplate: ''
   }
+  const _idDB = ['mysql', 'github', 'postgresql', 'sqlite']
+  if (_idDB.includes(process.env.DISCUSS_DB_TYPE)) options.id = Unique()
   global.Dconfig = await Admin.add(options)
 }
 

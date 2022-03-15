@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs')
 const axios = require('axios')
 const {
+  Unique,
   XSS,
   SetAvatar,
   DeepColne,
@@ -248,6 +249,9 @@ async function CommitCommentHandler(params) {
   let path = IndexHandler(params.path)
 
   const avatar = await SetAvatar(params.mail)
+
+  const _idDB = ['mysql', 'github', 'postgresql', 'sqlite']
+  if (_idDB.includes(process.env.DISCUSS_DB_TYPE)) data.id = Unique()
 
   data.nick = params.nick
   data.mail = params.mail

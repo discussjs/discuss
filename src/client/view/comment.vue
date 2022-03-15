@@ -100,6 +100,9 @@ export default {
   mounted() {
     this.$lazy()
   },
+  updated() {
+    this.$lazy()
+  },
   methods: {
     onReply(id, pid) {
       this.pid = pid || id
@@ -156,7 +159,8 @@ export default {
 .D-comments-child {
   .D-comments {
     margin: 0;
-    border: none;
+    border: 0;
+    border-radius: 0;
     margin-left: 40px;
     padding: 15px 0 10px;
     border-top: dashed 1px var(--D-Low-Color);

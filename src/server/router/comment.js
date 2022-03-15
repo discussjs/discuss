@@ -85,7 +85,10 @@ async function CommitComment(params) {
   VerufyMailANDSite(params.mail, params.site)
 
   // 查询rid是否存在
-  const RplayComment = (await Comment.select({ id: params.rid }))[0]
+  let RplayComment
+  if (params.rid) {
+    RplayComment = (await Comment.select({ id: params.rid }))[0]
+  }
 
   const config = global.Dconfig
 

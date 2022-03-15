@@ -1,6 +1,6 @@
 <template>
   <div class="D-submit">
-    <div class="D-input">
+    <div class="D-input" ref="input">
       <input
         v-for="input in inputs"
         :key="input.key"
@@ -11,7 +11,6 @@
         v-model="metas[input.key].value"
       />
       <textarea
-        ref="input-content"
         class="D-input-content"
         v-model="metas.content.value"
         @input="onInput($event, 'content')"
@@ -99,8 +98,8 @@
         <button
           class="D-send D-btn D-btn-main"
           @click="onSend"
-          :disabled="!isSend"
-          :class="{ 'D-disabled': !isSend }"
+          :disabled="disabledSend"
+          :class="disabledSendClass"
           v-html="sending ? iconLoading : translate('send')"
         ></button>
       </div>
@@ -187,6 +186,15 @@ export default {
     isOnPreview() {
       const length = this.metas.content.value.length
       return length
+    },
+    disabledSend() {
+      return !this.isSend || this.sending
+    },
+    disabledSendClass() {
+      let classStr = ''
+      if (!this.isSend) classStr += 'D-disabled'
+      if (this.disabledSend) classStr += ' D-disabled-click'
+      return classStr
     }
   },
   async mounted() {
@@ -205,19 +213,30 @@ export default {
         this.metas.mail.value = this.storage.mail
         this.metas.site.value = this.storage.site
         this.metas.content.value = this.storage.content
-        /**
-         * 初始化用户信息时，调用MetasChange()
-         * 判断信息是否符合要求
-         * 符合: 允许发送评论
-         * 不符合: 禁用发送评论按钮，并高亮提示不符合要求的信息框
-         */
-        this.$nextTick(() => {
-          const input = document.querySelectorAll('.D-input *')
-          input.forEach((ele) => this.MetasChange(ele, ele.name || contentStr))
-        })
+        this.isVerify()
       } catch (error) {
         this.storage = {}
       }
+    },
+    isVerify() {
+      const isNull = []
+      for (const i in this.storage) {
+        if (this.storage[i]) isNull.push(1)
+        else isNull.push(0)
+      }
+      if (isNull.includes(1)) this.Verify()
+    },
+    Verify() {
+      /**
+       * 初始化用户信息时，调用MetasChange()
+       * 判断信息是否符合要求
+       * 符合: 允许发送评论
+       * 不符合: 禁用发送评论按钮，并高亮提示不符合要求的信息框
+       */
+      this.$nextTick(() => {
+        const input = this.$refs.input.children
+        for (const i of input) this.MetasChange(i, i.name || contentStr)
+      })
     },
     SaveInfo() {
       this.storage.nick = this.metas.nick.value
@@ -226,9 +245,9 @@ export default {
       this.storage.content = this.metas.content.value
       localStorage.Discuss = JSON.stringify(this.storage)
     },
-    onInput(e, key) {
+    onInput() {
       this.SaveInfo()
-      this.MetasChange(e, key)
+      this.Verify()
       this.Preview()
     },
     MetasChange(dom, key) {
@@ -355,6 +374,7 @@ export default {
     },
     async onSend() {
       try {
+        if (!this.isSend || this.sending) return
         this.ParseEmot()
         const meta = this.metas
         const comment = {
@@ -380,7 +400,7 @@ export default {
         if (!data && msg.includes('login')) {
           this.$dialog(translate('pleaseLogin'))
         }
-
+        
         if (data instanceof Array) {
           this.$emit('submitComment', data, this.pid)
           this.metas.content.value = ''
@@ -405,7 +425,7 @@ export default {
      * @param {String} type 表情类型(text or image)
      */
     onClickEmot(key, value, type) {
-      let iptContent = this.$refs['input-' + contentStr]
+      let iptContent = this.$refs.input.children[3]
       const content = this.metas.content.value
 
       // 获取输入框光标位置

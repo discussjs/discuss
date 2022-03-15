@@ -22,8 +22,8 @@
 
           <button
             class="D-btn D-btn-main D-btn-login"
-            :class="{ 'D-disabled-click D-disabled': isNull }"
-            :disabled="isNull"
+            :class="{ 'D-disabled-click D-disabled': isNull || isSend }"
+            :disabled="isNull || isSend"
             @click="onLogin"
             v-html="loginBtn"
           ></button>

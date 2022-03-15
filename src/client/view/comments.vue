@@ -17,7 +17,7 @@
     <div class="D-more" v-show="showMore">
       <button
         class="D-more-button"
-        :class="{ 'D-disabled': moerDisabled }"
+        :class="{ 'D-disabled D-disabled-click': moerDisabled }"
         :disabled="moerDisabled"
         @click="onMoreComment"
         v-html="more"

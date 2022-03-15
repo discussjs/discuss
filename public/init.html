@@ -173,61 +173,63 @@
       </li>
     </div>
     <li>
-      <input
-        type="button"
-        class="submit"
-        onclick="FormSubmit()"
-        value="Submit"
-      />
+      <input type="button" class="submit" onclick="FormSubmit()" value="Submit" />
     </li>
   </ul>
 </div>
 
 <script>
   async function FormSubmit() {
-    const submit = document.querySelector('.submit')
-
-    const reg = /^([a-z0-9-])*[^-]@([a-z0-9-])+[^-]*(\.[a-z]{2,5})+$/
-    const username = document.querySelector('#name').value
-    const password = document.querySelector('#password').value
-    const confirm = document.querySelector('#confirm').value
-    const mail = document.querySelector('#mail').value
-
-    const isConform =
-      username.length >= 2 &&
-      password.length >= 6 &&
-      password === confirm &&
-      reg.test(mail)
-    if (!isConform) {
-      const init = document.querySelector('.input')
-      init.classList.add('shake')
-      setTimeout(() => init.classList.remove('shake'), 1000)
-      return
-    }
-
-    submit.setAttribute('disabled', '')
-    const data = await ajax({
-      url: '/',
-      data: {
-        type: 'INIT',
-        mail,
-        username,
-        password
-      }
-    })
     const msg = document.querySelector('.msg')
-    msg.style.display = 'block'
-    msg.innerText = data.msg
+    const submit = document.querySelector('.submit')
+    try {
 
-    if (data.msg !== 'success') {
-      msg.classList.add('error')
+      const reg = /^([a-z0-9-])*[^-]@([a-z0-9-])+[^-]*(\.[a-z]{2,5})+$/
+      const username = document.querySelector('#name').value
+      const password = document.querySelector('#password').value
+      const confirm = document.querySelector('#confirm').value
+      const mail = document.querySelector('#mail').value
+
+      const isConform =
+        username.length >= 2 &&
+        password.length >= 6 &&
+        password === confirm &&
+        reg.test(mail)
+      if (!isConform) {
+        const init = document.querySelector('.input')
+        init.classList.add('shake')
+        setTimeout(() => init.classList.remove('shake'), 1000)
+        return
+      }
+
+      submit.setAttribute('disabled', '')
+      const data = await ajax({
+        url: '/',
+        method: 'post',
+        data: {
+          type: 'INIT',
+          mail,
+          username,
+          password
+        }
+      })
+      msg.style.display = 'block'
+      msg.innerText = data.msg
+
+      if (data.msg !== 'success') {
+        msg.classList.add('error')
+      }
+
+    } catch (error) {
+      console.error('Discuss Error:', error);
+    } finally {
+      setTimeout(() => {
+        msg.innerText = ''
+        msg.style.display = 'none'
+        msg.classList.remove('error')
+        submit.removeAttribute('disabled')
+      }, 6000)
     }
 
-    setTimeout(() => {
-      msg.innerText = ''
-      msg.style.display = 'none'
-      msg.classList.remove('error')
-      submit.removeAttribute('disabled')
-    }, 6000)
   }
 </script>

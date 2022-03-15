@@ -2,6 +2,7 @@ const GetIP = require('get-user-ip')
 const { readFileSync, existsSync } = require('fs')
 const { join } = require('path')
 const CORS = require('./CORS')
+const Unique = require('./unique')
 const VerifyParams = require('./verify')
 const akismet = require('./akismet')
 const XSS = require('./XSS')
@@ -66,6 +67,7 @@ function DeepColne(options = {}) {
 
 module.exports = {
   GetUserIP,
+  Unique,
   IndexHandler,
   GetFavicon,
   SetFavicon,
