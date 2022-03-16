@@ -9,6 +9,7 @@ vercel.json
 .vscode
 
 # project file
+assets
 node_modules
 docs
 public/index.html

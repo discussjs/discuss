@@ -173,7 +173,12 @@
       </li>
     </div>
     <li>
-      <input type="button" class="submit" onclick="FormSubmit()" value="Submit" />
+      <input
+        type="button"
+        class="submit"
+        onclick="FormSubmit()"
+        value="Submit"
+      />
     </li>
   </ul>
 </div>
@@ -183,7 +188,6 @@
     const msg = document.querySelector('.msg')
     const submit = document.querySelector('.submit')
     try {
-
       const reg = /^([a-z0-9-])*[^-]@([a-z0-9-])+[^-]*(\.[a-z]{2,5})+$/
       const username = document.querySelector('#name').value
       const password = document.querySelector('#password').value
@@ -219,9 +223,8 @@
       if (data.msg !== 'success') {
         msg.classList.add('error')
       }
-
     } catch (error) {
-      console.error('Discuss Error:', error);
+      console.error('Discuss Error:', error)
     } finally {
       setTimeout(() => {
         msg.innerText = ''
@@ -230,6 +233,5 @@
         submit.removeAttribute('disabled')
       }, 6000)
     }
-
   }
 </script>

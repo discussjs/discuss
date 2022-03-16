@@ -227,11 +227,50 @@ async function SaveConfig(params) {
   global.Dconfig = (await Admin.update(data, { id }))[0]
 }
 
+/* eslint-disable max-statements */
+async function Import(params) {
+  const config = global.Dconfig
+  const { Comment } = global.DiscussDB
+  const { username, password, comments } = params
+
+  // 验证评论信息是否合法
+  VerifyParams(params, ['username', 'password', 'comments'])
+
+  const isUsername = username === config.username
+  const isPassword = bcrypt.compareSync(password, config.password)
+  // 用户名密码是否正确
+  if (!isUsername || !isPassword) throw new Error('User name or password error')
+
+  let success = 0
+  let failure = 0
+  const _idDB = ['mysql', 'github', 'postgresql', 'sqlite']
+  const condition = _idDB.includes(process.env.DISCUSS_DB_TYPE)
+  for (const i of comments) {
+    try {
+      // 如果不是关系型数据库，那么就将id重命名为_id，反之则默认使用id为主键
+      if (!condition) {
+        i._id = i.id
+        delete i.id
+      }
+      i.path = IndexHandler(i.path)
+      await Comment.add(i)
+      success++
+    } catch (error) {
+      // eslint-disable-next-line
+      console.error(error)
+      failure++
+    }
+  }
+  return { success, failure }
+}
+/* eslint-enable */
+
 module.exports = {
   init,
   Login,
   AdminGetComments,
   GetConfig,
   SaveConfig,
+  Import,
   OperateComment
 }

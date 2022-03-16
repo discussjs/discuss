@@ -184,7 +184,7 @@ export default {
   opacity: 0.5;
 }
 
-.D-comment-emot {
+#Discuss .D-comment-emot {
   width: 32px;
   height: auto;
   vertical-align: middle;

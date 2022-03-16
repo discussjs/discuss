@@ -8,6 +8,7 @@ const {
   AdminGetComments,
   GetConfig,
   SaveConfig,
+  Import,
   OperateComment
 } = require('./admin')
 const {
@@ -90,6 +91,9 @@ async function Router(req, res) {
         break
       case 'SAVE_CONFIG':
         result.data = await SaveConfig(body)
+        break
+      case 'IMPORT':
+        result.data = await Import(body)
         break
       case 'COUNTER':
         result.data = await GetCounter(body)

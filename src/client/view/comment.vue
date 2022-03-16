@@ -224,6 +224,13 @@ time.D-time {
   font-size: 0.9rem;
   white-space: pre-wrap;
   word-break: break-all;
+
+  :deep(p) {
+    display: inline;
+  }
+  :deep(img) {
+    width: 100%;
+  }
 }
 
 .D-reply {

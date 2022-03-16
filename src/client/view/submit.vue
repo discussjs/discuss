@@ -400,7 +400,7 @@ export default {
         if (!data && msg.includes('login')) {
           this.$dialog(translate('pleaseLogin'))
         }
-        
+
         if (data instanceof Array) {
           this.$emit('submitComment', data, this.pid)
           this.metas.content.value = ''
