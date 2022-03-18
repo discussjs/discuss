@@ -230,8 +230,8 @@ async function SaveConfig(params) {
 /* eslint-disable max-statements */
 async function Import(params) {
   const config = global.Dconfig
-  const { Comment } = global.DiscussDB
-  const { username, password, comments } = params
+  const { Comment, Counter } = global.DiscussDB
+  const { username, password, comments, counters } = params
 
   // 验证评论信息是否合法
   VerifyParams(params, ['username', 'password', 'comments'])
@@ -243,9 +243,15 @@ async function Import(params) {
 
   let success = 0
   let failure = 0
+  const failureID = []
+
+  let datas = []
+  if (comments.length) datas = comments // 评论
+  if (counters.length) datas = counters // 访问量
+
   const _idDB = ['mysql', 'github', 'postgresql', 'sqlite']
   const condition = _idDB.includes(process.env.DISCUSS_DB_TYPE)
-  for (const i of comments) {
+  for (const i of datas) {
     try {
       // 如果不是关系型数据库，那么就将id重命名为_id，反之则默认使用id为主键
       if (!condition) {
@@ -253,15 +259,23 @@ async function Import(params) {
         delete i.id
       }
       i.path = IndexHandler(i.path)
-      await Comment.add(i)
+
+      if (comments.length) await Comment.add(i) // 评论
+      if (counters.length) await Counter.add(i) // 访问量
+
       success++
     } catch (error) {
       // eslint-disable-next-line
       console.error(error)
       failure++
+      failureID.push(i.id || i._id)
     }
   }
-  return { success, failure }
+
+  const result = { success, failure }
+  if (failureID.length) result.failureID = failureID
+
+  return result
 }
 /* eslint-enable */
 

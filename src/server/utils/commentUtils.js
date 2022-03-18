@@ -229,7 +229,10 @@ function CommentHandler(comments) {
       obj[comment.id] = comment
       for (const reply of comment.replys) {
         obj[reply.id] = reply
-        reply.rnick = obj[reply.rid].nick
+        reply.rnick =
+          obj[reply.rid] && obj[reply.rid].nick
+            ? obj[reply.rid].nick
+            : 'Anonymity'
       }
     }
     comment.time = comment.created
