@@ -18,6 +18,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 16
+          registry-url: https://registry.npmjs.org/
 
       - name: 安装依赖
         run: npm install
@@ -27,19 +28,6 @@ jobs:
 
       - name: 构建
         run: npm run build
-
-  publish-npm:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: 检查分支
-        uses: actions/checkout@v2
-
-      - name: 安装 Node
-        uses: actions/setup-node@v2
-        with:
-          node-version: 16
-          registry-url: https://registry.npmjs.org/
 
       - name: 发布
         run: npm publish
