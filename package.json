@@ -1,0 +1,25 @@
+{
+  "name": "hexo-discuss",
+  "version": "1.0.0-beta.0",
+  "description": "Discuss comment system for Hexo Plugin.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lete114/Hexo-Discuss.git"
+  },
+  "keywords": [
+    "Hexo",
+    "Discuss",
+    "Comment",
+    "Comment System"
+  ],
+  "author": "Lete乐特",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Lete114/Hexo-Discuss/issues"
+  },
+  "homepage": "https://github.com/Lete114/Hexo-Discuss#readme"
+}
