@@ -253,7 +253,7 @@ async function CommitCommentHandler(params) {
 
   const avatar = await SetAvatar(params.mail)
 
-  const _idDB = ['mysql', 'github', 'postgresql', 'sqlite']
+  const _idDB = ['mysql', 'postgresql', 'sqlite']
   if (_idDB.includes(process.env.DISCUSS_DB_TYPE)) data.id = Unique()
 
   data.nick = params.nick

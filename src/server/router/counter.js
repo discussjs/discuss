@@ -23,7 +23,7 @@ module.exports = async (params) => {
     const updated = Date.now()
     const data = { path, time: 1, created, updated }
 
-    const _idDB = ['mysql', 'github', 'postgresql', 'sqlite']
+    const _idDB = ['mysql', 'postgresql', 'sqlite']
     if (_idDB.includes(process.env.DISCUSS_DB_TYPE)) data.id = Unique()
 
     result = await Counter.add(data)

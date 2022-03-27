@@ -9,4 +9,5 @@ vercel.json
 # project file
 node_modules
 .env
+dist
 

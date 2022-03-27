@@ -314,10 +314,10 @@ export default {
     },
     async defaultEmotMaps() {
       if (!this.emotMaps) {
-        const defaultEmot = await import(
+        const {emot} = await import(
           /* webpackChunkName: "emot" */ '../lib/emot'
         )
-        this.emotMaps = defaultEmot.default
+        this.emotMaps = emot()
       }
     },
     async getEmot() {

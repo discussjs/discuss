@@ -47,7 +47,7 @@ async function init(body) {
     replySubject: '',
     replyTemplate: ''
   }
-  const _idDB = ['mysql', 'github', 'postgresql', 'sqlite']
+  const _idDB = ['mysql', 'postgresql', 'sqlite']
   if (_idDB.includes(process.env.DISCUSS_DB_TYPE)) options.id = Unique()
   global.Dconfig = await Admin.add(options)
 }
@@ -249,7 +249,7 @@ async function Import(params) {
   if (comments.length) datas = comments // 评论
   if (counters.length) datas = counters // 访问量
 
-  const _idDB = ['mysql', 'github', 'postgresql', 'sqlite']
+  const _idDB = ['mysql', 'postgresql', 'sqlite']
   const condition = _idDB.includes(process.env.DISCUSS_DB_TYPE)
   for (const i of datas) {
     try {

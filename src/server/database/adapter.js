@@ -12,8 +12,6 @@ module.exports = () => {
         return base(db, require('./storage/cloudbase'))
       case 'deta':
         return base(db, require('./storage/deta'))
-      case 'github':
-        return base(db, require('./storage/github'))
       case 'inspirecloud':
         return base(db, require('./storage/inspirecloud'))
       case 'leancloud':
