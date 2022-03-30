@@ -153,7 +153,7 @@ export default {
     submitCommentFn(comment, pid) {
       for (const item of this.comments) {
         if (item.id === pid) {
-          item.replys = [...comment, ...item.replys]
+          item.replys = [...comment, ...(item.replys || [])]
           break
         }
       }

@@ -426,7 +426,8 @@ export default {
      */
     onClickEmot(key, value, type) {
       let iptContent = this.$refs.input.children[3]
-      const content = this.metas.content.value
+      const cObj = this.metas.content
+      let content = cObj.value
 
       // 获取输入框光标位置
       let cursorStart = iptContent.selectionStart
@@ -435,13 +436,13 @@ export default {
       const Ent = content.substring(cursorEnd)
 
       if (type == textStr) {
-        this.metas.content.value = `${Start}${value}${Ent}`
+        cObj.value = `${Start}${value}${Ent}`
       } else {
-        this.metas.content.value = `${Start}[${key}]${Ent}`
+        cObj.value = `${Start}[${key}]${Ent}`
       }
 
       iptContent.focus()
-      const contentLen = this.metas.content.value.length
+      const contentLen = content.length
       cursorStart = contentLen
       cursorEnd = contentLen
     },
@@ -459,8 +460,7 @@ export default {
   },
   watch: {
     'metas.content.value'() {
-      this.SaveInfo()
-      this.Preview()
+      this.onInput()
       this.MetasChange({}, contentStr)
     }
   }

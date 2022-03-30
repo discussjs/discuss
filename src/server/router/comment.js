@@ -130,7 +130,7 @@ async function CommitComment(params) {
   delete data.token
   delete data.type
 
-  if (result) return CommentHandler([data])
+  if (result) return CommentHandler([result])
   return false
 }
 /* eslint-enable max-statements */
