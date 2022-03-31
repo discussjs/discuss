@@ -208,7 +208,7 @@
 
       submit.setAttribute('disabled', '')
       const data = await ajax({
-        url: '/',
+        url: location.href,
         method: 'post',
         data: {
           type: 'INIT',

@@ -28,6 +28,7 @@ module.exports = async (req, res) => {
     const js = Discussjs(req.url)
     if (js) {
       res.setHeader('Content-Type', 'application/javascript; charset=utf-8')
+      res.setHeader('Cache-Control', 'public, no-transform, s-maxage=604800, max-age=604800')
     }
     return res.end(js || '{ msg: "Not Found" }')
   }
