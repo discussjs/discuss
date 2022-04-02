@@ -322,7 +322,7 @@ export default {
       color: #878593;
       margin-bottom: 0.5rem;
 
-      &:hover svg {
+      &:hover :deep(svg) {
         animation: D-touchStir 0.3s;
       }
     }

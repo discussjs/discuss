@@ -4,10 +4,6 @@
 # github
 .github
 
-# Vercel
-.vercel
-vercel.json
-
 # vscode
 .vscode
 
