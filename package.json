@@ -34,7 +34,7 @@
     "akismet-api": "^5.2.1",
     "axios": "^0.22.0",
     "bcryptjs": "^2.4.3",
-    "body-data": "^1.0.3",
+    "body-data": "^1.0.5",
     "dittorm": "^1.0.0-beta.0",
     "dotenv": "^10.0.0",
     "get-user-ip": "^1.0.0",
@@ -44,19 +44,23 @@
     "nodemailer": "^6.7.0",
     "output-line": "^1.0.1",
     "vue": "^3.1.1",
-    "xhr-ajax": "^0.0.2",
+    "xhr-ajax": "^0.0.4",
     "xss": "^1.0.10"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
     "@babel/plugin-transform-runtime": "^7.17.0",
     "@babel/preset-env": "^7.12.11",
+    "@commitlint/cli": "^16.2.3",
+    "@commitlint/config-conventional": "^16.2.1",
     "@vue/compiler-sfc": "^3.1.1",
     "babel-loader": "^8.2.2",
     "clean-css-loader": "^4.1.1",
     "clean-webpack-plugin": "^4.0.0",
     "css-loader": "^5.2.6",
     "eslint": "^8.9.0",
+    "husky": "^7.0.4",
+    "lint-staged": "^12.3.7",
     "nodemon": "^2.0.15",
     "postcss": "^8.4.5",
     "postcss-loader": "^6.2.1",
@@ -71,5 +75,12 @@
     "webpack-cli": "^4.7.2",
     "webpack-dev-server": "^4.2.0",
     "webpack-merge": "^5.8.0"
+  },
+  "commitlint": {
+    "extends": "@commitlint/config-conventional"
+  },
+  "lint-staged": {
+    "*.js": "npx eslint --fix",
+    "*": "npx prettier --check --write"
   }
 }

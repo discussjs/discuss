@@ -4,6 +4,9 @@
 # github
 .github
 
+# husky
+.husky
+
 # vscode
 .vscode
 
