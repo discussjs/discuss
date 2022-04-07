@@ -12,10 +12,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 检查分支
-        uses: actions/checkout@v2
+        uses: actions/checkout@main
 
       - name: 安装 Node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@main
         with:
           node-version: 16
           registry-url: https://registry.npmjs.org/
