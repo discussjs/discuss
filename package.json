@@ -8,6 +8,7 @@
     "start:client": "npx webpack serve --config ./webpack/dev.js",
     "start:server": "node ./start.js",
     "start:server:hot": "npx nodemon ./start.js",
+    "prepare": "npx husky install",
     "lint": "npx eslint . && npx prettier --check .",
     "lint:fix": "npx eslint --fix . && npx prettier --check --write ."
   },
