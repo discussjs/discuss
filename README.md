@@ -2,17 +2,17 @@
 <p align="center">一款简单，安全，免费的评论系统 | A simple, safe, free comment system</p>
 
 <p align="center">
-    <a href="https://discuss.js.org" target="_blank"><img src="https://img.shields.io/badge/-Docs-1081c1?logo=read-the-docs" alt="Docs"></a>
+    <a href="https://discuss.js.org" target="_blank"><img src="https://img.shields.io/badge/Docs-文档-1081c1?logo=read-the-docs" alt="Docs"></a>
     <a href="https://github.com/lete114/Discuss/releases/"><img src="https://img.shields.io/npm/v/discuss?color=critical&logo=npm" alt="Version"></a>
     <a href="https://github.com/lete114/Discuss/tree/dev"><img src="https://img.shields.io/github/package-json/v/lete114/Discuss/dev?color=%231ab1ad&label=dev" alt="Dev Version"></a>
     <img src="https://img.shields.io/npm/dm/discuss" alt="Downloads">
-    <a href="https://jq.qq.com/?_wv=1027&k=lh7oS7Xt"><img src="https://img.shields.io/badge/QQ-343890210-00a4ff?logo=tencent-qq" alt="QQ"></a>
+    <a href="https://jq.qq.com/?_wv=1027&k=lh7oS7Xt"><img src="https://img.shields.io/badge/QQ群-343890210-00a4ff?logo=tencent-qq" alt="QQ群"></a>
     <a href="https://github.com/lete114/Discuss/blob/master/LICENSE"><img src="https://img.shields.io/github/license/lete114/Discuss?color=FF5531" alt="MIT License"></a>
 </p>
 
 ## 个性
 
-- 多数据库支持(8种)
+- 多数据库支持(7 种)
 - 深色模式 (自动适配深色模式)
 - 支持自定义`博主` `置顶`表示文字
 - 支持自定义评论框`placeholder`(占位符)
