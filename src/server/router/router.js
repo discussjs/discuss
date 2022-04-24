@@ -51,6 +51,19 @@ async function Router(req, res) {
       return
     }
 
+    //  eslint-disable-next-line no-inner-declarations
+    function Page(file) {
+      const path = join(__dirname, `../../../public/${file}.html`)
+      res.setHeader('Content-Type', 'text/html; charset=utf-8')
+      return HtmlMinify(path)
+    }
+
+    // 响应初始化页面
+    if (!global.Dconfig && body.type !== 'INIT') return res.end(Page('init'))
+
+    // 响应后台管理
+    if (req.method.toUpperCase() === 'GET') return res.end(Page('admin'))
+
     // 邮件通知
     if (body.type === 'PUSH_MAIL') {
       result.data = await SendMail(body)

@@ -1,0 +1,53 @@
+<style>
+  body {
+    background: #13111c;
+  }
+
+  #Discuss-Comments {
+    visibility: hidden;
+  }
+</style>
+<div id="Discuss-Comments"></div>
+<script>
+  /**
+   * 动态添加JavaScript
+   * @param {*} url 资源地址
+   * @param {*} callback 回调方法
+   */
+  function getScript(url, callback) {
+    var script = document.createElement('script')
+    script.src = url
+    document.body.appendChild(script)
+    if (typeof callback != 'undefined') {
+      if (script.readyState) {
+        script.onreadystatechange = function () {
+          if (
+            script.readyState == 'loaded' ||
+            script.readyState == 'complete'
+          ) {
+            script.onreadystatechange = null
+            callback()
+          }
+        }
+      } else {
+        script.onload = function () {
+          callback()
+        }
+      }
+    }
+  }
+
+  getScript(location.href + '/Discuss.js', () => {
+    const el = '#Discuss-Comments'
+    Discuss.init({ el, serverURLs: location.href })
+    const query = (s) => document.querySelector(s)
+    const timer = setInterval(() => {
+      const setting = query('.D-setting-btn')
+      if (setting) {
+        query(el).style.visibility = 'visible'
+        setting.click()
+        clearInterval(timer)
+      }
+    }, 99)
+  })
+</script>

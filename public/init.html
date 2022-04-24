@@ -184,6 +184,7 @@
 </div>
 
 <script>
+  let data = {}
   async function FormSubmit() {
     const msg = document.querySelector('.msg')
     const submit = document.querySelector('.submit')
@@ -207,7 +208,7 @@
       }
 
       submit.setAttribute('disabled', '')
-      const data = await ajax({
+      data = await ajax({
         url: location.href,
         method: 'post',
         data: {
@@ -231,7 +232,8 @@
         msg.style.display = 'none'
         msg.classList.remove('error')
         submit.removeAttribute('disabled')
-      }, 6000)
+        if (data.msg === 'success') window.location.reload()
+      }, 3000)
     }
   }
 </script>
