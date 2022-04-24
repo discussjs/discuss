@@ -1,6 +1,6 @@
 const GetIP = require('get-user-ip')
 const { readFileSync, existsSync } = require('fs')
-const { join } = require('path')
+const { join, parse } = require('path')
 const CORS = require('./CORS')
 const Unique = require('./unique')
 const VerifyParams = require('./verify')
@@ -54,7 +54,7 @@ function SetFavicon(res) {
 }
 
 function Discussjs(url) {
-  const path = join(__dirname, '../../../dist', url)
+  const path = join(__dirname, '../../../dist', parse(url).base)
   if (!existsSync(path)) return
   return readFileSync(path, { encoding: 'utf-8' })
 }
