@@ -3,8 +3,19 @@
     background: #13111c;
   }
 
-  #Discuss-Comments {
-    visibility: hidden;
+  #Discuss > div {
+    opacity: 0;
+  }
+
+  #Discuss > .D-admin-container,
+  #Discuss > .D-dialog-wrap {
+    opacity: 1;
+  }
+
+  .D-exit,
+  .D-close,
+  .D-btn-login:nth-last-child(1) {
+    display: none;
   }
 </style>
 <div id="Discuss-Comments"></div>
@@ -38,16 +49,14 @@
   }
 
   getScript(location.href + '/Discuss.js', () => {
-    const el = '#Discuss-Comments'
-    Discuss.init({ el, serverURLs: location.href })
+    Discuss.init({ el: '#Discuss-Comments', serverURLs: location.href })
     const query = (s) => document.querySelector(s)
     const timer = setInterval(() => {
       const setting = query('.D-setting-btn')
       if (setting) {
-        query(el).style.visibility = 'visible'
         setting.click()
         clearInterval(timer)
       }
-    }, 99)
+    })
   })
 </script>
