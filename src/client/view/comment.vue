@@ -46,11 +46,11 @@
         </div>
       </div>
     </div>
-    <div
+    <button
       class="D-reply"
       @click="onReply(comment.id, comment.pid)"
       v-text="translate('reply')"
-    ></div>
+    ></button>
     <D-Submit
       v-if="replying === comment.id"
       :cancel="true"
