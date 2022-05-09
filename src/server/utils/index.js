@@ -2,13 +2,15 @@ const GetIP = require('get-user-ip')
 const { readFileSync, existsSync } = require('fs')
 const { join, parse } = require('path')
 const CORS = require('./CORS')
-const Unique = require('./unique')
+const simpleUnique = require('simple-unique')
 const VerifyParams = require('./verify')
 const akismet = require('./akismet')
 const XSS = require('./XSS')
 const { GetAvatar, SetAvatar } = require('./avatar')
 const HtmlMinify = require('./minify')
 const { jwtSign, jwtVerify } = require('./jwt')
+
+const Unique = (size) => simpleUnique(size || 24)
 
 // 获取用户IP
 function GetUserIP(req) {

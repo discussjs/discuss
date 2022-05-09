@@ -44,6 +44,7 @@
     "md5": "^2.3.0",
     "nodemailer": "^6.7.0",
     "output-line": "^1.0.1",
+    "simple-unique": "^1.2.0",
     "vue": "^3.1.1",
     "xhr-ajax": "^0.0.4",
     "xss": "^1.0.10"
