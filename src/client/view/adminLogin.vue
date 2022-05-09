@@ -89,7 +89,6 @@ export default {
       this.isToken = TRUE
       this.isSend = TRUE
       this.send()
-      this.$dialog(translate(adminLoginStr + 'msg'), 2000)
     },
     onLogin() {
       if (this.isSend) return
@@ -118,7 +117,6 @@ export default {
         }
       } catch (error) {
         console.error(error)
-        this.$dialog(translate(adminLoginStr + 'loginError'), 2000)
         // 登录失败
         this.isSend = FALSE
         this.isToken = FALSE

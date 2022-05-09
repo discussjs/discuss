@@ -128,8 +128,6 @@ const mailStr = 'mail'
 const siteStr = 'site'
 const contentStr = 'content'
 
-const delay2s = 2000
-
 export default {
   props: { cancel: Boolean, pid: String, rid: String, wordNumber: Object },
   emits: ['onCancel', 'onSetting', 'onRefresh', 'submitComment'],
@@ -398,7 +396,7 @@ export default {
         })
 
         if (!data && msg.includes('login')) {
-          this.$dialog(translate('pleaseLogin'))
+          console.error(translate('pleaseLogin'))
         }
 
         if (data instanceof Array) {
@@ -407,7 +405,6 @@ export default {
           this.isPreview = false
         }
       } catch (error) {
-        this.$dialog(translate('sendError'))
         console.error('Comment failure:', error)
       } finally {
         this.sending = false
@@ -447,15 +444,11 @@ export default {
       cursorEnd = contentLen
     },
     onSetting() {
-      const msg = translate('settingMsg')
-      if (!this.isSetting) this.$dialog(msg, delay2s)
       this.isSetting = true
       this.$emit('onSetting', true)
     },
     onRefresh() {
       this.$emit('onRefresh')
-      const msg = translate('refreshMsg')
-      this.$dialog(msg, 1500)
     }
   },
   watch: {

@@ -84,7 +84,6 @@ export default {
         this.$emit('onComments', this.wordNumber)
       } catch (error) {
         this.$emit('onComments')
-        this.$dialog(translate('commentsError'), 1500)
         console.error('Request failed', error)
       }
 

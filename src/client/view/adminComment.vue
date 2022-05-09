@@ -291,7 +291,6 @@ export default {
     }
   },
   mounted() {
-    this.$dialog(translate(adminManageCommentStr + 'msg'), 2000)
     this.GetComment()
   },
   updated() {
@@ -349,7 +348,6 @@ export default {
         this.GeneratePages()
       } catch (error) {
         console.error(error)
-        this.$dialog(translate('commentsError'))
       }
     },
     CleanChecked() {
@@ -374,7 +372,6 @@ export default {
       // 如果未选择，则提示并且结束当前方法
       const checked = this.checkedAll
       const msg = translate(batchStr + operateStr + 'Msg')
-      if (checked.length < 1) return this.$dialog(msg, 2000) // 输出错误提示框
 
       this.onOperate(this.operateType)
       this.onCheckedAll() // 取消选中
@@ -406,7 +403,6 @@ export default {
         }
       }
       const { msg } = await this.$ajax(options)
-      this.$dialog(msg) // 弹出提示信息
       await this.GetComment() // 重新获取评论
     },
     async onEditSend(comment) {

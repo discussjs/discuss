@@ -5,7 +5,6 @@ import Main from './Main.vue'
 import VisitStat from './api/VisitStat'
 import RecentComment from './api/RecentComment'
 import CommentCount from './api/CommentCount'
-import dialog from './lib/dialog'
 import { setLanguage, translate } from './i18n/language'
 
 const Discuss = {
@@ -38,7 +37,6 @@ function init(options = {}) {
     globalProperties.$D = options
     globalProperties.$ajax = request
     globalProperties.$lazy = lazyload
-    globalProperties.$dialog = dialog
     app.mount(options.el)
   })
 }

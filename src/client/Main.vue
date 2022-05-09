@@ -1,6 +1,5 @@
 <template>
   <div id="Discuss" class="Discuss">
-    <div class="D-dialog-wrap"></div>
     <D-admin @isAdmin="onIsAdmin" v-if="isAdmin" ref="admin" />
     <D-submit
       @submitComment="submitComment"
@@ -188,44 +187,6 @@ export default {
   width: 32px;
   height: auto;
   vertical-align: middle;
-}
-
-.D-dialog-wrap {
-  width: 400px;
-  position: fixed;
-  left: 50%;
-  top: 32px;
-  font-size: 14px;
-  transform: translate(-50%);
-  border-radius: 10px;
-  letter-spacing: 1px;
-  text-align: center;
-  z-index: 9999999;
-}
-.D-dialog {
-  width: 100%;
-  position: fixed;
-  opacity: 0;
-  padding: 16px;
-  margin-bottom: 16px;
-  color: #fff;
-  border-radius: 10px;
-  background: var(--D-main-Color);
-  transition: all 0.5s;
-  box-sizing: border-box;
-  transform: translate(0, -100px);
-}
-
-.D-dialog-appear {
-  opacity: 1;
-  position: unset;
-  transform: none;
-}
-
-@media (max-width: 500px) {
-  .D-dialog-wrap {
-    width: 100vw;
-  }
 }
 
 .D-zoom {

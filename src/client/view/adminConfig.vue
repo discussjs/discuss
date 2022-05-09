@@ -240,7 +240,6 @@ export default {
   },
   mounted() {
     this.group = this.settings[0].name
-    this.$dialog(translate(adminManageConfigStr + 'msg'), 2000)
     this.GetConfig()
   },
   methods: {
@@ -254,14 +253,12 @@ export default {
           data: { type: 'GET_CONFIG', token: this.token }
         }
         const { data, msg } = await this.$ajax(options)
-        if (!data) this.$dialog(msg)
         if (data) {
           this.config = data
           this.InitConfig()
         }
       } catch (error) {
         console.error(error)
-        this.$dialog(translate(adminManageConfigStr + 'error'), 2000)
       }
     },
     async SaveConfig() {
@@ -271,7 +268,7 @@ export default {
       this.ForConfig((item) => (this.config[item.key] = item.value))
 
       if (this.config.password !== this.config.confirm_password) {
-        this.$dialog(translate(adminManageConfigStr + 'passwordError'))
+        console.error(translate(adminManageConfigStr + 'passwordError'))
         return
       }
 
@@ -288,7 +285,6 @@ export default {
 
       const { msg } = await this.$ajax(options)
       this.isSave = false
-      this.$dialog(msg)
     },
     InitConfig() {
       this.ForConfig((item) => {
