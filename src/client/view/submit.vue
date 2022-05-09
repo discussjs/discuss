@@ -119,7 +119,7 @@ import { translate } from '../i18n/language'
 // source: /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]{1,30}\.)+[A-Za-z\d]{2,5}$/
 const redo = '[A-Za-z\\d]'
 const domain = `(${redo}{1,30}\\.)+${redo}{2,5}$`
-const mailReg = new RegExp(`^${redo}+([-_.]${redo}+)*@${domain}`)
+const mailReg = /^\w+([-+.]\w+)*@\w+([-.]\w+)*(\.[a-z]{2,5})+$/
 const siteReg = new RegExp('^https?://' + domain)
 
 const textStr = 'text'
@@ -314,7 +314,7 @@ export default {
     },
     async defaultEmotMaps() {
       if (!this.emotMaps) {
-        const {emot} = await import(
+        const { emot } = await import(
           /* webpackChunkName: "emot" */ '../lib/emot'
         )
         this.emotMaps = emot()

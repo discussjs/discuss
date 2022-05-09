@@ -189,11 +189,11 @@
     const msg = document.querySelector('.msg')
     const submit = document.querySelector('.submit')
     try {
-      const reg = /^([a-z0-9-])*[^-]@([a-z0-9-])+[^-]*(\.[a-z]{2,5})+$/
+      const reg = /^\w+([-+.]\w+)*@\w+([-.]\w+)*(\.[a-z]{2,5})+$/
       const username = document.querySelector('#name').value
       const password = document.querySelector('#password').value
       const confirm = document.querySelector('#confirm').value
-      const mail = document.querySelector('#mail').value
+      const mail = document.querySelector('#mail').value.toLowerCase()
 
       const isConform =
         username.length >= 2 &&

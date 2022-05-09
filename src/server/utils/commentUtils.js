@@ -285,7 +285,7 @@ function VerufyMailANDSite(mail, site) {
   */
   const redo = '[A-Za-z\\d]'
   const domain = `(${redo}{1,30}\\.)+${redo}{2,5}$`
-  const mailReg = new RegExp(`^${redo}+([-_.]${redo}+)*@${domain}`)
+  const mailReg = /^\w+([-+.]\w+)*@\w+([-.]\w+)*(\.[a-z]{2,5})+$/
   const siteReg = new RegExp('^https?://' + domain)
 
   const errorMail = 'Mail format does not meet the requirements!'
