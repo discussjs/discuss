@@ -19,7 +19,11 @@
     </div>
     <div class="D-actions D-select-none">
       <div class="D-actions-left">
-        <div class="D-emot-btn" v-html="iconEmotion"></div>
+        <div
+          class="D-emot-btn"
+          @click="isEmot = !isEmot"
+          v-html="iconEmotion"
+        ></div>
         <div
           v-if="!isCancel"
           class="D-setting-btn"
@@ -32,44 +36,6 @@
           @click="onRefresh"
           v-html="iconRefresh"
         ></div>
-        <div class="D-emot">
-          <ul
-            class="D-emot-items"
-            :class="{ 'D-emot-items-active': index === emotIndex }"
-            v-for="(emots, keys, index) in emotMaps"
-            :key="index"
-          >
-            <li
-              class="D-emot-item"
-              v-for="(items, key, index) in emots.items"
-              @click="onClickEmot(key, items, emots.type)"
-              :key="index"
-            >
-              <span
-                v-if="emots.type == 'text'"
-                :title="key"
-                v-text="items"
-              ></span>
-              <img
-                v-else
-                :src="$D.imgLoading"
-                :d-src="items"
-                :alt="key"
-                :title="key"
-              />
-            </li>
-          </ul>
-
-          <div class="D-emot-packages">
-            <span
-              :class="{ 'D-emot-package-active': index === emotIndex }"
-              v-for="(emots, key, index) in emotMaps"
-              @click="onClickEmotPackage(index)"
-              :key="index"
-              v-html="key"
-            ></span>
-          </div>
-        </div>
       </div>
       <div class="D-actions-right">
         <div class="D-text-number" v-if="wordNumber.content">
@@ -105,6 +71,40 @@
       </div>
     </div>
     <div class="D-preview" v-if="isPreview" v-html="contentHTML"></div>
+    <div class="D-emot" v-show="isEmot">
+      <ul
+        class="D-emot-items"
+        :class="{ 'D-emot-items-active': index === emotIndex }"
+        v-for="(emots, keys, index) in emotMaps"
+        :key="index"
+      >
+        <li
+          class="D-emot-item"
+          v-for="(items, key, index) in emots.items"
+          @click="onClickEmot(key, items, emots.type)"
+          :key="index"
+        >
+          <span v-if="emots.type == 'text'" :title="key" v-text="items"></span>
+          <img
+            v-else
+            :src="$D.imgLoading"
+            :d-src="items"
+            :alt="key"
+            :title="key"
+          />
+        </li>
+      </ul>
+
+      <div class="D-emot-packages">
+        <span
+          :class="{ 'D-emot-package-active': index === emotIndex }"
+          v-for="(emots, key, index) in emotMaps"
+          @click="onClickEmotPackage(index)"
+          :key="index"
+          v-html="key"
+        ></span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -172,6 +172,7 @@ export default {
       sending: false,
 
       // emot
+      isEmot: false,
       emotIndex: 0,
       emotMaps: this.$D.emotMaps,
       emotAll: {},
@@ -567,10 +568,9 @@ export default {
 /* emot */
 .D-emot {
   top: 30px;
-  display: none;
   width: 100%;
+  margin-top: 10px;
   border: 1px solid var(--D-Low-Color);
-  z-index: 1;
   border-radius: 4px;
   background: #fff;
 }
@@ -583,20 +583,6 @@ export default {
   .D-emot {
     background: #333841;
   }
-}
-
-.D-emot-btn::after {
-  content: '';
-  position: absolute;
-  left: -6px;
-  top: 0;
-  right: -6px;
-  bottom: -10px;
-}
-.D-emot-btn:hover ~ .D-emot,
-.D-emot:hover {
-  display: block;
-  position: absolute;
 }
 
 .D-emot-items {
