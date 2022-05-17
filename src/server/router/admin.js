@@ -224,7 +224,10 @@ async function SaveConfig(params) {
   data.siteUrl = siteUrl ? void 0 : data.siteUrl.replace(/\/$/, '')
 
   const { id } = global.Dconfig
-  global.Dconfig = (await Admin.update(data, { id }))[0]
+  global.Dconfig = {
+    ...global.Dconfig,
+    ...(await Admin.update(data, { id }))[0]
+  }
 }
 
 /* eslint-disable max-statements */
