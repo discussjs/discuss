@@ -7,8 +7,24 @@
     <a href="https://github.com/lete114/Discuss/tree/dev"><img src="https://img.shields.io/github/package-json/v/lete114/Discuss/dev?color=%231ab1ad&label=dev" alt="Dev Version"></a>
     <img src="https://img.shields.io/npm/dm/discuss" alt="Downloads">
     <a href="https://jq.qq.com/?_wv=1027&k=lh7oS7Xt"><img src="https://img.shields.io/badge/QQ群-343890210-00a4ff?logo=tencent-qq" alt="QQ群"></a>
-    <a href="https://github.com/lete114/Discuss/blob/master/LICENSE"><img src="https://img.shields.io/github/license/lete114/Discuss?color=FF5531" alt="MIT License"></a>
+    <a href="https://github.com/lete114/Discuss/blob/master/LICENSE"><img src="https://img.shields.io/npm/l/discuss?color=FF5531" alt="MIT License"></a>
+    
 </p>
+
+## 简介
+
+这是一款简单，安全，免费的评论系统，仅提供评论功能、访问量统计、获取最新评论、获取评论数(可批量)
+
+它与其它评论系统有什么区别？
+
+- Discuss <===> 手机短信
+- Twikoo、Waline <===> QQ/微信
+
+如上比喻，简单明了，如果你只是需要一个能**收发评论**的轻量评论，那么你可能需要**Discuss**
+
+如果你需要体验更多共功能，就可以选择使用 [Twikoo](https://twikoo.js.org/) 或 [Waline](https://waline.js.org/)
+
+由于 [Lete 乐特](https://github.com/Lete114) 没有什么艺术细胞，UI 写的也很烂，Logo 也是随便弄的，如果你对**Discuss**感兴趣，并想提供帮助或贡献，那么欢迎你 🎉🎉🎉
 
 ## 个性
 
@@ -24,7 +40,7 @@
 ## 特点
 
 - **真**·安全
-- 轻量 (~120kb gzip: ~40kb)
+- 轻量 (~50kb gzip: ~16kb)
 - 自托管 (Nodejs 后端跨平台)
 - 免费部署 (Server、ServerLess 均可部署)
 - 邮件通知
