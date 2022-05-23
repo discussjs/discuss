@@ -1,4 +1,4 @@
-import request from 'xhr-ajax'
+import request from '../lib/request'
 
 /**
  * 访问量统计

@@ -1,9 +1,27 @@
-import request from 'xhr-ajax'
-
-export default async (object) => {
-  object.method = object.method || 'post'
-  object.headers = object.headers || {
-    'Content-Type': 'application/json; charset=utf-8'
+function isJSON(t) {
+  try {
+    return JSON.parse(t)
+  } catch (error) {
+    return t
   }
-  return await request(object)
+}
+
+export default (options) => {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest()
+    xhr.open(options.method || 'POST', options.url, true)
+    if (options.method === 'GET') xhr.send()
+    else xhr.send(JSON.stringify(options.data))
+    xhr.onreadystatechange = () => {
+      try {
+        if (xhr.readyState === 4) {
+          const isSuccess = xhr.status >= 200 && xhr.status < 300
+          if (isSuccess) resolve(isJSON(xhr.responseText))
+          else reject(xhr)
+        }
+      } catch (error) {
+        reject(error)
+      }
+    }
+  })
 }

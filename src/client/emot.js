@@ -1,6 +1,4 @@
-/* eslint-disable max-len */
-const cdnStr = 'https://cdn.jsdelivr.net/npm/discuss/assets/emot/'
-const png = '.png'
+import { version } from '../../package.json'
 
 const key = [
   '应援',
@@ -135,10 +133,10 @@ const key = [
   '偷偷看'
 ]
 
-const items = {}
-for (const i of key) items[i] = cdnStr + i + png
-
-export function emot() {
+export default () => {
+  const emotCDN = `https://unpkg.com/discuss@${version}/assets/emot/`
+  const items = {}
+  for (const i of key) items[i] = emotCDN + i + '.png'
   return {
     OwO: {
       type: 'text',

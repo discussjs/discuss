@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <link rel="icon" href="/favicon.ico" />
     <title>Discuss Comments</title>
-    <script src="./Discuss.js"></script>
+    <script src="/dist/Discuss.js"></script>
     <style>
       body {
         max-width: 800px;
@@ -166,18 +166,10 @@
       const ipts = document.querySelectorAll('.config-item input')
 
       ipts[0].value = localStorage.DServer ? localStorage.DServer : url
-      ipts[0].addEventListener(
-        'input',
-        () => (localStorage.DServer = ipts[0].value)
-      )
+      ipts[0].addEventListener('input', () => (localStorage.DServer = ipts[0].value))
 
-      ipts[1].value = localStorage.DUnique
-        ? localStorage.DUnique
-        : location.pathname
-      ipts[1].addEventListener(
-        'input',
-        () => (localStorage.DUnique = ipts[1].value)
-      )
+      ipts[1].value = localStorage.DUnique ? localStorage.DUnique : location.pathname
+      ipts[1].addEventListener('input', () => (localStorage.DUnique = ipts[1].value))
 
       function init() {
         Discuss.init({

@@ -1,4 +1,4 @@
-import request from 'xhr-ajax'
+import request from '../lib/request'
 
 /**
  * 请求评论数量(一般用于首页显示某篇文章有多少条评论)

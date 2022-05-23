@@ -1,4 +1,5 @@
-import request from 'xhr-ajax'
+import request from '../lib/request'
+
 /**
  * 获取最新评论
  * @param {String} url 请求地址

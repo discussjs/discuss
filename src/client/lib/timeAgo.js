@@ -1,4 +1,4 @@
-import { translate } from '../i18n/language'
+import { translate } from '../i18n'
 
 // padStart 如果长度达不到指定长度(2)使用指定字符(0)填充到内容前面(padEnd填充到后面)
 // 日期格式化
