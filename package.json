@@ -1,6 +1,6 @@
 {
   "name": "discuss",
-  "version": "0.2.17",
+  "version": "0.3.0",
   "description": "一款简单，安全，免费的评论系统 | A simple, safe, free comment system",
   "main": "index.js",
   "scripts": {
