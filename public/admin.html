@@ -3,15 +3,6 @@
     background: #13111c;
   }
 
-  #Discuss > div {
-    opacity: 0;
-  }
-
-  #Discuss > .D-admin-container,
-  #Discuss > .D-dialog-wrap {
-    opacity: 1;
-  }
-
   .D-exit,
   .D-close,
   .D-btn-login:nth-last-child(1) {
@@ -28,35 +19,17 @@
   function getScript(url, callback) {
     var script = document.createElement('script')
     script.src = url
-    document.body.appendChild(script)
-    if (typeof callback != 'undefined') {
-      if (script.readyState) {
-        script.onreadystatechange = function () {
-          if (
-            script.readyState == 'loaded' ||
-            script.readyState == 'complete'
-          ) {
-            script.onreadystatechange = null
-            callback()
-          }
-        }
-      } else {
-        script.onload = function () {
-          callback()
-        }
-      }
+    script.onload = function () {
+      script.onload = null
+      callback()
     }
+    document.head.appendChild(script)
   }
 
-  getScript(location.href + '/Discuss.js', () => {
-    Discuss.init({ el: '#Discuss-Comments', serverURLs: location.href })
-    const query = (s) => document.querySelector(s)
-    const timer = setInterval(() => {
-      const setting = query('.D-setting-btn')
-      if (setting) {
-        setting.click()
-        clearInterval(timer)
-      }
+  getScript(location.href + '/Discuss.admin.js', () => {
+    DiscussAdmin.init({
+      el: '#Discuss-Comments',
+      serverURLs: location.href
     })
   })
 </script>
