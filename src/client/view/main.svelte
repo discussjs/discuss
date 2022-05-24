@@ -24,9 +24,12 @@
       $msg({ text: translate('settingMsg') })
       loadScript('admin', initAdmin)
     }
+    // 此处用于再次打开评论管理面板
     if (app) {
       for (const fun of app.$$.ctx) {
-        if (typeof fun === 'function' && fun.name === 'onOpenAndClose') fun()
+        if (Object.prototype.toString.call(fun) === '[object Object]' && typeof fun.onOpenAdmin === 'function') {
+          fun.onOpenAdmin()
+        }
       }
     }
   }

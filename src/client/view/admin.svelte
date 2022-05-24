@@ -20,7 +20,6 @@
   const manageStr = 'admin.'
   const commentManageStr = manageStr + 'manage'
 
-  $: open = false
   let isLogin,
     title,
     tab,
@@ -54,7 +53,10 @@
     $showSetting = false
     localStorage.DToken = ''
   }
-  function onOpenAndClose() {
+  // 为什么这样写？
+  // 因为打包后评论区无法确定识别该方法(方法名会被缩小为一个字母，导致评论区无法调用)
+  const onOpenAndClose = {}
+  onOpenAndClose.onOpenAdmin = function () {
     $showSetting = !$showSetting
   }
 </script>
@@ -62,7 +64,7 @@
 <svelte:component this={global} />
 <div class="D-admin-container" bind:this={adminDOM} style={!$showSetting ? 'display:none' : ''}>
   {#if !isLogin}
-    <Login on:onClose={onOpenAndClose} on:loginS={() => (isLogin = true)} />
+    <Login on:onClose={onOpenAndClose.onOpenAdmin} on:loginS={() => (isLogin = true)} />
   {/if}
   {#if isLogin}
     <div class="D-admin" style={!$showSetting ? 'display:none' : ''}>
@@ -78,7 +80,7 @@
           {#if show}
             <!-- 是否显示关闭以及退出登录，主要区分页面评论区评论管理与以及评论管理独立初始化 -->
             <span class="D-exit" on:click={onExit}><IconExit /></span>
-            <span class="D-close" on:click={onOpenAndClose}><IconClose /></span>
+            <span class="D-close" on:click={onOpenAndClose.onOpenAdmin}><IconClose /></span>
           {/if}
         </nav>
       </header>
