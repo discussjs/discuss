@@ -16,12 +16,26 @@
 
 它与其它评论系统有什么区别？
 
+你可以理解为手机上的 **短信** **QQ** **微信**
+
 - Discuss <===> 手机短信
 - Twikoo、Waline <===> QQ/微信
+
+文件体积
+
+> 如下体积仅供参考，在后续的更新中可能有些许小浮动
+
+- Discuss: ~50kb
+- twikoo:
+  - twikoo.all: ~500kb
+  - twikoo.min: ~380kb
+- waline: ~150kb
 
 如上比喻，简单明了，如果你只是需要一个能**收发评论**的轻量评论，那么你可能需要**Discuss**
 
 如果你需要体验更多共功能，就可以选择使用 [Twikoo](https://twikoo.js.org/) 或 [Waline](https://waline.js.org/)
+
+一句话 **萝卜青菜，各有所爱** 选择最适合自己的即可
 
 由于 [Lete 乐特](https://github.com/Lete114) 没有什么艺术细胞，UI 写的也很烂，Logo 也是随便弄的，如果你对**Discuss**感兴趣，并想提供帮助或贡献，那么欢迎你 🎉🎉🎉
 
