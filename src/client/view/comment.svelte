@@ -84,7 +84,7 @@
       <div class="D-comments-child">
         <!-- on:onReply 为事件转发，将其转发到comments.svelte -->
         <!-- 此处的转发是指：转发子评论的 on:onReply 事件 -->
-        <!-- 
+        <!--
           举例：
             parent: on:onReply -> comments.svelte
             child:  on:onReply -> comment.svelte -> comments.svelte
@@ -193,7 +193,7 @@
     white-space: pre-wrap;
     word-break: break-all;
 
-    :global() {
+    :global(p) {
       display: inline;
     }
     :global(img) {
