@@ -13,7 +13,7 @@ scriptUrl = scriptUrl
 window.DChunk = []
 const map = { emot: 'emot.js', admin: 'Discuss.admin.js' }
 const loadScript = (chunk, callback) => {
-  if (window.DChunk.includes(chunk)) return
+  if (window.DChunk.includes(chunk)) return callback()
   window.DChunk.push(chunk)
   const script = document.createElement('script')
   script.src = scriptUrl + map[chunk]
