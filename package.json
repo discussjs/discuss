@@ -1,6 +1,6 @@
 {
   "name": "discuss",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "description": "一款简单，安全，免费的评论系统 | A simple, safe, free comment system",
   "main": "index.js",
   "unpkg": "dist/Discuss.js",
@@ -12,8 +12,8 @@
     "start:server": "node ./start.js",
     "start:server:hot": "npx nodemon ./start.js",
     "prepare": "npx husky install",
-    "lint": "npx eslint . && npx prettier --check .",
-    "lint:fix": "npx eslint --fix . && npx prettier --check --write ."
+    "lint": "npx eslint src && npx prettier --check src",
+    "lint:fix": "npx eslint --fix src && npx prettier --check --write src"
   },
   "browserslist": [
     "> 1%",

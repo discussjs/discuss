@@ -150,7 +150,87 @@
     }
   }
 </style>
-<script src="https://cdn.jsdelivr.net/npm/xhr-ajax/dist/ajax.js"></script>
+<script>
+  var ajax = (function () {
+    'use strict'
+    function t(e) {
+      return (
+        (t =
+          'function' == typeof Symbol && 'symbol' == typeof Symbol.iterator
+            ? function (t) {
+                return typeof t
+              }
+            : function (t) {
+                return t && 'function' == typeof Symbol && t.constructor === Symbol && t !== Symbol.prototype
+                  ? 'symbol'
+                  : typeof t
+              }),
+        t(e)
+      )
+    }
+    var e = 'GET',
+      n = encodeURIComponent
+    function o(t, o) {
+      switch (
+        ((function (t) {
+          var o = t.data,
+            r = t.method === e
+          if (Object.keys(o).length && r) {
+            var a = []
+            for (var s in o) Object.prototype.hasOwnProperty.call(o, s) && a.push(n(s) + '=' + n(o[s]))
+            ;(t.url += /\?$/.test(t.url) ? '' : '?'), (t.url += a.join('&'))
+          }
+        })(o),
+        t.open(o.method, o.url, o.async, o.username, o.password),
+        (function (t, e) {
+          for (var n in e.headers) t.setRequestHeader(n, e.headers[n])
+        })(t, o),
+        o.method)
+      ) {
+        case e:
+          t.send()
+          break
+        case 'POST':
+          t.send(JSON.stringify(o.data))
+      }
+    }
+    return function (n) {
+      return n
+        ? new Promise(function (r, a) {
+            'object' !== t(n) && (n = { url: n })
+            var s,
+              u = new XMLHttpRequest(),
+              c = Object.assign({ method: e, async: !0, data: {}, headers: {} }, n)
+            ;(c.method = c.method.toUpperCase()),
+              o(u, c),
+              c.timeout &&
+                (s = setTimeout(function () {
+                  return u.abort()
+                }, c.timeout)),
+              (u.onreadystatechange = function () {
+                try {
+                  if (4 === u.readyState)
+                    s && clearTimeout(s),
+                      u.status >= 200 && u.status < 300
+                        ? r(
+                            (function (t) {
+                              try {
+                                return JSON.parse(t)
+                              } catch (e) {
+                                return t
+                              }
+                            })(u.responseText)
+                          )
+                        : a(u)
+                } catch (t) {
+                  a(t)
+                }
+              })
+          })
+        : n
+    }
+  })()
+</script>
 
 <div class="init">
   <div class="title">Init Discuss</div>
@@ -173,12 +253,7 @@
       </li>
     </div>
     <li>
-      <input
-        type="button"
-        class="submit"
-        onclick="FormSubmit()"
-        value="Submit"
-      />
+      <input type="button" class="submit" onclick="FormSubmit()" value="Submit" />
     </li>
   </ul>
 </div>
@@ -195,11 +270,7 @@
       const confirm = document.querySelector('#confirm').value
       const mail = document.querySelector('#mail').value.toLowerCase()
 
-      const isConform =
-        username.length >= 2 &&
-        password.length >= 6 &&
-        password === confirm &&
-        reg.test(mail)
+      const isConform = username.length >= 2 && password.length >= 6 && password === confirm && reg.test(mail)
       if (!isConform) {
         const init = document.querySelector('.input')
         init.classList.add('shake')

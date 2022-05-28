@@ -2,21 +2,8 @@ const { join } = require('path')
 const bodyData = require('body-data')
 const SendMail = require('../utils/Mail')
 
-const {
-  init,
-  Login,
-  AdminGetComments,
-  GetConfig,
-  SaveConfig,
-  Import,
-  OperateComment
-} = require('./admin')
-const {
-  GetComment,
-  CommitComment,
-  RecentComment,
-  CommentCount
-} = require('./comment')
+const { init, Login, AdminGetComments, GetConfig, SaveConfig, Import, OperateComment } = require('./admin')
+const { GetComment, CommitComment, RecentComment, CommentCount } = require('./comment')
 const GetCounter = require('./counter')
 const { GetUserIP, CORS, HtmlMinify } = require('../utils')
 

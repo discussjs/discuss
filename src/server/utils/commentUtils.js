@@ -1,14 +1,6 @@
 const bcrypt = require('bcryptjs')
 const axios = require('axios')
-const {
-  Unique,
-  XSS,
-  SetAvatar,
-  DeepColne,
-  IndexHandler,
-  VerifyParams,
-  GetAvatar
-} = require('./index')
+const { Unique, XSS, SetAvatar, DeepColne, IndexHandler, VerifyParams, GetAvatar } = require('./index')
 
 /**
  * 限制字数
@@ -16,9 +8,7 @@ const {
  * @returns {Object}
  */
 function WordNumberLimit(configWordNumber) {
-  let [content, nick, mail, site] = configWordNumber
-    .split(',')
-    .map((item) => parseInt(item))
+  let [content, nick, mail, site] = configWordNumber.split(',').map((item) => parseInt(item))
 
   nick = nick || 0
   mail = mail || 0
@@ -65,8 +55,7 @@ function WordNumberExceed(configWordNumber, params) {
   // 去除规定的表情包表情包(img)标签
   // 进行字数判断是否超出指定范围
   /* eslint-disable max-len */
-  const regImage =
-    /<img class=(['"]?)D-comment-emot\1 src=\1([^'"]*)\1 alt=(['"]?)([^'"]*)\1\/?>/g
+  const regImage = /<img class=(['"]?)D-comment-emot\1 src=\1([^'"]*)\1 alt=(['"]?)([^'"]*)\1\/?>/g
   /* eslint-enable max-len */
 
   const emot = params.content.match(regImage)
@@ -97,14 +86,7 @@ async function SendMailHandler(config, data) {
   // 发送邮件通知请求
   try {
     // 验证邮件配置是否完整
-    VerifyParams(config, [
-      'mailHost',
-      'mailPort',
-      'mailFrom',
-      'mailAccept',
-      'masterSubject',
-      'replySubject'
-    ])
+    VerifyParams(config, ['mailHost', 'mailPort', 'mailFrom', 'mailAccept', 'masterSubject', 'replySubject'])
 
     data.type = 'PUSH_MAIL'
 
@@ -126,9 +108,7 @@ async function SendMailHandler(config, data) {
     }
   } catch (error) {
     /* eslint-disable no-console */
-    console.error(
-      'Mail ERROR: Mail configuration information error cancel sending emails'
-    )
+    console.error('Mail ERROR: Mail configuration information error cancel sending emails')
     console.error(error)
     /* eslint-enable no-console */
   }
@@ -229,10 +209,7 @@ function CommentHandler(comments) {
       obj[comment.id] = comment
       for (const reply of comment.replys) {
         obj[reply.id] = reply
-        reply.rnick =
-          obj[reply.rid] && obj[reply.rid].nick
-            ? obj[reply.rid].nick
-            : 'Anonymity'
+        reply.rnick = obj[reply.rid] && obj[reply.rid].nick ? obj[reply.rid].nick : 'Anonymity'
       }
     }
     comment.time = comment.created

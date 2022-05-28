@@ -65,11 +65,7 @@ let options = {
       ? JSON.parse(D_MONGO_HOST) // 如果是 [xxx, xxx] 数组格式则解析为数组，否则不解析
       : D_MONGO_HOST
     : '127.0.0.1', // 如果 D_MONGO_HOST 为 null 或 undefined 则使用 127.0.0.1
-  port: D_MONGO_PORT
-    ? D_MONGO_PORT.startsWith('[')
-      ? JSON.parse(D_MONGO_PORT)
-      : D_MONGO_PORT
-    : 27017,
+  port: D_MONGO_PORT ? (D_MONGO_PORT.startsWith('[') ? JSON.parse(D_MONGO_PORT) : D_MONGO_PORT) : 27017,
   database: D_MONGO_DB || 'Discuss',
   user: D_MONGO_USER,
   password: D_MONGO_PASSWORD,
