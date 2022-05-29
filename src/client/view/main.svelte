@@ -38,6 +38,8 @@
     $msg({ time: 1500, text: translate('refreshMsg') })
     isLoading = !isLoading
     isRefreshComments = true
+    // 当刷新评论时，清空当前组件的评论缓存
+    comment = []
     setTimeout(() => {
       isLoading = !isLoading
     }, 1000)
@@ -46,14 +48,19 @@
   function onComments() {
     isRefreshComments = false
   }
+
+  let comment = []
+  function submitComment(event) {
+    comment = event.detail.data
+  }
 </script>
 
 <svelte:component this={global} />
 <div id="Discuss" class="Discuss">
   <div class="D-admin-wrap" />
-  <Submit on:onRefresh={onRefresh} on:onSetting={onSetting} />
+  <Submit on:onRefresh={onRefresh} on:onSetting={onSetting} on:submitComment={submitComment} />
   {#if isLoading}
-    <Comments on:onComments={onComments} />
+    <Comments on:onComments={onComments} comment={comment}/>
   {/if}
   <div class="D-loading-comments" style={isRefreshComments ? '' : 'display:none'}>
     <IconLoading />
