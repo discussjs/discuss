@@ -450,17 +450,6 @@
     margin-top: 10px;
     border: 1px solid var(--D-Low-Color);
     border-radius: 4px;
-    background: #fff;
-  }
-
-  :global(.night),
-  :global(.darkmode),
-  :global(.DarkMode),
-  :global([theme='dark']),
-  :global([data-theme='dark']) {
-    .D-emot {
-      background: #333841;
-    }
   }
 
   .D-emot-items {

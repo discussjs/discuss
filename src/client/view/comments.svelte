@@ -12,11 +12,6 @@
 
   export let comment = []
 
-  // 相当于vue中的watch
-  $: {
-    comments = [...comment, ...comments]
-  }
-
   // svelte 变量
   let moerDisabled = false,
     comments = [],
@@ -26,6 +21,11 @@
     showMore = false,
     loading = false,
     replying = ''
+
+  // 相当于vue中的watch
+  $: {
+    comments = [...comment, ...comments]
+  }
 
   onMount(() => {
     GetComment()

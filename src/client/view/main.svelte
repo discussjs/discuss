@@ -11,6 +11,7 @@
 
   let isLoading = true
   let isRefreshComments = true
+  let comment = []
   let app
 
   function initAdmin() {
@@ -49,7 +50,6 @@
     isRefreshComments = false
   }
 
-  let comment = []
   function submitComment(event) {
     comment = event.detail.data
   }
