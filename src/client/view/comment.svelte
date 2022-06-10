@@ -67,8 +67,7 @@
         <div class="D-content">
           {#if comment.pid}
             <a href="#{comment.pid}"><strong>@{comment.rnick}: </strong></a>
-          {/if}
-          <span>{@html comment.content}</span>
+          {/if}<span>{@html comment.content}</span>
         </div>
       </div>
     </div>
