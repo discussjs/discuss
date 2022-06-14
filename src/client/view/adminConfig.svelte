@@ -380,6 +380,9 @@
         margin: 0;
       }
     }
+    .D-menu-close {
+      display: none;
+    }
   }
 
   @media (max-width: 768px) {
@@ -407,11 +410,12 @@
       }
 
       .D-menu-close {
-        position: absolute;
         top: 0;
         right: 10px;
         margin: 8px;
         color: #878593;
+        display: block;
+        position: absolute;
         &:hover {
           cursor: pointer;
         }
