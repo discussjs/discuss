@@ -46,6 +46,7 @@
     "html-minifier": "^4.0.0",
     "jsonwebtoken": "^8.5.1",
     "md5": "^2.3.0",
+    "min-1px": "^1.0.0",
     "nodemailer": "^6.7.0",
     "output-line": "^1.0.1",
     "simple-unique": "^1.2.0",

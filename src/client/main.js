@@ -1,3 +1,4 @@
+import gif1px from 'min-1px'
 import Main from './view/main.svelte'
 import { options } from './lib/stores'
 import { translate, setLanguage } from './i18n'
@@ -16,7 +17,7 @@ function init(opt) {
     ph: translate('content'),
     path: location.pathname,
     visitStat: true,
-    imgLoading: 'data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw'
+    imgLoading: gif1px.GIF
   }
 
   options.set(Object.assign(defaultOptions, opt))
