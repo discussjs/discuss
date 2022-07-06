@@ -2,6 +2,7 @@
   import { onMount } from 'svelte'
   import { openMenu, showSetting } from '../lib/stores'
   import { translate } from '../i18n'
+  import zIndex from '../lib/zIndex'
   import global from './global.svelte'
   import Login from './adminLogin.svelte'
   import Comment from './adminComment.svelte'
@@ -56,7 +57,8 @@
   // 为什么这样写？
   // 因为打包后评论区无法确定识别该方法(方法名会被缩小为一个字母，导致评论区无法调用)
   const onOpenAndClose = {}
-  onOpenAndClose.onOpenAdmin = function () {
+  onOpenAndClose.onOpenAdmin = function (flag) {
+    zIndex(flag)
     $showSetting = !$showSetting
   }
 </script>
@@ -80,7 +82,7 @@
           {#if show}
             <!-- 是否显示关闭以及退出登录，主要区分页面评论区评论管理与以及评论管理独立初始化 -->
             <span class="D-exit" on:click={onExit}><IconExit /></span>
-            <span class="D-close" on:click={onOpenAndClose.onOpenAdmin}><IconClose /></span>
+            <span class="D-close" on:click={onOpenAndClose.onOpenAdmin('close')}><IconClose /></span>
           {/if}
         </nav>
       </header>
