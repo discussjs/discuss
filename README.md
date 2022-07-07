@@ -4,7 +4,6 @@
 <p align="center">
     <a href="https://discuss.js.org" target="_blank"><img src="https://img.shields.io/badge/Docs-文档-1081c1?logo=read-the-docs" alt="Docs"></a>
     <a href="https://github.com/discussjs/Discuss/releases/"><img src="https://img.shields.io/npm/v/discuss?color=critical&logo=npm" alt="Version"></a>
-    <a href="https://github.com/discussjs/Discuss/tree/dev"><img src="https://img.shields.io/github/package-json/v/discussjs/Discuss/dev?color=%231ab1ad&label=dev" alt="Dev Version"></a>
     <img src="https://img.shields.io/npm/dm/discuss" alt="Downloads">
     <a href="https://jq.qq.com/?_wv=1027&k=lh7oS7Xt"><img src="https://img.shields.io/badge/QQ群-343890210-00a4ff?logo=tencent-qq" alt="QQ群"></a>
     <a href="https://github.com/discussjs/Discuss/blob/dev/LICENSE"><img src="https://img.shields.io/npm/l/discuss?color=ee5535" alt="MIT License"></a>
