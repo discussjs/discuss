@@ -99,51 +99,7 @@
     height: auto;
     vertical-align: middle;
   }
-  /* 消息提示框容器样式 */
-  .D-msg {
-    left: 50%;
-    color: #909399;
-    font-size: 14px;
-    width: 300px;
-    padding: 16px 17px;
-    position: fixed;
-    line-height: 1;
-    letter-spacing: 1px;
-    word-wrap: break-word;
-    word-break: break-all;
-    z-index: 9999999999;
-    border-radius: 6px;
-    border: 1px solid #edf2fc;
-    background-color: #edf2fc;
-    transform: translateX(-50%);
-    transition: opacity 0.3s, transform 0.5s, top 0.5s;
-  }
-
-  .D-msg-opacity {
-    opacity: 0;
-    transform: translate(-50%, -100%);
-  }
-
-  /* 成功提示框样式 */
-  .D-msg-success {
-    background-color: #e1f3d8;
-    border-color: #e1f3d8;
-    color: #67c23a;
-  }
-
-  /* 警告提示框样式 */
-  .D-msg-warn {
-    background-color: #fdfce6;
-    border-color: #fdfce6;
-    color: #e6a23c;
-  }
-  /* 错误提示框样式 */
-  .D-msg-error {
-    background-color: #fef0f0;
-    border-color: #fef0f0;
-    color: #f56c6c;
-  }
-
+  
   .D-zoom {
     animation: D-zoom-animation 0.3s forwards;
   }

@@ -5,7 +5,7 @@ const str = 'D-zIndex'
  * @param {String} flag open or close
  */
 export default function (flag) {
-  const all = [...document.body.querySelectorAll('*:not(.D-msg)')]
+  const all = [...document.body.querySelectorAll('*:not(._msg)')]
   all.forEach((el) => {
     const zIndex = window.getComputedStyle(el).zIndex
     if (flag === 'close') {
