@@ -243,6 +243,7 @@
       if (result.data instanceof Array) {
         dispatch('submitComment', { data: result.data, pid })
         metas.content.value = ''
+        SaveInfo()
         isPreview = false
       }
     } catch (error) {
