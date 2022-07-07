@@ -6,7 +6,7 @@
   import Comments from './comments.svelte'
   import Footer from './footer.svelte'
   import IconLoading from '../../../assets/svg/Loading.svg'
-
+  import zIndex from '../lib/zIndex'
   import loadScript from '../lib/import'
 
   let isLoading = true
@@ -15,6 +15,7 @@
   let app
 
   function initAdmin() {
+    zIndex('open')
     app = window.DiscussAdmin.init({ ...$options, el: '.D-admin-wrap', show: true })
   }
 
@@ -29,7 +30,7 @@
     if (app) {
       for (const fun of app.$$.ctx) {
         if (Object.prototype.toString.call(fun) === '[object Object]' && typeof fun.onOpenAdmin === 'function') {
-          fun.onOpenAdmin()
+          fun.onOpenAdmin('open')
         }
       }
     }
@@ -60,7 +61,7 @@
   <div class="D-admin-wrap" />
   <Submit on:onRefresh={onRefresh} on:onSetting={onSetting} on:submitComment={submitComment} />
   {#if isLoading}
-    <Comments on:onComments={onComments} comment={comment}/>
+    <Comments on:onComments={onComments} {comment} />
   {/if}
   <div class="D-loading-comments" style={isRefreshComments ? '' : 'display:none'}>
     <IconLoading />
