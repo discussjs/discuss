@@ -89,12 +89,13 @@
       emotMaps = await request({ url: emot, method: 'GET' })
     } else if (!emot) {
       loadScript('emot', () => {
-        emotMaps = window.discussEmot()
+        emotMaps = window.discussEmot(D.emotCDN)
       })
     } else {
       emotMaps = emot
     }
   }
+  
   function getEmotAll() {
     try {
       for (const e in emotMaps) {
