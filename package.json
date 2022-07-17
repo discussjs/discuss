@@ -3,8 +3,8 @@
   "version": "1.0.3",
   "description": "一款简单，安全，免费的评论系统 | A simple, safe, free comment system",
   "main": "index.js",
-  "unpkg": "dist/Discuss.js",
-  "jsdelivr": "dist/Discuss.js",
+  "unpkg": "dist/discuss.js",
+  "jsdelivr": "dist/discuss.js",
   "scripts": {
     "build": "rollup -c",
     "start:client": "rollup -c -w",
@@ -28,7 +28,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/discussjs/Discuss"
+    "url": "https://github.com/discussjs/discuss"
   },
   "license": "MIT",
   "author": {

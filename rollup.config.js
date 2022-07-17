@@ -67,8 +67,8 @@ export default [
     output: {
       sourcemap: true,
       format: 'iife',
-      name: 'Discuss',
-      file: production ? 'dist/Discuss.js' : 'public/dist/Discuss.js'
+      name: 'discuss',
+      file: production ? 'dist/discuss.js' : 'public/dist/discuss.js'
     },
     plugins
   },
@@ -77,8 +77,8 @@ export default [
     output: {
       sourcemap: true,
       format: 'iife',
-      name: 'DiscussAdmin',
-      file: production ? 'dist/Discuss.admin.js' : 'public/dist/Discuss.admin.js'
+      name: 'discussAdmin',
+      file: production ? 'dist/discuss.admin.js' : 'public/dist/discuss.admin.js'
     },
     plugins
   },
@@ -87,7 +87,7 @@ export default [
     output: {
       sourcemap: true,
       format: 'iife',
-      name: 'DiscussEmot',
+      name: 'discussEmot',
       file: production ? 'dist/emot.js' : 'public/dist/emot.js'
     },
     plugins

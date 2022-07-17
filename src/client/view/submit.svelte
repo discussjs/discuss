@@ -29,7 +29,7 @@
   const siteReg = new RegExp('^https?://' + domain)
 
   // svelte变量
-  let storage = localStorage.Discuss
+  let storage = localStorage.discuss
   let isEmot = false
   let emotIndex = 0
   let emotMaps = {}
@@ -89,7 +89,7 @@
       emotMaps = await request({ url: emot, method: 'GET' })
     } else if (!emot) {
       loadScript('emot', () => {
-        emotMaps = window.DiscussEmot()
+        emotMaps = window.discussEmot()
       })
     } else {
       emotMaps = emot
@@ -132,7 +132,7 @@
     storage.mail = metas.mail.value.trim()
     storage.site = metas.site.value.trim()
     storage.content = metas.content.value.trim()
-    localStorage.Discuss = JSON.stringify(storage)
+    localStorage.discuss = JSON.stringify(storage)
   }
 
   $: isOnPreview = metas.content.value.length

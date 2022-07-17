@@ -2,9 +2,9 @@ import gif1px from 'min-1px'
 import Main from './view/main.svelte'
 import { options } from './lib/stores'
 import { translate, setLanguage } from './i18n'
-import VisitStat from './api/VisitStat'
-import RecentComment from './api/RecentComment'
-import CommentCount from './api/CommentCount'
+import getVisitStat from './api/VisitStat'
+import getRecentComment from './api/RecentComment'
+import getCommentCount from './api/CommentCount'
 
 let app
 function init(opt) {
@@ -34,4 +34,30 @@ function init(opt) {
   }
 }
 
-export default { init, VisitStat, RecentComment, CommentCount }
+/* eslint-disable no-console */
+function warn(fun) {
+  console.warn('Disucss:', `"${fun}" will be removed in a future version, please use "get${fun}" instead.`)
+}
+async function VisitStat(...params) {
+  warn('VisitStat')
+  return await getVisitStat(...params)
+}
+async function RecentComment(...params) {
+  warn('RecentComment')
+  return await getRecentComment(...params)
+}
+async function CommentCount(...params) {
+  warn('CommentCount')
+  return await getCommentCount(...params)
+}
+/* eslint-enable no-console */
+
+export default window.Discuss = {
+  init,
+  getVisitStat,
+  getRecentComment,
+  getCommentCount,
+  VisitStat,
+  RecentComment,
+  CommentCount
+}

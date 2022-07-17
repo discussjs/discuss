@@ -16,11 +16,11 @@
 
   function initAdmin() {
     zIndex('open')
-    app = window.DiscussAdmin.init({ ...$options, el: '.D-admin-wrap', show: true })
+    app = window.discussAdmin.init({ ...$options, el: '.D-admin-wrap', show: true })
   }
 
   function onSetting() {
-    if (window.DiscussAdmin) {
+    if (window.discussAdmin) {
       initAdmin()
     } else {
       $msg({ text: translate('settingMsg') })

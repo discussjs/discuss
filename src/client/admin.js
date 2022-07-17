@@ -24,4 +24,4 @@ function init(opt) {
   return app
 }
 
-export default { init }
+export default window.DiscussAdmin = { init }

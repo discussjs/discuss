@@ -133,7 +133,7 @@ const key = [
   '偷偷看'
 ]
 
-export default () => {
+export default window.DiscussEmot = () => {
   const emotCDN = `https://unpkg.com/discuss@${version}/assets/emot/`
   const items = {}
   for (const i of key) items[i] = emotCDN + i + '.png'
