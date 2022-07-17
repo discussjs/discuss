@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <link rel="icon" href="/favicon.ico" />
     <title>Discuss Comments</title>
-    <script src="/dist/Discuss.js"></script>
+    <script src="./dist/discuss.js"></script>
     <style>
       body {
         max-width: 800px;
@@ -172,7 +172,7 @@
       ipts[1].addEventListener('input', () => (localStorage.DUnique = ipts[1].value))
 
       function init() {
-        Discuss.init({
+        discuss.init({
           el: '#Discuss-Comments',
           master: 'Main',
           ph: '快来评论呀',
