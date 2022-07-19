@@ -26,8 +26,8 @@
     document.head.appendChild(script)
   }
 
-  getScript(location.href + '/Discuss.admin.js', () => {
-    DiscussAdmin.init({
+  getScript(location.href + '/discuss.admin.js', () => {
+    discussAdmin.init({
       el: '#Discuss-Comments',
       serverURLs: location.href
     })
