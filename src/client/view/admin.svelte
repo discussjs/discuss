@@ -66,7 +66,7 @@
 <svelte:component this={global} />
 <div class="D-admin-container" bind:this={adminDOM} style={!$showSetting ? 'display:none' : ''}>
   {#if !isLogin}
-    <Login on:onClose={onOpenAndClose.onOpenAdmin} on:loginS={() => (isLogin = true)} />
+    <Login on:onClose={onOpenAndClose.onOpenAdmin('close')} on:loginS={() => (isLogin = true)} />
   {/if}
   {#if isLogin}
     <div class="D-admin" style={!$showSetting ? 'display:none' : ''}>

@@ -20,6 +20,10 @@
     }
   }
 
+  .D-zIndex{
+    z-index: -1 !important;
+  }
+
   .D-svg {
     display: flex;
     width: inherit;
@@ -99,7 +103,7 @@
     height: auto;
     vertical-align: middle;
   }
-  
+
   .D-zoom {
     animation: D-zoom-animation 0.3s forwards;
   }
