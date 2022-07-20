@@ -5,10 +5,10 @@ const str = 'D-zIndex'
  * @param {String} flag open or close
  */
 export default function (flag) {
-  const adminWrap = [...document.querySelectorAll('.D-admin-wrap *')]
+  const adminWrap = document.querySelector('.D-admin-wrap')
   const all = [...document.body.querySelectorAll('*:not(._msg)')]
   all.forEach((el) => {
-    if (adminWrap.includes(el)) return
+    if (adminWrap.contains(el)) return
     const zIndex = window.getComputedStyle(el).zIndex
     if (flag === 'close') return el.classList.remove(str)
 
