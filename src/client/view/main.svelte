@@ -12,7 +12,7 @@
   let isLoading = true
   let isRefreshComments = true
   let comment = []
-  let app
+  let app, wordLimit
 
   function initAdmin() {
     zIndex('open')
@@ -51,17 +51,21 @@
     isRefreshComments = false
   }
 
+  function wordLimitFn({ detail }) {
+    wordLimit = detail
+  }
+
   function submitComment(event) {
-    comment = event.detail.data
+    comment = event.detail.comment
   }
 </script>
 
 <svelte:component this={global} />
 <div id="Discuss" class="Discuss">
   <div class="D-admin-wrap" />
-  <Submit on:onRefresh={onRefresh} on:onSetting={onSetting} on:submitComment={submitComment} />
+  <Submit on:onRefresh={onRefresh} on:onSetting={onSetting} on:submitComment={submitComment} {wordLimit} />
   {#if isLoading}
-    <Comments on:onComments={onComments} {comment} />
+    <Comments on:onComments={onComments} on:wordLimit={wordLimitFn} {comment} />
   {/if}
   <div class="D-loading-comments" style={isRefreshComments ? '' : 'display:none'}>
     <IconLoading />

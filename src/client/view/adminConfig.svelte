@@ -245,16 +245,25 @@
       for (const item of setting.items) fn(item)
     }
   }
+
+  function closeMenu() {
+    $openMenu = false
+  }
+
+  function selectedSidebar(name) {
+    group = name
+    closeMenu()
+  }
 </script>
 
 <aside class="D-sidebar D-select-none {$openMenu && 'D-sidebar-open'}">
   {#each settings as setting}
-    <span class="D-group {group === setting.name ? 'D-selected-group' : ''}" on:click={() => (group = setting.name)}>
+    <span class="D-group {group === setting.name ? 'D-selected-group' : ''}" on:click={selectedSidebar(setting.name)}>
       <span class="D-group-item-icon"><svelte:component this={setting.icon} /></span>
       <span class="D-group-item-title">{setting.name}</span>
     </span>
   {/each}
-  <span class="D-menu-close" on:click={() => ($openMenu = false)}><IconClose /></span>
+  <span class="D-menu-close" on:click={closeMenu}><IconClose /></span>
 </aside>
 <main class="D-main">
   <section class="D-section">
