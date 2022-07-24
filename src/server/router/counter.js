@@ -1,7 +1,7 @@
 const { Unique, VerifyParams, IndexHandler } = require('../utils')
 
 module.exports = async (params) => {
-  const { Counter } = global.DiscussDB
+  const { addCounter, getCounter, updateCounter } = global.DiscussDB
 
   // 验证 path 是否存在
   VerifyParams(params, ['path'])
@@ -10,14 +10,13 @@ module.exports = async (params) => {
   const path = IndexHandler(params.path)
 
   // 查询
-  let result = (await Counter.select({ path }))[0]
+  let result = await getCounter(path)
 
   // 判断是否有统计记录
   // 有: 自增1
   // 没有: 新增记录
   if (result) {
-    const data = { time: ++result.time, updated: Date.now() }
-    result = (await Counter.update(data, { path }))[0]
+    await updateCounter({ path, updated: Date.now() })
   } else {
     const created = Date.now()
     const updated = Date.now()
@@ -26,8 +25,8 @@ module.exports = async (params) => {
     const _idDB = ['mysql', 'postgresql', 'sqlite']
     if (_idDB.includes(process.env.DISCUSS_DB_TYPE)) data.id = Unique()
 
-    result = await Counter.add(data)
+    await addCounter(data)
   }
 
-  return result.time || 1
+  return (result && ++result.time) || 1
 }

@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs')
 const axios = require('axios')
-const { Unique, XSS, SetAvatar, DeepColne, IndexHandler, VerifyParams, GetAvatar } = require('./index')
+const { Unique, XSS, SetAvatar, DeepClone, IndexHandler, VerifyParams, GetAvatar } = require('./index')
 
 /**
  * 限制字数
@@ -122,7 +122,7 @@ async function SendMailHandler(config, data) {
  * @returns
  */
 async function UpdateComment(arr, exec, comment) {
-  const { Comment } = global.DiscussDB
+  const { updateComment } = global.DiscussDB
   let data = { status: exec }
 
   // 修改为置顶
@@ -131,21 +131,21 @@ async function UpdateComment(arr, exec, comment) {
   // 判断是否为编辑的评论
   if (comment) data = comment
 
-  return await Comment.update(data, { id: ['IN', arr] })
+  for (const i of arr) await updateComment(i, data)
 }
 
 // 删除评论
 async function DeleteComment(arr) {
-  const { Comment } = global.DiscussDB
-  return await Comment.delete({ id: ['IN', arr] })
+  const { deleteComment } = global.DiscussDB
+  for (const id of arr) await deleteComment(id)
 }
 
 // token 正确则不查询回复评论了
 async function GetReplyComment(comments) {
-  const { Comment } = global.DiscussDB
+  const { getComment } = global.DiscussDB
   for (const item of comments) {
-    const id = item.id.toString() // toString 将 new ObjectId() 转换为 id
-    const replys = await Comment.select({ pid: id })
+    const id = item.id
+    const replys = await getComment({ pid: id, status: 'accept' })
     // 处理回复评论
     item.replys = CommentHandler(replys)
   }
@@ -159,21 +159,21 @@ async function GetReplyComment(comments) {
  * @returns {Number}
  */
 async function GetCommentCounts(options, isClone = true) {
-  const { Comment } = global.DiscussDB
-  const newOptions = isClone ? DeepColne(options) : options
+  const { getCommentCount } = global.DiscussDB
+  const newOptions = isClone ? DeepClone(options) : options
   delete newOptions.pid
 
   // 查询path的所有评论(包含：父评论、子评论、置顶评论)
-  const counts = await Comment.count(newOptions)
+  const counts = await getCommentCount(newOptions)
 
   return counts
 }
 
 // 限制页码
 async function limitPageNo(page, pageSize, options) {
-  const { Comment } = global.DiscussDB
+  const { getCommentCount } = global.DiscussDB
   // 根据父评论数量进行分页
-  const counts = await Comment.count(options)
+  const counts = await getCommentCount(options)
 
   let pageCount = Math.ceil(counts / pageSize)
   if (pageCount < 1) pageCount = 1
@@ -241,6 +241,7 @@ async function CommitCommentHandler(params) {
   data.rid = params.rid || ''
   data.ua = params.ua
   data.ip = params.ip
+  data.stick = params.stick || false
   data.status = params.status
   data.path = path
   data.avatar = avatar
@@ -275,27 +276,22 @@ function VerufyMailANDSite(mail, site) {
 
 // 限流
 async function limitFilter(ip) {
-  const { Comment } = global.DiscussDB
+  const { getCommentCountLimit } = global.DiscussDB
   const tenmin = 600000 // 10分钟
 
   const { limit, limitAll } = global.Dconfig
 
   // 10分钟内，相同的ip能评论多少条(默认10)
   if (parseInt(limit)) {
-    const count = await Comment.count({
-      ip,
-      created: ['>', Date.now() - tenmin]
-    })
-    if (count >= limit) {
+    const count = await getCommentCountLimit({ ip, created: tenmin })
+    if (count > limit) {
       throw new Error('Commenting too frequently')
     }
   }
   // 10分钟内，所有的ip能评论多少条
   if (parseInt(limitAll)) {
-    const count = await Comment.count({
-      created: ['>', Date.now() - tenmin]
-    })
-    if (count >= limitAll) {
+    const count = await getCommentCountLimit({ created: tenmin })
+    if (count > limitAll) {
       throw new Error('Server is busy, please try again later...')
     }
   }

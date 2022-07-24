@@ -6,7 +6,7 @@ require('output-line')()
 module.exports = async (req, res) => {
   // 将数据库信息锁定到全局
   if (!global.DiscussDB) {
-    const result = require('./database/adapter')()
+    const result = await require('./database/adapter')()
     // 如果未返回信息，则表示连接错误，直接结束请求
     if (!result) return
     global.DiscussDB = result

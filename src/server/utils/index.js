@@ -61,7 +61,7 @@ function Discussjs(url) {
   return readFileSync(path, { encoding: 'utf-8' })
 }
 
-function DeepColne(options = {}) {
+function DeepClone(options = {}) {
   const str = JSON.stringify(options)
   const json = JSON.parse(str)
   return json
@@ -74,7 +74,7 @@ module.exports = {
   GetFavicon,
   SetFavicon,
   Discussjs,
-  DeepColne,
+  DeepClone,
   CORS,
   VerifyParams,
   akismet,

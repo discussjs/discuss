@@ -1,26 +1,12 @@
-const base = require('./storage/base')
+const { DISCUSS_DB_TYPE } = process.env
 
-module.exports = () => {
+module.exports = async () => {
   try {
-    const db = process.env.DISCUSS_DB_TYPE
-    switch (db) {
-      case 'mongodb':
-        return base(db, require('./storage/mongodb'))
-      case 'mysql':
-        return base(db, require('./storage/mysql'))
-      case 'cloudbase':
-        return base(db, require('./storage/cloudbase'))
-      case 'deta':
-        return base(db, require('./storage/deta'))
-      case 'leancloud':
-        return base(db, require('./storage/leancloud'))
-      case 'postgresql':
-        return base(db, require('./storage/postgresql'))
-      case 'sqlite':
-        return base(db, require('./storage/sqlite'))
-      default:
-        throw new Error('No matching database found')
-    }
+    let db = (DISCUSS_DB_TYPE || '').toLowerCase()
+    // eslint-disable-next-line no-console
+    console.log('Use db type:', db)
+    if (!db) throw new Error('No matching database found')
+    return await require('./storage/' + db)()
   } catch (error) {
     /* eslint-disable no-console */
     console.error('Discuss: Database connect fault')
