@@ -17,8 +17,8 @@ async function Router(req, res) {
   try {
     // 将配置信息放置到全局
     if (!global.Dconfig) {
-      const { Admin } = global.DiscussDB
-      global.Dconfig = (await Admin.select({}))[0]
+      const { getAdmin } = global.DiscussDB
+      global.Dconfig = await getAdmin()
     }
 
     // 获取请求参数
@@ -28,15 +28,6 @@ async function Router(req, res) {
     // 获取 IP
     body.ip = GetUserIP(req)
     console.log('body', body)
-
-    // 返回初始化页面
-    if (!global.Dconfig && body.type !== 'INIT') {
-      const path = join(__dirname, '../../../public/init.html')
-      const html = HtmlMinify(path)
-      res.setHeader('Content-Type', 'text/html; charset=utf-8')
-      res.end(html)
-      return
-    }
 
     //  eslint-disable-next-line no-inner-declarations
     function Page(file) {

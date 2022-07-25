@@ -1,5 +1,5 @@
 const bcrypt = require('bcryptjs')
-const { Unique, jwtSign, DeepColne, GetAvatar } = require('../utils')
+const { Unique, jwtSign, DeepClone, GetAvatar } = require('../utils')
 
 const { SECRET, VerifyToken } = require('../utils/adminUtils')
 const { GetCommentCounts, limitPageNo, DeleteComment, UpdateComment } = require('../utils/commentUtils')
@@ -9,8 +9,8 @@ const { VerifyParams, IndexHandler } = require('../utils')
  * 初始化管理员，并将信息发送到全局
  */
 async function init(body) {
-  const { Admin } = global.DiscussDB
-  global.Dconfig = (await Admin.select({}))[0]
+  const { addAdmin, getAdmin } = global.DiscussDB
+  global.Dconfig = await getAdmin()
   // 如果已有则直接退出
   if (global.Dconfig) return
   const { username, password, mail } = body
@@ -44,7 +44,8 @@ async function init(body) {
   }
   const _idDB = ['mysql', 'postgresql', 'sqlite']
   if (_idDB.includes(process.env.DISCUSS_DB_TYPE)) options.id = Unique()
-  global.Dconfig = await Admin.add(options)
+  await addAdmin(options)
+  global.Dconfig = await getAdmin()
 }
 
 /**
@@ -80,30 +81,6 @@ async function Login(params) {
   return result
 }
 
-/**
- * 模糊多条件查询
- * @param {*} options
- * @param {*} keyword
- * @param {*} searchType
- * @returns
- */
-function FuzzyQueries(options, keyword, searchType) {
-  if (!keyword) return
-
-  // 默认查询全部字段
-  if (searchType === 'all') {
-    delete options.path
-    options._complex = { _logic: 'OR' }
-    const arr = ['nick', 'mail', 'site', 'ip', 'content', 'path']
-    for (const i of arr) {
-      options._complex[i] = ['LIKE', `%${keyword}%`]
-    }
-  } else {
-    // 指定字段
-    options[searchType] = ['LIKE', `%${keyword}%`]
-  }
-}
-
 /* eslint-disable max-statements */
 /**
  * 管理员获取评论
@@ -111,7 +88,7 @@ function FuzzyQueries(options, keyword, searchType) {
  * @returns
  */
 async function AdminGetComments(params) {
-  const { Comment } = global.DiscussDB
+  const { getComments, fuzzyQueries } = global.DiscussDB
   const config = global.Dconfig
 
   const token = await VerifyToken(params.token)
@@ -121,7 +98,7 @@ async function AdminGetComments(params) {
   if (!pageSize) pageSize = config.commentCount
   const { pageNo, keyword, searchType, status, path } = params
 
-  const options = { status }
+  let options = { status }
 
   if (status === 'current') {
     options.path = IndexHandler(path)
@@ -135,7 +112,7 @@ async function AdminGetComments(params) {
   }
 
   // 模糊查询
-  FuzzyQueries(options, keyword, searchType)
+  if (keyword) options = fuzzyQueries(options, keyword, searchType)
 
   const counts = await GetCommentCounts(options, false)
 
@@ -143,11 +120,7 @@ async function AdminGetComments(params) {
   const { page, pageCount } = await limitPageNo(pageNo, pageSize, options)
 
   // 分页查询
-  const comments = await Comment.select(options, {
-    offset: (page - 1) * pageSize,
-    limit: pageSize,
-    desc: 'created'
-  })
+  const comments = await getComments(options, { page, pageSize })
 
   for (const item of comments) {
     // 处理头像
@@ -184,7 +157,7 @@ async function OperateComment({ id, exec, token, comment }) {
   // 判断操作是否为删除，如果不是则为修改
   if (exec === 'delete') return await DeleteComment(id)
 
-  return await UpdateComment(id, exec, comment)
+  await UpdateComment(id, exec, comment)
 }
 
 // 获取配置信息
@@ -192,7 +165,7 @@ async function GetConfig({ token }) {
   const isToken = await VerifyToken(token)
   if (!isToken) throw new Error('Token exception')
 
-  const config = DeepColne(global.Dconfig)
+  const config = DeepClone(global.Dconfig)
   delete config.id
   delete config.password
   return config
@@ -200,7 +173,7 @@ async function GetConfig({ token }) {
 
 // 保存配置信息
 async function SaveConfig(params) {
-  const { Admin } = global.DiscussDB
+  const { getAdmin, updateAdmin } = global.DiscussDB
 
   const { data, token } = params
 
@@ -215,20 +188,17 @@ async function SaveConfig(params) {
   data.limitAll = parseInt(data.limitAll)
   data.commentCount = parseInt(data.commentCount)
 
-  const siteUrl = data.siteUrl === null || data.siteUrl === void 0
-  data.siteUrl = siteUrl ? void 0 : data.siteUrl.replace(/\/$/, '')
+  data.siteUrl = data.siteUrl == null ? null : data.siteUrl.replace(/\/$/, '')
 
   const { id } = global.Dconfig
-  global.Dconfig = {
-    ...global.Dconfig,
-    ...(await Admin.update(data, { id }))[0]
-  }
+  await updateAdmin(id, data)
+  global.Dconfig = await getAdmin()
 }
 
 /* eslint-disable max-statements */
 async function Import(params) {
   const config = global.Dconfig
-  const { Comment, Counter } = global.DiscussDB
+  const { addComment, addCounter } = global.DiscussDB
   const { username, password, comments, counters } = params
 
   // 验证评论信息是否合法
@@ -258,8 +228,8 @@ async function Import(params) {
       }
       i.path = IndexHandler(i.path)
 
-      if (comments.length) await Comment.add(i) // 评论
-      if (counters.length) await Counter.add(i) // 访问量
+      if (comments.length) await addComment(i) // 评论
+      if (counters.length) await addCounter(i) // 访问量
 
       success++
     } catch (error) {

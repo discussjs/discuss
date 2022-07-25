@@ -1,77 +1,126 @@
+const { MongoClient, ObjectId } = require('mongodb')
+const { DeepClone } = require('../../utils')
+
 const {
   D_MONGO_URL,
-  D_MONGO_HOST,
-  D_MONGO_PORT,
-  D_MONGO_DB,
-  D_MONGO_USER,
-  D_MONGO_PASSWORD,
-  D_MONGO_REPLICASET,
-  D_MONGO_AUTHSOURCE,
-  D_MONGO_SSL
+  DISCUSS_DB_ADMIN = 'd_admin',
+  DISCUSS_DB_COMMENT = 'd_comment',
+  DISCUSS_DB_COUNTER = 'd_counter'
 } = process.env
 
-// 自动拆分
-const parseOpt = {}
-if (D_MONGO_URL) {
-  const protocol = 'mongodb://'
-  let split = D_MONGO_URL.split(',')
+const D_DB_NAME = 'discuss'
 
-  // 正则: ^mongodb:\/\/.*
-  const reg = new RegExp('^' + protocol + '.*')
+let db
 
-  // 加协议
-  const urls = []
-  for (let i of split) {
-    if (reg.test(i)) urls.push(i)
-    else urls.push(protocol + i)
+async function connectDatabase() {
+  if (db) return
+
+  const options = { useNewUrlParser: true, useUnifiedTopology: true }
+  const client = await MongoClient.connect(D_MONGO_URL, options)
+
+  const dbName = new URL(D_MONGO_URL).pathname.substring(1)
+  db = await client.db(dbName || D_DB_NAME)
+}
+
+function idHandler(datas) {
+  for (const data of datas) {
+    data.id = data._id.toString()
+    delete data._id
   }
-
-  // 解析
-  const url1 = new URL(urls[0])
-  const url2 = new URL(urls[1])
-  const url3 = new URL(urls[2])
-
-  // url1
-  parseOpt.host = []
-  parseOpt.host.push(url1.hostname)
-  parseOpt.port = []
-  parseOpt.port.push(url1.port)
-
-  parseOpt.user = url1.username
-  parseOpt.password = url1.password
-
-  // url2
-  parseOpt.host.push(url2.hostname)
-  parseOpt.port.push(url2.port)
-
-  // url3
-  parseOpt.host.push(url3.hostname)
-  parseOpt.port.push(url3.port)
-  parseOpt.database = url3.pathname.replace(/^\//, '')
-
-  parseOpt.options = {}
-  const params = url3.searchParams.entries()
-  for (const i of params) parseOpt.options[i[0]] = i[1]
+  return datas
 }
 
-const dbOptions = {}
-if (D_MONGO_REPLICASET) dbOptions.replicaset = D_MONGO_REPLICASET
-if (D_MONGO_AUTHSOURCE) dbOptions.authSource = D_MONGO_AUTHSOURCE
-if (D_MONGO_SSL) dbOptions.ssl = D_MONGO_SSL
+module.exports = async () => {
+  try {
+    await connectDatabase()
 
-let options = {
-  host: D_MONGO_HOST
-    ? D_MONGO_HOST.startsWith('[')
-      ? JSON.parse(D_MONGO_HOST) // 如果是 [xxx, xxx] 数组格式则解析为数组，否则不解析
-      : D_MONGO_HOST
-    : '127.0.0.1', // 如果 D_MONGO_HOST 为 null 或 undefined 则使用 127.0.0.1
-  port: D_MONGO_PORT ? (D_MONGO_PORT.startsWith('[') ? JSON.parse(D_MONGO_PORT) : D_MONGO_PORT) : 27017,
-  database: D_MONGO_DB || 'Discuss',
-  user: D_MONGO_USER,
-  password: D_MONGO_PASSWORD,
-  options: dbOptions
+    return {
+      async addAdmin(data) {
+        await db.collection(DISCUSS_DB_ADMIN).insertOne(data)
+      },
+      async getAdmin() {
+        const datas = await db.collection(DISCUSS_DB_ADMIN).findOne({})
+        if (!datas) return
+        return idHandler([datas])[0]
+      },
+      async updateAdmin(id, data) {
+        await db.collection(DISCUSS_DB_ADMIN).updateOne({ _id: ObjectId(id) }, { $set: data })
+      },
+      fuzzyQueries(options, keyword, searchType) {
+        const reg = new RegExp(keyword, 'i')
+        if (searchType !== 'all') {
+          options[searchType] = reg
+        } else {
+          const arr = ['nick', 'mail', 'site', 'ip', 'content', 'path']
+          options.$or = []
+          for (const i of arr) options.$or.push({ [i]: { $regex: reg } })
+        }
+        return options
+      },
+      async addComment(data) {
+        const res = await db.collection(DISCUSS_DB_COMMENT).insertOne(data)
+        return [await this.getCommentByID(res.insertedId.toString())]
+      },
+      async deleteComment(id) {
+        await db.collection(DISCUSS_DB_COMMENT).deleteOne({ _id: ObjectId(id) })
+      },
+      async updateComment(id, data) {
+        await db.collection(DISCUSS_DB_COMMENT).updateOne({ _id: ObjectId(id) }, { $set: data })
+      },
+      async getTopComments(query) {
+        return idHandler(await db.collection(DISCUSS_DB_COMMENT).find(query).sort({ created: -1 }).toArray())
+      },
+      async getCommentByID(id) {
+        const data = await db
+          .collection(DISCUSS_DB_COMMENT)
+          .find({ _id: ObjectId(id) })
+          .toArray()
+        return idHandler(data)[0]
+      },
+      async getComment(query) {
+        // 不知道为什么 mongodb 直接传入 query 查不出来数据，得深度克隆后才可以查出
+        query = DeepClone(query)
+        return idHandler(await db.collection(DISCUSS_DB_COMMENT).find(query).toArray())
+      },
+      async getComments(query, { page, pageSize }) {
+        const stick = query.stick
+        const condition = Array.isArray(stick) && stick[0] === '!=' && stick[1]
+        if (condition) query.stick = { $ne: true }
+        return idHandler(
+          await db
+            .collection(DISCUSS_DB_COMMENT)
+            .find(query)
+            .sort({ created: -1 })
+            .skip((page - 1) * pageSize)
+            .limit(pageSize)
+            .toArray()
+        )
+      },
+      async getRecentComment(query, limit) {
+        return await db.collection(DISCUSS_DB_COMMENT).find(query).sort({ created: -1 }).limit(limit).toArray()
+      },
+      async getCommentCount(query) {
+        return await db.collection(DISCUSS_DB_COMMENT).countDocuments(query)
+      },
+      async getCommentCountLimit({ ip, created }) {
+        const query = { $gt: Date.now() - created }
+        if (ip) query.ip = ip
+        return await db.collection(DISCUSS_DB_COMMENT).countDocuments(query)
+      },
+      async addCounter(data) {
+        await db.collection(DISCUSS_DB_COUNTER).insertOne(data)
+      },
+      async updateCounter({ path, updated }) {
+        await db.collection(DISCUSS_DB_COUNTER).updateOne({ path }, { $inc: { time: 1 }, $set: { updated } })
+      },
+      async getCounter(path) {
+        const res = await db.collection(DISCUSS_DB_COUNTER).findOne({ path })
+        if (!res) return
+        return idHandler([res])[0]
+      }
+    }
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(error)
+  }
 }
-
-if (JSON.stringify(parseOpt) !== '{}') options = parseOpt
-
-module.exports = options

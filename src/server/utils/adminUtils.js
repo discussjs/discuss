@@ -11,7 +11,7 @@ async function VerifyToken(token) {
   const data = jwtVerify(token, SECRET)
   if (data.msg) return false
   if (data.id) {
-    const condition = data.id === global.Dconfig.id.toString()
+    const condition = data.id === global.Dconfig.id
     if (condition) return true
     return false
   }

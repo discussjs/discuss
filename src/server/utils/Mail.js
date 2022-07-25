@@ -68,7 +68,7 @@ async function Send(options) {
 
 // 查询(父|回复)评论信息
 async function PRComment(comment) {
-  const { Comment } = global.DiscussDB
+  const { getCommentByID } = global.DiscussDB
 
   let ids = []
   let pComment = {}
@@ -79,7 +79,9 @@ async function PRComment(comment) {
     if (comment.pid === comment.rid) ids.push(comment.pid)
     else ids = [comment.rid, comment.pid]
 
-    const comments = await Comment.select({ id: ['IN', ids] })
+    const comments = []
+    for (const id of ids) comments.push(await getCommentByID(id))
+
     for (const item of comments) {
       pComment = item.id === comment.pid ? parse(item) : pComment
       rComment = item.id === comment.rid ? parse(item) : rComment

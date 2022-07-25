@@ -36,21 +36,27 @@
     "url": "https://www.imlete.cn"
   },
   "dependencies": {
+    "@cloudbase/node-sdk": "^2.9.1",
     "akismet-api": "^5.2.1",
     "axios": "^0.22.0",
     "bcryptjs": "^2.4.3",
     "body-data": "^1.0.5",
-    "dittorm": "^1.0.0-beta.0",
     "dotenv": "^10.0.0",
     "get-user-ip": "^1.0.0",
     "html-minifier": "^4.0.0",
     "jsonwebtoken": "^8.5.1",
     "md5": "^2.3.0",
     "min-1px": "^1.0.0",
+    "mongodb": "^4.8.0",
     "msg-alert": "^1.0.0-beta.2",
+    "mysql2": "^2.3.3",
     "nodemailer": "^6.7.0",
     "output-line": "^1.0.1",
+    "pg": "^8.7.3",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.21.3",
     "simple-unique": "^1.2.0",
+    "sqlite3": "^5.0.10",
     "xss": "^1.0.10"
   },
   "devDependencies": {

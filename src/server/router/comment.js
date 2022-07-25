@@ -11,12 +11,12 @@ const {
   VerufyMailANDSite,
   CommitCommentHandler
 } = require('../utils/commentUtils')
-const { IndexHandler, DeepColne, VerifyParams, akismet } = require('../utils')
+const { IndexHandler, DeepClone, VerifyParams, akismet } = require('../utils')
 
 /* eslint-disable max-statements  */
 // 获取评论
 async function GetComment(params) {
-  const { Comment } = global.DiscussDB
+  const { getTopComments, getComments } = global.DiscussDB
   const config = global.Dconfig
   const commentCount = config.commentCount
   // 处理index.html
@@ -38,25 +38,21 @@ async function GetComment(params) {
   */
   let commentsTop = []
   if (pageNo === 1) {
-    const optionsTop = DeepColne(options)
+    const optionsTop = DeepClone(options)
     optionsTop.stick = true
-    commentsTop = await Comment.select(optionsTop, { desc: 'created' })
+    commentsTop = await getTopComments(optionsTop)
   }
 
   // 获取通过审核的评论数
-  const optionsCount = DeepColne(options)
+  const optionsCount = DeepClone(options)
   delete optionsCount.stick
   const counts = await GetCommentCounts(optionsCount)
 
   // 限制页码
-  const { page, pageCount } = await limitPageNo(pageNo, commentCount, options)
+  const { page, pageCount } = await limitPageNo(pageNo, commentCount, optionsCount)
 
   // 分页查询
-  const comments = await Comment.select(options, {
-    offset: (page - 1) * commentCount,
-    limit: commentCount,
-    desc: 'created'
-  })
+  const comments = await getComments(options, { page, pageSize: commentCount })
 
   // 合并置顶评论和普通评论
   const newComments = [...commentsTop, ...comments]
@@ -78,7 +74,7 @@ async function GetComment(params) {
 
 // 提交评论
 async function CommitComment(params) {
-  const { Comment } = global.DiscussDB
+  const { addComment, getCommentByID } = global.DiscussDB
   // 验证评论信息是否合法
   VerifyParams(params, ['nick', 'mail', 'content', 'ua', 'path'])
   // 验证邮箱和网址是否正确
@@ -87,7 +83,7 @@ async function CommitComment(params) {
   // 查询rid是否存在
   let RplayComment
   if (params.rid) {
-    RplayComment = (await Comment.select({ id: params.rid }))[0]
+    RplayComment = await getCommentByID(params.rid)
   }
 
   const config = global.Dconfig
@@ -119,11 +115,11 @@ async function CommitComment(params) {
 
   const data = await CommitCommentHandler(params)
 
-  // 如果是回复评论则写入回复评论的昵称
-  if (RplayComment) data.rnick = RplayComment.nick
-
   // 保存评论
-  const result = await Comment.add(data)
+  const result = (await addComment(data))[0]
+
+  // 如果是回复评论则写入回复评论的昵称
+  if (RplayComment) data.rnick = result.rnick = RplayComment.nick
 
   await SendMailHandler(config, data)
 
@@ -137,22 +133,19 @@ async function CommitComment(params) {
 
 // 获取最新评论
 async function RecentComment(params) {
-  const { Comment } = global.DiscussDB
+  const { getRecentComment } = global.DiscussDB
   const config = global.Dconfig
   let query = { status: 'accept' }
   if (params.reply === false) query.pid = ''
 
-  const comments = await Comment.select(query, {
-    limit: config.commentCount || 10,
-    desc: 'created'
-  })
+  const comments = await getRecentComment(query, config.commentCount || 10)
 
   return CommentHandler(comments)
 }
 
 // 获取评论数
 async function CommentCount(params) {
-  const { Comment } = global.DiscussDB
+  const { getCommentCount } = global.DiscussDB
 
   VerifyParams(params, ['paths'])
 
@@ -168,7 +161,7 @@ async function CommentCount(params) {
     const options = { path }
     // 是否查询回复评论，默认查询所有评论
     if (params.reply === false) options.pid = ''
-    const count = await Comment.count(options)
+    const count = await getCommentCount(options)
     result.push({ path, count })
   }
 
