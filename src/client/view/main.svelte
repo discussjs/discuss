@@ -11,6 +11,7 @@
 
   let isLoading = true
   let isRefreshComments = true
+  let isNotComments = false
   let comment = []
   let app, wordLimit
 
@@ -47,8 +48,13 @@
     }, 1000)
   }
 
-  function onComments() {
+  function onComment({ detail }) {
+    if (!detail) isNotComments = true
     isRefreshComments = false
+  }
+
+  function onCommentError() {
+    onComment()
   }
 
   function wordLimitFn({ detail }) {
@@ -65,10 +71,16 @@
   <div class="D-admin-wrap" />
   <Submit on:onRefresh={onRefresh} on:onSetting={onSetting} on:submitComment={submitComment} {wordLimit} />
   {#if isLoading}
-    <Comments on:onComments={onComments} on:wordLimit={wordLimitFn} {comment} />
+    <Comments on:onComment={onComment} on:wordLimit={wordLimitFn} on:onCommentError={onCommentError} {comment} />
   {/if}
-  <div class="D-loading-comments" style={isRefreshComments ? '' : 'display:none'}>
-    <IconLoading />
+  <div class="D-loading-comments" style={isRefreshComments || isNotComments ? '' : 'margin:0'}>
+    {#if isRefreshComments}
+      <IconLoading />
+    {/if}
+
+    {#if isNotComments}
+      {translate('notComments')}
+    {/if}
   </div>
   <Footer />
 </div>

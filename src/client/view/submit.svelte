@@ -205,8 +205,8 @@
         condition ? (metas[k].is = true) : (metas[k].is = false)
       }
       isLegal = nick.is && mail.is && site.is && content.is
-      // eslint-disable-next-line no-empty
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error(error)
     }
   }

@@ -19,6 +19,7 @@
   "pleaseLogin": "Please log in and then use the admin email to comment",
   "sendError": "Comment failed~",
   "more": "More",
+  "notComments": "Not Comments",
   "commentsError": "Failed to get comments~",
   "settingMsg": "Loading admin panel...",
   "refreshMsg": "Refreshing comments...",

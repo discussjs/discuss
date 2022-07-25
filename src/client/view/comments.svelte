@@ -45,12 +45,13 @@
       pageCount = data.pageCount
       comments = [...comments, ...data.comments]
 
-      dispatch('onComments')
+      dispatch('onComment', comments.length)
       dispatch('wordLimit', data.wordNumber)
     } catch (error) {
       // eslint-disable-next-line
       console.error('Request failed', error)
       $msg({ type: 'error', time: 1500, text: translate('commentsError') })
+      dispatch('onCommentError')
     }
 
     // 页码大于当前页显示‘更多评论’按钮
