@@ -14,7 +14,13 @@
 
   export let cancel = false,
     pid = '',
-    rid = ''
+    rid = '',
+    wordLimit = 0
+
+  let wordLimitContent = wordLimit.content
+  $: {
+    wordLimitContent = wordLimit.content
+  }
 
   // 普通变量
   const textStr = 'text'
@@ -64,20 +70,19 @@
   onMount(async () => {
     initInfo()
     await getEmot()
-    D.MetasChange()
   })
 
   afterUpdate(() => {
+    MetasChange()
     $lazy()
   })
 
   function initInfo() {
     try {
       storage = JSON.parse(storage) || {}
-      metas.nick.value = storage.nick || ''
-      metas.mail.value = storage.mail || ''
-      metas.site.value = storage.site || ''
-      metas.content.value = storage.content || ''
+      for (const [k, v] of Object.entries(storage)) {
+        metas[k].value = v || ''
+      }
     } catch (error) {
       storage = {}
     }
@@ -95,7 +100,7 @@
       emotMaps = emot
     }
   }
-  
+
   function getEmotAll() {
     try {
       for (const e in emotMaps) {
@@ -129,10 +134,9 @@
   }
 
   function SaveInfo() {
-    storage.nick = metas.nick.value.trim()
-    storage.mail = metas.mail.value.trim()
-    storage.site = metas.site.value.trim()
-    storage.content = metas.content.value.trim()
+    for (const [k, v] of Object.entries(metas)) {
+      storage[k] = v.value.trim()
+    }
     localStorage.discuss = JSON.stringify(storage)
   }
 
@@ -150,7 +154,7 @@
   function onInput() {
     SaveInfo()
     Preview()
-    D.MetasChange()
+    MetasChange()
   }
   /**
    * @param {String} key 表情名(描述)
@@ -183,34 +187,28 @@
     metas = metas
   }
 
-  D.MetasChange = function () {
+  function MetasChange() {
     try {
-      const inputsDOM = document.querySelectorAll('.D-submit>.D-input>*')
-      let { nick, mail, site, content } = metas
-      inputsDOM.forEach((el) => {
-        el.classList.remove('error')
-        const len = el.value.length
-        const name = el.name
-        const word = D.wordNumber[el.name]
-
+      const { nick, mail, site, content } = metas
+      for (const [k, v] of Object.entries(metas)) {
+        const len = v.value.length
+        const word = wordLimit[k]
         let condition = true
-        if (name === nickStr) condition = len > 1
-        if (name === mailStr) condition = mailReg.test(el.value)
-        if (name === siteStr) condition = len === 0 ? true : siteReg.test(el.value)
-        if (name === contentStr) condition = len > 1
+        if (k === nickStr) condition = len > 1
+        if (k === mailStr) condition = mailReg.test(v.value)
+        if (k === siteStr) condition = len === 0 ? true : siteReg.test(v.value)
+        if (k === contentStr) condition = len > 1
 
-        // 如果word的参数不为0，这判断输入框内容长度是否符合规定
+        // 如果word的参数不为0，则判断输入框内容长度是否符合规定
         if (word) condition = condition && len <= word
 
-        if (condition) metas[el.name].is = true
-        else {
-          el.classList.add('error')
-          metas[el.name].is = false
-        }
-      })
+        condition ? (metas[k].is = true) : (metas[k].is = false)
+      }
       isLegal = nick.is && mail.is && site.is && content.is
       // eslint-disable-next-line no-empty
-    } catch (error) {}
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   // eslint-disable-next-line max-statements
@@ -242,7 +240,7 @@
       }
 
       if (result.data instanceof Array) {
-        dispatch('submitComment', { data: result.data, pid })
+        dispatch('submitComment', { comment: result.data, pid })
         metas.content.value = ''
         SaveInfo()
         isPreview = false
@@ -262,6 +260,7 @@
     {#each inputs as i}
       <input
         bind:value={metas[i.key].value}
+        class={metas[i.key].is ? '' : 'D-error'}
         name={i.key}
         placeholder={i.locale}
         on:input={(e) => (e.target.type = i.type)}
@@ -270,12 +269,22 @@
     {/each}
     <textarea
       name={contentStr}
-      class="D-input-content"
+      class="D-input-content {metas.content.is ? '' : 'D-error'}"
       bind:value={metas.content.value}
       placeholder={D.ph}
       on:input={onInput}
       bind:this={textareaDOM}
     />
+    {#if wordLimitContent}
+      <span class="D-text-number">
+        {metas.content.value.length}
+        {#if wordLimitContent}
+          <span class={metas.content.value.length > wordLimitContent && 'D-text-number-illegal'}
+            >{'/ ' + wordLimitContent}
+          </span>
+        {/if}
+      </span>
+    {/if}
   </div>
   <div class="D-actions D-select-none">
     <div class="D-actions-left">
@@ -348,18 +357,14 @@
     &:hover {
       border-color: var(--D-Height-Color);
     }
-    .D-input :global(.error) {
+    .D-input .D-error {
       border-radius: 6px;
       border-color: var(--D-main-Color);
       background: rgba(244, 100, 95, 0.1);
     }
   }
   .D-input {
-    :global(.error) {
-      border-radius: 6px;
-      border-color: var(--D-main-Color);
-      background: rgba(244, 100, 95, 0.1);
-    }
+    position: relative;
     input {
       padding: 6px;
       width: calc((100% - 1rem) / 3);
@@ -394,6 +399,23 @@
       outline: none;
       font-family: inherit;
     }
+
+    .D-text-number {
+      position: absolute;
+      color: #999;
+      right: 14px;
+      bottom: 6px;
+      font-size: 12px;
+    }
+
+    .D-text-number-illegal {
+      color: red;
+    }
+    .D-error {
+      border-radius: 6px;
+      border-color: var(--D-main-Color);
+      background: rgba(244, 100, 95, 0.1);
+    }
   }
 
   .D-actions {
@@ -409,15 +431,6 @@
 
       .D-btn {
         margin-left: 4px;
-      }
-
-      .D-text-number {
-        font-size: 12px;
-        color: #999;
-      }
-
-      .D-text-number-illegal {
-        color: red;
       }
     }
   }

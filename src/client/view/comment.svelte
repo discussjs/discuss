@@ -36,8 +36,8 @@
    * 3. 再此递归自身将其发送到comments.vue根组件统一处理，并渲染
    */
   function submitComment(event) {
-    const { data, pid } = event.detail
-    dispatch('submitComment', { comment: data, pid })
+    const { comment, pid } = event.detail
+    dispatch('submitComment', { comment, pid })
   }
 </script>
 

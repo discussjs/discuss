@@ -45,9 +45,8 @@
       pageCount = data.pageCount
       comments = [...comments, ...data.comments]
 
-      D.wordNumber = data.wordNumber
-      D.MetasChange()
       dispatch('onComments')
+      dispatch('wordLimit', data.wordNumber)
     } catch (error) {
       // eslint-disable-next-line
       console.error('Request failed', error)
