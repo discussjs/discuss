@@ -76,9 +76,7 @@
   <div class="D-loading-comments" style={isRefreshComments || isNotComments ? '' : 'margin:0'}>
     {#if isRefreshComments}
       <IconLoading />
-    {/if}
-
-    {#if isNotComments}
+    {:else if isNotComments}
       {translate('notComments')}
     {/if}
   </div>
