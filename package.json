@@ -1,6 +1,6 @@
 {
   "name": "discuss",
-  "version": "1.0.7",
+  "version": "1.1.0",
   "description": "一款简单，安全，免费的评论系统 | A simple, safe, free comment system",
   "main": "index.js",
   "unpkg": "dist/discuss.js",
@@ -15,11 +15,6 @@
     "lint": "npx eslint src && npx prettier --check src",
     "lint:fix": "npx eslint --fix src && npx prettier --check --write src"
   },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not dead"
-  ],
   "keywords": [
     "discuss",
     "comments",
