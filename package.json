@@ -83,7 +83,6 @@
     "extends": "@commitlint/config-conventional"
   },
   "lint-staged": {
-    "*.js": "npx eslint --fix",
-    "*": "npx prettier --check --write"
+    "src/**": "npm run lint:fix"
   }
 }
