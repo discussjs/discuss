@@ -20,7 +20,7 @@
     }
   }
 
-  .D-zIndex{
+  .D-zIndex {
     z-index: -1 !important;
   }
 
@@ -104,12 +104,25 @@
     vertical-align: middle;
   }
 
+  .D-loading-svg {
+    animation: D-rotate-animation 0.8s linear infinite;
+  }
+
   .D-zoom {
     animation: D-zoom-animation 0.3s forwards;
   }
 
   .D-shrink {
     animation: D-shrink-animation 0.5s forwards;
+  }
+
+  @keyframes D-rotate-animation {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
   }
 
   @keyframes D-zoom-animation {
