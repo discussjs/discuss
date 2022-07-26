@@ -36,10 +36,12 @@
 
   async function GetComment() {
     try {
-      const { data } = await request({
+      const { data, msg } = await request({
         url: D.serverURLs,
         data: { type: 'GET_COMMENT', path: D.path, pageNo }
       })
+
+      if (!data) throw new Error(msg)
 
       counts = data.counts
       pageCount = data.pageCount

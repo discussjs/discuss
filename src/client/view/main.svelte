@@ -54,7 +54,7 @@
   }
 
   function onCommentError() {
-    onComment()
+    onComment({})
   }
 
   function wordLimitFn({ detail }) {
