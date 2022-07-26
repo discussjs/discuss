@@ -1,6 +1,6 @@
 const { Unique, VerifyParams, IndexHandler } = require('../utils')
 
-module.exports = async (params) => {
+async function GetCounter(params) {
   const { addCounter, getCounter, updateCounter } = global.DiscussDB
 
   // 验证 path 是否存在
@@ -30,3 +30,5 @@ module.exports = async (params) => {
 
   return (result && ++result.time) || 1
 }
+
+module.exports = GetCounter

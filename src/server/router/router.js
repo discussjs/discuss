@@ -58,50 +58,31 @@ async function Router(req, res) {
       return
     }
 
-    switch (body.type) {
-      case 'INIT':
-        result.data = await init(body)
-        break
-      case 'GET_COMMENT':
-        result.data = await GetComment(body)
-        break
-      case 'COMMIT_COMMENT':
-        result.data = await CommitComment(body)
-        break
-      case 'GET_COMMENT_ADMIN':
-        result.data = await AdminGetComments(body)
-        break
-      case 'OPERATE_COMMENT':
-        result.data = await OperateComment(body)
-        break
-      case 'LOGIN':
-        result.data = await Login(body)
-        break
-      case 'GET_CONFIG':
-        result.data = await GetConfig(body)
-        break
-      case 'SAVE_CONFIG':
-        result.data = await SaveConfig(body)
-        break
-      case 'IMPORT':
-        result.data = await Import(body)
-        break
-      case 'COUNTER':
-        result.data = await GetCounter(body)
-        break
-      case 'RECENT_COMMENT':
-        result.data = await RecentComment(body)
-        break
-      case 'COMMENT_COUNT':
-        result.data = await CommentCount(body)
-        break
-      default:
-        result = NotFound
+    const contrller = {
+      INIT: init,
+      GET_COMMENT: GetComment,
+      COMMIT_COMMENT: CommitComment,
+      GET_COMMENT_ADMIN: AdminGetComments,
+      OPERATE_COMMENT: OperateComment,
+      LOGIN: Login,
+      GET_CONFIG: GetConfig,
+      SAVE_CONFIG: SaveConfig,
+      IMPORT: Import,
+      COUNTER: GetCounter,
+      RECENT_COMMENT: RecentComment,
+      COMMENT_COUNT: CommentCount
+    }
+
+    const fn = contrller[body.type]
+    if (fn) {
+      result.data = await fn(body)
+    } else {
+      result = NotFound
     }
   } catch (error) {
     console.error('Request param', body)
     console.error('ERROR:', error)
-    result.msg = error === null || error === void 0 ? void 0 : error.toString()
+    result.msg = error == null ? void 0 : error.toString()
   }
   res.end(JSON.stringify(result))
 }
