@@ -395,9 +395,11 @@
       margin: 10px 0 0;
       resize: vertical;
       width: 100%;
-      min-height: 100px;
+      min-height: 140px;
+      max-height: 400px;
       outline: none;
       font-family: inherit;
+      transition: none;
     }
 
     .D-text-number {
