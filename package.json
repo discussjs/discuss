@@ -1,6 +1,6 @@
 {
   "name": "discuss",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "一款简单，安全，免费的评论系统 | A simple, safe, free comment system",
   "main": "index.js",
   "unpkg": "dist/discuss.js",
