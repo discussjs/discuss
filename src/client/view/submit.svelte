@@ -307,7 +307,7 @@
 
       <button on:click={onPreview} class="D-cancel D-btn D-btn-main {!isOnPreview && 'D-disabled'}"
         >{translate('preview')}</button
-      ><button class="D-send D-btn D-btn-main" on:click={onSend} disabled={!isSend && !isLegal}>
+      ><button class="D-send D-btn D-btn-main" on:click={onSend} disabled={isSend || !isLegal}>
         {#if isSend && isLegal}
           <Loading />
         {:else}
