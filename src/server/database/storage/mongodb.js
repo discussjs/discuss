@@ -34,7 +34,7 @@ module.exports = async () => {
   try {
     await connectDatabase()
 
-    return {
+    const databaseFn = {
       async addAdmin(data) {
         await db.collection(DISCUSS_DB_ADMIN).insertOne(data)
       },
@@ -59,7 +59,7 @@ module.exports = async () => {
       },
       async addComment(data) {
         const res = await db.collection(DISCUSS_DB_COMMENT).insertOne(data)
-        return [await this.getCommentByID(res.insertedId.toString())]
+        return [await databaseFn.getCommentByID(res.insertedId.toString())]
       },
       async deleteComment(id) {
         await db.collection(DISCUSS_DB_COMMENT).deleteOne({ _id: ObjectId(id) })
@@ -119,6 +119,7 @@ module.exports = async () => {
         return idHandler([res])[0]
       }
     }
+    return databaseFn
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error(error)

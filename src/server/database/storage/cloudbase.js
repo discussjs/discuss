@@ -60,7 +60,7 @@ module.exports = async () => {
     const mdb = await collection(DISCUSS_DB_COMMENT)
     const cdb = await collection(DISCUSS_DB_COUNTER)
 
-    return {
+    const databaseFn = {
       async addAdmin(data) {
         await adb.add(data)
       },
@@ -85,7 +85,7 @@ module.exports = async () => {
       },
       async addComment(data) {
         const res = await mdb.add(data)
-        return [await this.getCommentByID(res.id)]
+        return [await databaseFn.getCommentByID(res.id)]
       },
       async deleteComment(id) {
         await mdb.doc(id).delete()
@@ -142,6 +142,7 @@ module.exports = async () => {
         return idHandler(res.data)[0]
       }
     }
+    return databaseFn
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error(error)
