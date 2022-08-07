@@ -13,7 +13,7 @@ const {
 } = require('../utils/commentUtils')
 const { IndexHandler, DeepClone, VerifyParams, akismet } = require('../utils')
 
-const { D_AUDIT } = process.env
+const { DISCUSS_AUDIT } = process.env
 
 /* eslint-disable max-statements  */
 // 获取评论
@@ -113,7 +113,7 @@ async function CommitComment(params) {
       useragent: params.ua
     }
     params.status = await akismet(config.akismet, config.siteUrl, akismetData)
-    if (D_AUDIT) params.status = 'audit'
+    if (DISCUSS_AUDIT === 'true') params.status = 'audit'
   }
   const data = await CommitCommentHandler(params)
 
