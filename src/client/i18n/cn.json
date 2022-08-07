@@ -20,6 +20,7 @@
   "sendError": "评论失败~",
   "more": "更多评论",
   "notComments": "没有评论",
+  "commentsAudit": "您的评论可能需要通过审核后才能显示",
   "commentsError": "获取评论失败~",
   "settingMsg": "正在加载管理面板...",
   "refreshMsg": "正在刷新评论...",

@@ -239,7 +239,9 @@
         $msg({ type: 'error', text: translate('pleaseLogin') })
       }
 
-      if (result.data instanceof Array) {
+      if (Array.isArray(result.data)) {
+        if (!result.data.length) $msg({ type: 'success', duration: 5000, text: translate('commentsAudit') })
+
         dispatch('submitComment', { comment: result.data, pid })
         metas.content.value = ''
         SaveInfo()
