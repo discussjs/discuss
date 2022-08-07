@@ -1,4 +1,4 @@
-import { version } from '../../package.json'
+import { version } from '../../../package.json'
 
 const key = [
   '应援',
@@ -133,7 +133,7 @@ const key = [
   '偷偷看'
 ]
 
-export default window.DiscussEmot = (emotCDN) => {
+export default (emotCDN) => {
   emotCDN = (emotCDN || 'https://unpkg.com').replace(/\/$/, '') + `/discuss@${version}/assets/emot/`
   const items = {}
   for (const i of key) items[i] = emotCDN + i + '.png'
@@ -176,7 +176,7 @@ export default window.DiscussEmot = (emotCDN) => {
         太可怕了: 'ヽ(*。>Д<)o゜'
       }
     },
-    ['<img src="' + items['鼓掌'] + '">']: {
+    [`<img src=${items['鼓掌']}>`]: {
       type: 'image',
       items: items
     }

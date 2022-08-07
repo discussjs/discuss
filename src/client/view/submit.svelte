@@ -2,7 +2,7 @@
   import { onMount, afterUpdate, createEventDispatcher } from 'svelte'
   import { options, msg, lazy } from '../lib/stores'
   import request from '../lib/request'
-  import loadScript from '../lib/import'
+  import emotFn from '../lib/emot'
   import Emotion from '../../../assets/svg/Emotion.svg'
   import Loading from '../../../assets/svg/Loading.svg'
   import Setting from '../../../assets/svg/Setting.svg'
@@ -93,9 +93,7 @@
     if (/\.json$/.test(emot)) {
       emotMaps = await request({ url: emot, method: 'GET' })
     } else if (!emot) {
-      loadScript('emot', () => {
-        emotMaps = window.discussEmot(D.emotCDN)
-      })
+      emotMaps = emotFn(D.emotCDN)
     } else {
       emotMaps = emot
     }
@@ -117,12 +115,10 @@
   function ParseEmot() {
     getEmotAll()
     let content = metas.content.value
-    const reg = /\[(?<emot>.*?)\]/g
     const emots = []
-    const arr = content.matchAll(reg)
-    for (const item of arr) {
-      emots.push(item.groups.emot)
-    }
+    content.replace(/\[(.*?)\]/g, ($0, $1) => {
+      emots.push($1)
+    })
 
     for (const emot of emots) {
       const link = emotAll[emot]
