@@ -153,7 +153,7 @@ const key = [
 ]
 
 export default (emotCDN) => {
-  emotCDN = (emotCDN || 'https://unpkg.com').replace(/\/$/, '') + `/discuss@${version}/assets/emot/`
+  emotCDN = (emotCDN || `https://lib.baomitu.com/discuss/${version}`).replace(/\/$/, '') + '/assets/emot/'
   const items = {}
   for (const i of key) items[i] = emotCDN + i + '.png'
   return {
