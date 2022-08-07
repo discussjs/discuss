@@ -85,15 +85,5 @@ export default [
       file: production ? 'dist/discuss.admin.js' : 'public/dist/discuss.admin.js'
     },
     plugins
-  },
-  {
-    input: 'src/client/emot.js',
-    output: {
-      sourcemap: true,
-      format: 'iife',
-      name: 'discussEmot',
-      file: production ? 'dist/emot.js' : 'public/dist/emot.js'
-    },
-    plugins
   }
 ]

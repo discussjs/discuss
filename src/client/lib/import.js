@@ -11,7 +11,7 @@ scriptUrl = scriptUrl
   .replace(/\/[^/]+$/, '/') // 去除文件名
 
 window.DChunk = []
-const map = { emot: 'emot.js', admin: 'discuss.admin.js' }
+const map = { admin: 'discuss.admin.js' }
 const loadScript = (chunk, callback) => {
   if (window.DChunk.includes(chunk)) return callback()
   window.DChunk.push(chunk)
