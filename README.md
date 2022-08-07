@@ -1,5 +1,5 @@
 <h1 align="center"><a href="https://discuss.js.org" target="_blank"><img src="./assets/svg/Logo.svg" width="360" height="90" alt="Logo"></a></h1>
-<p align="center">一款简单，安全，免费的评论系统 | A simple, safe, free comment system</p>
+<p align="center">一款简单，安全，轻量，免费的评论系统 | A simple, safe, free comment system</p>
 
 <p align="center">
     <a href="https://discuss.js.org" target="_blank"><img src="https://img.shields.io/badge/Docs-文档-1081c1?logo=read-the-docs" alt="Docs"></a>
@@ -40,7 +40,7 @@
 ## 特点
 
 - **真**·安全
-- 轻量 (~50kb gzip: ~16kb)
+- 轻量 (~60kb gzip: ~20kb)
 - 自托管 (Nodejs 后端跨平台)
 - 免费部署 (Server、ServerLess 均可部署)
 - 邮件通知
