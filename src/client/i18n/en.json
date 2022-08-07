@@ -20,6 +20,7 @@
   "sendError": "Comment failed~",
   "more": "More",
   "notComments": "Not Comments",
+  "commentsAudit": "Your comment may need to be moderated before it can be displayed",
   "commentsError": "Failed to get comments~",
   "settingMsg": "Loading admin panel...",
   "refreshMsg": "Refreshing comments...",
