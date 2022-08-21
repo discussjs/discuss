@@ -28,11 +28,17 @@
   const mailStr = 'mail'
   const siteStr = 'site'
   const contentStr = 'content'
-  // source: /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]{1,30}\.)+[A-Za-z\d]{2,5}$/
-  const redo = '[A-Za-z\\d]'
-  const domain = `(${redo}{1,30}\\.)+${redo}{2,5}$`
   const mailReg = /^\w+([-.]\w+)*@\w+([-.]\w+)*(\.[a-z]{2,5})+$/
-  const siteReg = new RegExp('^https?://' + domain)
+
+  function isUrl(str) {
+    try {
+      if (/^https?:\/\//.test(str) && /([A-Za-z\d]{1,30}\.)+[A-Za-z\d]{2,5}$/.test(new URL(str).hostname)) {
+        return true
+      }
+    // eslint-disable-next-line no-empty
+    } catch (error) {}
+    return false
+  }
 
   // svelte变量
   let storage = localStorage.discuss
@@ -192,7 +198,7 @@
         let condition = true
         if (k === nickStr) condition = len > 1
         if (k === mailStr) condition = mailReg.test(v.value)
-        if (k === siteStr) condition = len === 0 ? true : siteReg.test(v.value)
+        if (k === siteStr) condition = len === 0 ? true : isUrl(v.value)
         if (k === contentStr) condition = len > 1
 
         // 如果word的参数不为0，则判断输入框内容长度是否符合规定

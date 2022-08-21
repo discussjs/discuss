@@ -257,21 +257,23 @@ async function CommitCommentHandler(params) {
  * @param {*} site 网站
  */
 function VerufyMailANDSite(mail, site) {
-  /*
-    source:
-        /^[A-Za-z\d]+([-_.][A-Za-z\d]+)*@([A-Za-z\d]{1,30}\.)+[A-Za-z\d]{2,5}$/
-  */
-  const redo = '[A-Za-z\\d]'
-  const domain = `(${redo}{1,30}\\.)+${redo}{2,5}$`
+  function isUrl(str) {
+    try {
+      if (/^https?:\/\//.test(str) && /([A-Za-z\d]{1,30}\.)+[A-Za-z\d]{2,5}$/.test(new URL(str).hostname)) {
+        return true
+      }
+      // eslint-disable-next-line no-empty
+    } catch (error) {}
+    return false
+  }
   const mailReg = /^\w+([-+.]\w+)*@\w+([-.]\w+)*(\.[a-z]{2,5})+$/
-  const siteReg = new RegExp('^https?://' + domain)
 
   const errorMail = 'Mail format does not meet the requirements!'
   const errorSite = 'Site address format does not meet the requirements!'
   if (!mailReg.test(mail)) throw new Error(errorMail)
 
-  const condition = site.length !== 0 && !siteReg.test(site)
-  if (condition) throw new Error(errorSite)
+  if (site.length === 0) return
+  if (!isUrl(site)) throw new Error(errorSite)
 }
 
 // 限流
