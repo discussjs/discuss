@@ -35,7 +35,7 @@
       if (/^https?:\/\//.test(str) && /([A-Za-z\d]{1,30}\.)+[A-Za-z\d]{2,5}$/.test(new URL(str).hostname)) {
         return true
       }
-    // eslint-disable-next-line no-empty
+      // eslint-disable-next-line no-empty
     } catch (error) {}
     return false
   }
@@ -481,7 +481,6 @@
     resize: vertical;
     padding: 10px;
     margin: 0;
-    font-size: 0;
     overflow-x: hidden;
     user-select: none;
   }
@@ -491,11 +490,11 @@
   }
 
   .D-emot-item {
+    font-size: 20px;
     list-style-type: none;
     padding: 5px 10px;
     border-radius: 5px;
     display: inline-block;
-    font-size: 12px;
     line-height: 14px;
     margin: 0 10px 12px 0;
     cursor: pointer;
