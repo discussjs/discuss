@@ -101,6 +101,7 @@
   #Discuss .D-comment-emot {
     width: 32px;
     height: auto;
+    margin: -1px 1px 0;
     vertical-align: middle;
   }
 

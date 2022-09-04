@@ -71,11 +71,10 @@
     site: { value: '', is: true },
     content: { value: '', is: false }
   }
-  $: contentHTML = ''
 
-  onMount(async () => {
+  onMount(() => {
     initInfo()
-    await getEmot()
+    getEmot()
   })
 
   afterUpdate(() => {
@@ -103,6 +102,7 @@
     } else {
       emotMaps = emot
     }
+    getEmotAll()
   }
 
   function getEmotAll() {
@@ -118,22 +118,6 @@
       console.log(error)
     }
   }
-  function ParseEmot() {
-    getEmotAll()
-    let content = metas.content.value
-    const emots = []
-    content.replace(/\[(.*?)\]/g, ($0, $1) => {
-      emots.push($1)
-    })
-
-    for (const emot of emots) {
-      const link = emotAll[emot]
-      if (!link) continue
-      const img = `<img class='D-comment-emot' src='${link}' alt='${emot}'/>`
-      content = content.replace(`[${emot}]`, img)
-    }
-    contentHTML = content
-  }
 
   function SaveInfo() {
     for (const [k, v] of Object.entries(metas)) {
@@ -142,51 +126,69 @@
     localStorage.discuss = JSON.stringify(storage)
   }
 
-  $: isOnPreview = metas.content.value.length
-  let isPreview = false
-  function Preview() {
-    if (!isPreview) return
-    ParseEmot()
-  }
-  function onPreview() {
-    isPreview = !isPreview
-    Preview()
-  }
-
   function onInput() {
     SaveInfo()
-    Preview()
     MetasChange()
   }
+
+  let lastEditRange
+  function getCursor() {
+    const sel = window.getSelection()
+    if (sel.rangeCount < 0) {
+      lastEditRange = document.createRange()
+      return
+    }
+
+    lastEditRange = sel.getRangeAt(0)
+  }
+
   /**
    * @param {String} key 表情名(描述)
    * @param {String} value 表情值(内容或地址)
    * @param {String} type 表情类型(text or image)
    */
   let textareaDOM
+  // eslint-disable-next-line max-statements
   function onClickEmot(key, value, type) {
-    const cObj = metas.content
-    let content = cObj.value
-
-    // 获取输入框光标位置
-    let cursorStart = textareaDOM.selectionStart
-    let cursorEnd = textareaDOM.selectionEnd
-    const Start = content.substring(0, cursorStart)
-    const Ent = content.substring(cursorEnd)
-
-    if (type === textStr) cObj.value = `${Start}${value}${Ent}`
-    else cObj.value = `${Start}[${key}]${Ent}`
-
     textareaDOM.focus()
-    const contentLen = content.length
-    cursorStart = contentLen
-    cursorEnd = contentLen
-    // 重新解析表情
-    ParseEmot()
-    // 重新保存
+    const sel = window.getSelection()
+    if (lastEditRange) {
+      // 清除所有光标并添加最后光标编辑的状态
+      sel.removeAllRanges()
+      sel.addRange(lastEditRange)
+    }
+
+    let emojiEl
+
+    if (type === textStr) {
+      emojiEl = document.createTextNode(value)
+    } else {
+      emojiEl = document.createElement('img')
+      emojiEl.src = emotAll[key]
+      emojiEl.className = 'D-comment-emot'
+      emojiEl.alt = key
+    }
+
+    // 不存在光标，则获取光标，并将光标移动至最后
+    if (!lastEditRange) {
+      getCursor()
+      lastEditRange.selectNodeContents(textareaDOM)
+      lastEditRange.collapse(false)
+      sel.removeAllRanges()
+      sel.addRange(lastEditRange)
+    }
+
+    // 如果光标没有重叠，则代表光标选择了一部分内容，需要删除光标再插入表情
+    if (!lastEditRange.collapsed) lastEditRange.deleteContents()
+
+    lastEditRange.insertNode(emojiEl)
+
+    // 让光标保持在插入表情的后面, true 表示保持在前面
+    lastEditRange.collapse(false)
+
+    metas.content.value = textareaDOM.innerHTML
+    // 保存
     SaveInfo()
-    // 由于这是Svelte的特性，引用类型需要重新给自身赋值才会触发双向绑定
-    metas = metas
   }
 
   function MetasChange() {
@@ -217,13 +219,12 @@
   async function onSend() {
     try {
       if (!isSend && !isLegal) return
-      ParseEmot()
       const comment = {
         type: 'COMMIT_COMMENT',
         nick: metas.nick.value,
         mail: metas.mail.value,
         site: metas.site.value,
-        content: contentHTML,
+        content: metas.content.value,
         path: D.path,
         pid,
         rid
@@ -247,7 +248,6 @@
         dispatch('submitComment', { comment: result.data, pid })
         metas.content.value = ''
         SaveInfo()
-        isPreview = false
       }
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -271,14 +271,21 @@
         on:input={onInput}
       />
     {/each}
-    <textarea
+    <div
       name={contentStr}
       class="D-input-content {metas.content.is ? '' : 'D-error'}"
-      bind:value={metas.content.value}
       placeholder={D.ph}
-      on:input={onInput}
+      on:input={function () {
+        metas.content.value = this.innerHTML
+        onInput()
+      }}
+      on:click={getCursor}
+      on:keyup={getCursor}
       bind:this={textareaDOM}
+      bind:innerHTML={metas.content.value}
+      contenteditable
     />
+
     {#if wordLimitContent}
       <span class="D-text-number">
         {metas.content.value.length}
@@ -309,9 +316,7 @@
         >
       {/if}
 
-      <button on:click={onPreview} class="D-cancel D-btn D-btn-main {!isOnPreview && 'D-disabled'}"
-        >{translate('preview')}</button
-      ><button class="D-send D-btn D-btn-main" on:click={onSend} disabled={isSend || !isLegal}>
+      <button class="D-send D-btn D-btn-main" on:click={onSend} disabled={isSend || !isLegal}>
         {#if isSend && isLegal}
           <Loading />
         {:else}
@@ -320,9 +325,6 @@
       </button>
     </div>
   </div>
-  {#if isPreview}
-    <div class="D-preview">{@html contentHTML}</div>
-  {/if}
   {#if isEmot}
     <div class="D-emot">
       {#each Object.entries(emotMaps) as [emotKey, emotValue], index}
@@ -332,7 +334,7 @@
               {#if emotValue.type === 'text'}
                 <span title={iKey}>{iValue}</span>
               {:else}
-                <img src={D.imgLoading} d-src={iValue} alt={iKey} title={iKey} />
+                <img class="D-comment-emot" src={D.imgLoading} d-src={iValue} alt={iKey} title={iKey} />
               {/if}
             </li>
           {/each}
@@ -395,8 +397,13 @@
       transition: all 0.5s;
     }
 
+    .D-input-content:empty::before {
+      content: attr(placeholder);
+      color: #666;
+    }
     .D-input-content {
       margin: 10px 0 0;
+      padding: 6px;
       resize: vertical;
       width: 100%;
       min-height: 140px;
@@ -404,6 +411,8 @@
       outline: none;
       font-family: inherit;
       transition: none;
+      overflow-y: auto;
+      letter-spacing: 1px;
     }
 
     .D-text-number {
@@ -500,11 +509,6 @@
     cursor: pointer;
     transition: 0.3s;
 
-    img {
-      width: 32px;
-      height: auto;
-    }
-
     &:hover {
       background: var(--D-Low-Color);
       box-shadow: 0 2px 2px 0 rgb(0 0 0 / 14%), 0 3px 1px -2px rgb(0 0 0 / 20%), 0 1px 5px 0 rgb(0 0 0 / 12%);
@@ -537,17 +541,6 @@
 
   .D-emot-package-active {
     background: var(--D-Low-Color);
-  }
-
-  /* preview */
-
-  .D-preview {
-    padding: 10px;
-    overflow-x: auto;
-    min-height: 1.375rem /* 22/16 */;
-    margin: 10px 0;
-    border: 1px solid #dcdfe6;
-    border-radius: 4px;
   }
 
   @media screen and (max-width: 500px) {
