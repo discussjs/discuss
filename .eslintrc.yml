@@ -6,9 +6,11 @@ extends: eslint:recommended
 parserOptions:
   ecmaVersion: latest
   sourceType: module
+
 plugins: [svelte3]
 
-overrides: [{ files: ['*.svelte'], processor: 'svelte3/svelte3' }]
+overrides: [{ files: ['**/*.svelte'], processor: 'svelte3/svelte3' }]
+
 rules:
   # off   或 0 - 关闭规则
   # warn  或 1 - 开启规则, 使用警告 程序不会退出
