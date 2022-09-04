@@ -278,7 +278,7 @@ export default (emotCDN) => {
     },
     [`<img src=${items['鼓掌']}>`]: {
       type: 'image',
-      items: items
+      items
     }
   }
 }
