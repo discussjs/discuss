@@ -1,5 +1,5 @@
 <script>
-  import { onMount, afterUpdate, createEventDispatcher } from 'svelte'
+  import { onMount, afterUpdate, createEventDispatcher, tick } from 'svelte'
   import { options, msg, lazy } from '../lib/stores'
   import request from '../lib/request'
   import emotFn from '../lib/emot'
@@ -15,12 +15,12 @@
   export let cancel = false,
     pid = '',
     rid = '',
-    wordLimit = 0
-
-  let wordLimitContent = wordLimit.content
-  $: {
-    wordLimitContent = wordLimit.content
-  }
+    wordLimit = {
+      nick: 0,
+      mail: 0,
+      site: 0,
+      content: 0
+    }
 
   // 普通变量
   const textStr = 'text'
@@ -46,6 +46,8 @@
   let emotIndex = 0
   let emotMaps = {}
   let emotAll = {}
+  let textareaDOM
+  let isPreview = false
   let isSend = false
   let isLegal = false
   const inputs = [
@@ -71,14 +73,23 @@
     site: { value: '', is: true },
     content: { value: '', is: false }
   }
+  let contentHTML = ''
+  let wordLimitContent = wordLimit.content
+  let limitContentLen
+  $: {
+    wordLimitContent = wordLimit.content
+    const dom = new DOMParser().parseFromString(contentHTML, 'text/html')
+    limitContentLen = dom.body.textContent.length + dom.body.querySelectorAll('img').length
+  }
 
   onMount(() => {
     initInfo()
     getEmot()
+    onInput()
   })
 
   afterUpdate(() => {
-    MetasChange()
+    metasChange()
     $lazy()
   })
 
@@ -118,96 +129,110 @@
       console.log(error)
     }
   }
+  function parseEmot() {
+    let content = metas.content.value
+    const emots = []
+    content.replace(/\[(.*?)\]/g, ($0, $1) => {
+      emots.push($1)
+    })
 
-  function SaveInfo() {
+    for (const emot of emots) {
+      const link = emotAll[emot]
+      if (!link) continue
+      const img = `<img class='D-comment-emot' src='${link}' alt='${emot}'/>`
+      content = content.replace(`[${emot}]`, img)
+    }
+    contentHTML = content
+  }
+
+  function saveInfo() {
     for (const [k, v] of Object.entries(metas)) {
       storage[k] = v.value.trim()
     }
     localStorage.discuss = JSON.stringify(storage)
+    // 重新解析表情
+    parseEmot()
+  }
+
+  function onPreview() {
+    isPreview = !isPreview
   }
 
   function onInput() {
-    SaveInfo()
-    MetasChange()
+    saveInfo()
+    metasChange()
   }
-
-  let lastEditRange
-  function getCursor() {
-    const sel = window.getSelection()
-    if (sel.rangeCount < 0) {
-      lastEditRange = document.createRange()
-      return
-    }
-
-    lastEditRange = sel.getRangeAt(0)
-  }
-
   /**
    * @param {String} key 表情名(描述)
    * @param {String} value 表情值(内容或地址)
    * @param {String} type 表情类型(text or image)
    */
-  let textareaDOM
-  // eslint-disable-next-line max-statements
   function onClickEmot(key, value, type) {
+    const content = metas.content.value
+
+    // 获取输入框光标位置
+    let cursorStart = textareaDOM.selectionStart
+    let cursorEnd = textareaDOM.selectionEnd
+    const Start = content.substring(0, cursorStart)
+    const Ent = content.substring(cursorEnd)
+
+    let range
     textareaDOM.focus()
-    const sel = window.getSelection()
-    if (lastEditRange) {
-      // 清除所有光标并添加最后光标编辑的状态
-      sel.removeAllRanges()
-      sel.addRange(lastEditRange)
-    }
-
-    let emojiEl
-
     if (type === textStr) {
-      emojiEl = document.createTextNode(value)
+      metas.content.value = `${Start}${value}${Ent}`
+      range = (Start + value).length
     } else {
-      emojiEl = document.createElement('img')
-      emojiEl.src = emotAll[key]
-      emojiEl.className = 'D-comment-emot'
-      emojiEl.alt = key
+      metas.content.value = `${Start}[${key}]${Ent}`
+      range = (Start + key).length + 2
     }
+    // 重新保存
+    saveInfo()
 
-    // 不存在光标，则获取光标，并将光标移动至最后
-    if (!lastEditRange) {
-      getCursor()
-      lastEditRange.selectNodeContents(textareaDOM)
-      lastEditRange.collapse(false)
-      sel.removeAllRanges()
-      sel.addRange(lastEditRange)
-    }
-
-    // 如果光标没有重叠，则代表光标选择了一部分内容，需要删除光标再插入表情
-    if (!lastEditRange.collapsed) lastEditRange.deleteContents()
-
-    lastEditRange.insertNode(emojiEl)
-
-    // 让光标保持在插入表情的后面, true 表示保持在前面
-    lastEditRange.collapse(false)
-
-    metas.content.value = textareaDOM.innerHTML
-    // 保存
-    SaveInfo()
+    tick().then(() => {
+      textareaDOM.setSelectionRange(range, range)
+    })
   }
 
-  function MetasChange() {
+  // eslint-disable-next-line max-statements
+  function metasChange() {
     try {
       const { nick, mail, site, content } = metas
-      for (const [k, v] of Object.entries(metas)) {
-        const len = v.value.length
-        const word = wordLimit[k]
-        let condition = true
-        if (k === nickStr) condition = len > 1
-        if (k === mailStr) condition = mailReg.test(v.value)
-        if (k === siteStr) condition = len === 0 ? true : isUrl(v.value)
-        if (k === contentStr) condition = len > 1
+      const { nick: nickWord, mail: mailWord, site: siteWord, content: contentWord } = wordLimit
+      const nickLen = nick.value.length
+      const mailLen = mail.value.length
+      const siteLen = site.value.length
+      const contentLen = content.value.length
 
-        // 如果word的参数不为0，则判断输入框内容长度是否符合规定
-        if (word) condition = condition && len <= word
-
-        condition ? (metas[k].is = true) : (metas[k].is = false)
+      // 昵称
+      if (nickLen > 1 && nickLen <= nickWord) {
+        metas.nick.is = true
+      } else {
+        metas.nick.is = false
       }
+
+      // 邮箱
+      if (mailLen <= mailWord && mailReg.test(mail.value)) {
+        metas.mail.is = true
+      } else {
+        metas.mail.is = false
+      }
+
+      // 网站
+      if (siteLen === 0 || (siteLen <= siteWord && isUrl(site.value))) {
+        metas.site.is = true
+      } else if (siteLen !== 0) {
+        metas.site.is = false
+      }
+
+      // 内容
+      const dom = new DOMParser().parseFromString(contentHTML, 'text/html')
+      const textContent = dom.body.textContent.length
+      if (contentLen > 1 && textContent <= contentWord) {
+        metas.content.is = true
+      } else {
+        metas.content.is = false
+      }
+
       isLegal = nick.is && mail.is && site.is && content.is
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -224,7 +249,7 @@
         nick: metas.nick.value,
         mail: metas.mail.value,
         site: metas.site.value,
-        content: metas.content.value,
+        content: contentHTML,
         path: D.path,
         pid,
         rid
@@ -247,7 +272,8 @@
 
         dispatch('submitComment', { comment: result.data, pid })
         metas.content.value = ''
-        SaveInfo()
+        saveInfo()
+        isPreview = false
       }
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -271,28 +297,19 @@
         on:input={onInput}
       />
     {/each}
-    <div
+    <textarea
       name={contentStr}
       class="D-input-content {metas.content.is ? '' : 'D-error'}"
+      bind:value={metas.content.value}
       placeholder={D.ph}
-      on:input={function () {
-        metas.content.value = this.innerHTML
-        onInput()
-      }}
-      on:click={getCursor}
-      on:keyup={getCursor}
+      on:input={onInput}
       bind:this={textareaDOM}
-      bind:innerHTML={metas.content.value}
-      contenteditable
     />
-
     {#if wordLimitContent}
       <span class="D-text-number">
-        {metas.content.value.length}
+        {limitContentLen}
         {#if wordLimitContent}
-          <span class={metas.content.value.length > wordLimitContent && 'D-text-number-illegal'}
-            >{'/ ' + wordLimitContent}
-          </span>
+          <span class={limitContentLen > wordLimitContent && 'D-text-number-illegal'}>{'/ ' + wordLimitContent} </span>
         {/if}
       </span>
     {/if}
@@ -316,7 +333,11 @@
         >
       {/if}
 
-      <button class="D-send D-btn D-btn-main" on:click={onSend} disabled={isSend || !isLegal}>
+      <button
+        on:click={onPreview}
+        class="D-cancel D-btn D-btn-main {/* 没有内容则禁用预览按钮 */ !metas.content.value.length && 'D-disabled'}"
+        >{translate('preview')}</button
+      ><button class="D-send D-btn D-btn-main" on:click={onSend} disabled={isSend || !isLegal}>
         {#if isSend && isLegal}
           <Loading />
         {:else}
@@ -325,6 +346,9 @@
       </button>
     </div>
   </div>
+  {#if isPreview}
+    <div class="D-preview">{@html contentHTML}</div>
+  {/if}
   {#if isEmot}
     <div class="D-emot">
       {#each Object.entries(emotMaps) as [emotKey, emotValue], index}
@@ -397,13 +421,8 @@
       transition: all 0.5s;
     }
 
-    .D-input-content:empty::before {
-      content: attr(placeholder);
-      color: #666;
-    }
     .D-input-content {
       margin: 10px 0 0;
-      padding: 6px;
       resize: vertical;
       width: 100%;
       min-height: 140px;
@@ -411,8 +430,6 @@
       outline: none;
       font-family: inherit;
       transition: none;
-      overflow-y: auto;
-      letter-spacing: 1px;
     }
 
     .D-text-number {
@@ -541,6 +558,17 @@
 
   .D-emot-package-active {
     background: var(--D-Low-Color);
+  }
+
+  /* preview */
+
+  .D-preview {
+    padding: 10px;
+    overflow-x: auto;
+    min-height: 1.375rem /* 22/16 */;
+    margin: 10px 0;
+    border: 1px solid #dcdfe6;
+    border-radius: 4px;
   }
 
   @media screen and (max-width: 500px) {

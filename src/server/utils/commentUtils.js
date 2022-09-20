@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs')
 const axios = require('axios')
+const { JSDOM } = require('jsdom')
 const { Unique, XSS, SetAvatar, DeepClone, IndexHandler, VerifyParams, GetAvatar } = require('./index')
 
 /**
@@ -40,41 +41,24 @@ function WordExceedsOutput(text, content, wordNumber) {
 /* eslint-disable max-statements */
 function WordNumberExceed(configWordNumber, params) {
   // 自定义限制字数
-  const {
-    nick: nickWordNumber,
-    mail: mailWordNumber,
-    site: siteWordNumber,
-    content: contentWordNumber
-  } = WordNumberLimit(configWordNumber)
+  const { nick: nickWord, mail: mailWord, site: siteWord, content: contentWord } = WordNumberLimit(configWordNumber)
 
   // 实际输入字数
   const nick = params.nick.length
   const mail = params.mail.length
   const site = params.site.length
+  const dom = new JSDOM(params.content)
+  const content = dom.window.document.body.textContent.length + dom.window.document.querySelectorAll('img').length
 
-  // 去除规定的表情包表情包(img)标签
-  // 进行字数判断是否超出指定范围
-  /* eslint-disable max-len */
-  const regImage = /<img class=(['"]?)D-comment-emot\1 src=\1([^'"]*)\1 alt=(['"]?)([^'"]*)\1\/?>/g
-  /* eslint-enable max-len */
+  const nickExceed = nickWord && nick > nickWord
+  const mailExceed = mailWord && mail > mailWord
+  const siteExceed = siteWord && site > siteWord
+  const contentExceed = contentWord && content > contentWord
 
-  const emot = params.content.match(regImage)
-  const emotLen = emot === null || emot === void 0 ? void 0 : emot.length
-
-  const errorEmotStr = 'The number of emoji packs exceeds the specified range'
-  if (emotLen > 20) throw new Error(errorEmotStr)
-
-  const content = params.content.replace(regImage, '').length
-
-  const nickExceed = nickWordNumber && nick > nickWordNumber
-  const mailExceed = mailWordNumber && mail > mailWordNumber
-  const siteExceed = siteWordNumber && site > siteWordNumber
-  const contentExceed = contentWordNumber && content > contentWordNumber
-
-  if (contentExceed) WordExceedsOutput('Content', content, contentWordNumber)
-  if (nickExceed) WordExceedsOutput('Nickname', nick, nickWordNumber)
-  if (mailExceed) WordExceedsOutput('Mail', mail, mailWordNumber)
-  if (siteExceed) WordExceedsOutput('Site', site, siteWordNumber)
+  if (contentExceed) WordExceedsOutput('Content', content, contentWord)
+  if (nickExceed) WordExceedsOutput('Nickname', nick, nickWord)
+  if (mailExceed) WordExceedsOutput('Mail', mail, mailWord)
+  if (siteExceed) WordExceedsOutput('Site', site, siteWord)
 
   const condition = contentExceed || nickExceed || mailExceed || siteExceed
 

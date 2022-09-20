@@ -39,6 +39,7 @@
     "dotenv": "^10.0.0",
     "get-user-ip": "^1.0.0",
     "html-minifier": "^4.0.0",
+    "jsdom": "^19.0.0",
     "jsonwebtoken": "^8.5.1",
     "md5": "^2.3.0",
     "min-1px": "^1.0.0",
