@@ -15,12 +15,12 @@
   export let cancel = false,
     pid = '',
     rid = '',
-    wordLimit = 0
-
-  let wordLimitContent = wordLimit.content
-  $: {
-    wordLimitContent = wordLimit.content
-  }
+    wordLimit = {
+      nick: 0,
+      mail: 0,
+      site: 0,
+      content: 0
+    }
 
   // 普通变量
   const textStr = 'text'
@@ -70,6 +70,14 @@
     mail: { value: '', is: false },
     site: { value: '', is: true },
     content: { value: '', is: false }
+  }
+
+  let wordLimitContent = wordLimit.content
+  let limitContentLen
+  $: {
+    wordLimitContent = wordLimit.content
+    const dom = new DOMParser().parseFromString(metas.content.value, 'text/html')
+    limitContentLen = dom.body.textContent.length + dom.body.querySelectorAll('img').length
   }
 
   onMount(() => {
@@ -191,23 +199,46 @@
     SaveInfo()
   }
 
+  // eslint-disable-next-line max-statements
   function MetasChange() {
     try {
       const { nick, mail, site, content } = metas
-      for (const [k, v] of Object.entries(metas)) {
-        const len = v.value.length
-        const word = wordLimit[k]
-        let condition = true
-        if (k === nickStr) condition = len > 1
-        if (k === mailStr) condition = mailReg.test(v.value)
-        if (k === siteStr) condition = len === 0 ? true : isUrl(v.value)
-        if (k === contentStr) condition = len > 1
+      const { nick: nickWord, mail: mailWord, site: siteWord, content: contentWord } = wordLimit
+      const nickLen = nick.value.length
+      const mailLen = mail.value.length
+      const siteLen = site.value.length
+      const contentLen = content.value.length
 
-        // 如果word的参数不为0，则判断输入框内容长度是否符合规定
-        if (word) condition = condition && len <= word
-
-        condition ? (metas[k].is = true) : (metas[k].is = false)
+      // 昵称
+      if (nickLen > 1 && nickLen <= nickWord) {
+        metas.nick.is = true
+      } else {
+        metas.nick.is = false
       }
+
+      // 邮箱
+      if (mailLen <= mailWord && mailReg.test(mail.value)) {
+        metas.mail.is = true
+      } else {
+        metas.mail.is = false
+      }
+
+      // 网站
+      if (siteLen === 0 || siteLen <= siteWord && isUrl(site.value)) {
+        metas.site.is = true
+      } else if (siteLen !== 0) {
+        metas.site.is = false
+      }
+
+      // 内容
+      const dom = new DOMParser().parseFromString(content.value, 'text/html')
+      const textContent = dom.body.textContent.length
+      if (contentLen > 1 && textContent <= contentWord) {
+        metas.content.is = true
+      } else {
+        metas.content.is = false
+      }
+
       isLegal = nick.is && mail.is && site.is && content.is
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -288,11 +319,9 @@
 
     {#if wordLimitContent}
       <span class="D-text-number">
-        {metas.content.value.length}
+        {limitContentLen}
         {#if wordLimitContent}
-          <span class={metas.content.value.length > wordLimitContent && 'D-text-number-illegal'}
-            >{'/ ' + wordLimitContent}
-          </span>
+          <span class={limitContentLen > wordLimitContent && 'D-text-number-illegal'}>{'/ ' + wordLimitContent} </span>
         {/if}
       </span>
     {/if}
