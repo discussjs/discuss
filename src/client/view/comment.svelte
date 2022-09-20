@@ -7,6 +7,12 @@
 
   export let comments = []
   export let replying = []
+  export let wordLimit = {
+    nick: 0,
+    mail: 0,
+    site: 0,
+    content: 0
+  }
 
   let D = $options
   const dispatch = createEventDispatcher()
@@ -77,7 +83,7 @@
     <!-- 反之如果点击的是子评论的回复按钮，那么就将当前评论id传入，而(父评论id)pid为当前评论的(父评论id)pid -->
     <button class="D-reply" on:click={onReply(comment.id, comment.pid)}>{translate('reply')}</button>
     {#if replying === comment.id}
-      <Submit cancel={true} {pid} {rid} on:onCancel={onReply} on:submitComment={submitComment} />
+      <Submit cancel={true} {pid} {rid} {wordLimit} on:onCancel={onReply} on:submitComment={submitComment} />
     {/if}
     {#if comment.replys}
       <div class="D-comments-child">
@@ -89,7 +95,7 @@
             child:  on:onReply -> comment.svelte -> comments.svelte
         -->
         <!-- 简而言之: 此处的 on:onReply 与上方<script>里面的 onReply 方法没有半毛钱关系(仅和回复按钮的 on:click=onReply 有关系) -->
-        <svelte:self comments={comment.replys} {replying} on:onReply on:submitComment={submitComment} />
+        <svelte:self comments={comment.replys} {replying} {wordLimit} on:onReply on:submitComment={submitComment} />
       </div>
     {/if}
   </div>

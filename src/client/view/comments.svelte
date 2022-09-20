@@ -20,7 +20,8 @@
     pageCount = 1,
     showMore = false,
     loading = false,
-    replying = ''
+    replying = '',
+    wordLimit
 
   // 相当于vue中的watch
   $: {
@@ -46,6 +47,8 @@
       counts = data.counts
       pageCount = data.pageCount
       comments = [...comments, ...data.comments]
+
+      wordLimit = data.wordNumber
 
       dispatch('onComment', comments.length)
       dispatch('wordLimit', data.wordNumber)
@@ -91,7 +94,13 @@
     {/if}
   </div>
   <div class="D-comments-list">
-    <Comment {comments} {replying} on:onReply={({ detail }) => (replying = detail)} on:submitComment={submitComment} />
+    <Comment
+      {comments}
+      {replying}
+      {wordLimit}
+      on:onReply={({ detail }) => (replying = detail)}
+      on:submitComment={submitComment}
+    />
   </div>
   {#if showMore}
     <div class="D-more">
