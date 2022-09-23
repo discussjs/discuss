@@ -32,7 +32,8 @@
 
   function isUrl(str) {
     try {
-      if (/^https?:\/\//.test(str) && /([A-Za-z\d]{1,30}\.)+[A-Za-z\d]{2,5}$/.test(new URL(str).hostname)) {
+      const url = new URL(str)
+      if (/^https?:\/\//.test(str) && /([A-Za-z\d]{1,30}\.)+[A-Za-z\d]{2,5}$/.test(url.hostname)) {
         return true
       }
       // eslint-disable-next-line no-empty
@@ -201,38 +202,38 @@
       const nickLen = nick.value.length
       const mailLen = mail.value.length
       const siteLen = site.value.length
-      const contentLen = content.value.length
 
       // 昵称
-      if (nickLen > 1 && nickLen <= nickWord) {
-        metas.nick.is = true
+      if ((nickWord === 0 && nickLen > 1) || (nickLen > 1 && nickLen <= nickWord)) {
+        nick.is = true
       } else {
-        metas.nick.is = false
+        nick.is = false
       }
 
       // 邮箱
-      if (mailLen <= mailWord && mailReg.test(mail.value)) {
-        metas.mail.is = true
+      if ((mailWord === 0 && mailReg.test(mail.value)) || (mailLen <= mailWord && mailReg.test(mail.value))) {
+        mail.is = true
       } else {
-        metas.mail.is = false
+        mail.is = false
       }
 
       // 网站
-      if (siteLen === 0 || (siteLen <= siteWord && isUrl(site.value))) {
-        metas.site.is = true
-      } else if (siteLen !== 0) {
-        metas.site.is = false
+      if ((siteWord === 0 && isUrl(site.value)) || (siteLen <= siteWord && isUrl(site.value))) {
+        site.value = new URL(site.value).origin
+        site.is = true
+      } else {
+        site.is = false
       }
 
       // 内容
       const dom = new DOMParser().parseFromString(contentHTML, 'text/html')
       const textContent = dom.body.textContent.length
-      if (contentLen > 1 && textContent <= contentWord) {
-        metas.content.is = true
+      if ((contentWord === 0 && textContent > 1) || (textContent > 1 && textContent <= contentWord)) {
+        content.is = true
       } else {
-        metas.content.is = false
+        content.is = false
       }
-
+      metas = metas
       isLegal = nick.is && mail.is && site.is && content.is
     } catch (error) {
       // eslint-disable-next-line no-console
