@@ -241,6 +241,7 @@
       </select>
     </div>
     <div class="D-thead-item">
+      <!-- svelte-ignore a11y-click-events-have-key-events -->
       <span class="D-svg" on:click={onOpenSearch}><IconSearch /></span>
       <div class="D-search {isShowSearch ? 'D-zoom' : 'D-shrink'}">
         <div class="D-search-title">{translate(searchStr + 'title')}</div>
@@ -270,6 +271,7 @@
           <button class="D-btn" on:click={() => (isShowSearch = false)}>{translate(searchStr + 'close')}</button>
         </div>
       </div>
+      <!-- svelte-ignore a11y-click-events-have-key-events -->
       <div class="D-search-mask" style={isShowSearch && 'display:block'} on:click={() => (isShowSearch = false)} />
     </div>
   </div>
@@ -304,6 +306,7 @@
               {#if comment.stick && !comment.pid}
                 <span class="D-stick">{stick}</span>
               {/if}
+              <!-- svelte-ignore security-anchor-rel-noreferrer -->
               <a
                 class="D-link D-ellipsis"
                 href={comment.site ? comment.site : 'mailto:' + comment.mail}
@@ -313,6 +316,7 @@
               </a>
             </div>
             <div class="D-comment-desc">
+              <!-- svelte-ignore security-anchor-rel-noreferrer -->
               <a class="D-link D-ellipsis" href={'mailto:' + comment.mail} target="_blank">{comment.mail}</a>
               <div class="D-IP D-ellipsis">{comment.ip}</div>
             </div>
@@ -325,6 +329,7 @@
               </span>
               <span class="D-comment-path"
                 >{translate(adminManageCommentStr + 'path')}:
+                <!-- svelte-ignore security-anchor-rel-noreferrer -->
                 <a class="D-link D-ellipsis" href={comment.path} target="_blank">{comment.path}</a>
               </span>
             </div>
@@ -332,6 +337,7 @@
             <div class="D-comment-operate D-comment-font">
               {#each Object.entries(operate) as [key, value]}
                 {#if !comment.pid || key !== 'stick'}
+                  <!-- svelte-ignore a11y-click-events-have-key-events -->
                   <span class={'D-operate-' + key} on:click={onOperate(key, comment.id, comment)}>{value}</span>
                 {/if}
               {/each}
@@ -362,6 +368,7 @@
     <div class="D-pagination-operate">
       <div class="D-pagination-pages">
         {#each pages as page}
+          <!-- svelte-ignore a11y-click-events-have-key-events -->
           <span
             class="{page.class} {page.page === pageNo ? 'D-current' : ''}"
             on:click={page.class ? onChange(page.page) : ''}>{page.page}</span

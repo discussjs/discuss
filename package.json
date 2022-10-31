@@ -8,7 +8,6 @@
   "scripts": {
     "build": "rollup -c",
     "start:client": "rollup -c -w",
-    "start:sirv": "sirv public --no-clear",
     "start:server": "node ./start.js",
     "start:server:hot": "npx nodemon ./start.js",
     "prepare": "npx husky install",
@@ -72,11 +71,11 @@
     "prettier": "^2.6.2",
     "rollup": "^2.3.4",
     "rollup-plugin-livereload": "^2.0.0",
+    "rollup-plugin-serve": "^2.0.1",
     "rollup-plugin-svelte": "^7.0.0",
     "rollup-plugin-svelte-svg": "^1.0.0-beta.6",
     "rollup-plugin-terser": "^7.0.0",
     "sass": "^1.51.0",
-    "sirv-cli": "^2.0.2",
     "svelte": "^3.0.0",
     "svelte-preprocess": "^4.10.6"
   },

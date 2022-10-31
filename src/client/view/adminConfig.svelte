@@ -258,11 +258,13 @@
 
 <aside class="D-sidebar D-select-none {$openMenu && 'D-sidebar-open'}">
   {#each settings as setting}
+      <!-- svelte-ignore a11y-click-events-have-key-events -->
     <span class="D-group {group === setting.name ? 'D-selected-group' : ''}" on:click={selectedSidebar(setting.name)}>
       <span class="D-group-item-icon"><svelte:component this={setting.icon} /></span>
       <span class="D-group-item-title">{setting.name}</span>
     </span>
   {/each}
+      <!-- svelte-ignore a11y-click-events-have-key-events -->
   <span class="D-menu-close" on:click={closeMenu}><IconClose /></span>
 </aside>
 <main class="D-main">

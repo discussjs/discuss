@@ -56,6 +56,7 @@
           <div class="D-heads">
             <div class="D-head">
               {#if comment.site}
+                <!-- svelte-ignore security-anchor-rel-noreferrer -->
                 <a class="D-nick" href={comment.site} target="_blank">{comment.nick}</a>
               {:else}
                 <span class="D-nick">{comment.nick}</span>

@@ -1,4 +1,5 @@
 import svelte from 'rollup-plugin-svelte'
+import serve from 'rollup-plugin-serve'
 import commonjs from '@rollup/plugin-commonjs'
 import resolve from '@rollup/plugin-node-resolve'
 import livereload from 'rollup-plugin-livereload'
@@ -8,31 +9,6 @@ import json from '@rollup/plugin-json'
 import sveltePreprocess from 'svelte-preprocess'
 
 const production = !process.env.ROLLUP_WATCH
-
-function serve() {
-  let server
-
-  function toExit() {
-    if (server) server.kill(0)
-  }
-
-  return {
-    writeBundle() {
-      if (server) return
-      server = require('child_process').spawn(
-        'npm',
-        ['run', 'start:sirv', '--', '--dev', '--host', '127.0.0.1', '--port', '6871'],
-        {
-          stdio: ['ignore', 'inherit', 'inherit'],
-          shell: true
-        }
-      )
-
-      process.on('SIGTERM', toExit)
-      process.on('exit', toExit)
-    }
-  }
-}
 
 const plugins = [
   svelte({
@@ -54,7 +30,7 @@ const plugins = [
 
   // In dev mode, call `npm run start` once
   // the bundle has been generated
-  !production && serve(),
+  !production && serve({ port: 6871, host: '127.0.0.1', contentBase: ['dist', 'public'] }),
 
   // Watch the `public` directory and refresh the
   // browser on changes when not in production
@@ -72,7 +48,7 @@ export default [
       sourcemap: true,
       format: 'iife',
       name: 'discuss',
-      file: production ? 'dist/discuss.js' : 'public/dist/discuss.js'
+      file: 'dist/discuss.js'
     },
     plugins
   },
@@ -82,7 +58,7 @@ export default [
       sourcemap: true,
       format: 'iife',
       name: 'discussAdmin',
-      file: production ? 'dist/discuss.admin.js' : 'public/dist/discuss.admin.js'
+      file: 'dist/discuss.admin.js'
     },
     plugins
   }

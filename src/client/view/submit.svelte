@@ -218,8 +218,8 @@
       }
 
       // 网站
-      if ((siteWord === 0 && isUrl(site.value)) || (siteLen <= siteWord && isUrl(site.value))) {
-        site.value = new URL(site.value).origin
+      if (siteLen === 0 || (isUrl(site.value) && siteLen <= siteWord)) {
+        if (siteLen) site.value = new URL(site.value).origin
         site.is = true
       } else {
         site.is = false
@@ -317,11 +317,14 @@
   </div>
   <div class="D-actions D-select-none">
     <div class="D-actions-left">
+      <!-- svelte-ignore a11y-click-events-have-key-events -->
       <div class="D-emot-btn" on:click={() => (isEmot = !isEmot)}>
         <Emotion />
       </div>
       {#if !cancel}
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
         <div class="D-setting-btn" on:click={() => dispatch('onSetting')}><Setting /></div>
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
         <div class="D-refresh-btn" on:click={() => dispatch('onRefresh')}><Refresh /></div>
       {/if}
     </div>
@@ -355,6 +358,7 @@
       {#each Object.entries(emotMaps) as [emotKey, emotValue], index}
         <ul class="D-emot-items {index === emotIndex ? 'D-emot-items-active' : ''}">
           {#each Object.entries(emotValue.items) as [iKey, iValue]}
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
             <li class="D-emot-item" on:click={onClickEmot(iKey, iValue, emotValue.type)}>
               {#if emotValue.type === 'text'}
                 <span title={iKey}>{iValue}</span>
@@ -368,6 +372,7 @@
 
       <div class="D-emot-packages">
         {#each Object.entries(emotMaps) as [emotKey, emotValue], index}
+          <!-- svelte-ignore a11y-click-events-have-key-events -->
           <span on:click={() => (emotIndex = index)} class={index === emotIndex ? 'D-emot-package-active' : ''}
             >{@html emotKey}</span
           >

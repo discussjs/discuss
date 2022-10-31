@@ -1,9 +1,11 @@
 const Router = require('./router/router')
 const { SetFavicon, Discussjs } = require('./utils')
+const { version } = require('../../package.json')
 
 require('output-line')()
 /* eslint-disable */
 module.exports = async (req, res) => {
+  console.log('discuss version:', version)
   // 将数据库信息锁定到全局
   if (!global.DiscussDB) {
     const result = await require('./database/adapter')()

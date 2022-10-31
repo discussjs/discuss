@@ -26,6 +26,7 @@
 </script>
 
 <div class="D-footer">
+  <!-- svelte-ignore security-anchor-rel-noreferrer -->
   Powered by <strong><a href="https://Discuss.js.org" target="_blank">Discuss</a></strong> v{version}
 </div>
 
