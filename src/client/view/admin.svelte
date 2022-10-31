@@ -73,15 +73,21 @@
       <header class="D-header D-select-none">
         <div class="logo"><IconLogo /></div>
         <nav>
+          <!-- svelte-ignore a11y-click-events-have-key-events -->
           <span class="D-menu" style={tab !== 'config' ? 'display:none' : ''} on:click={() => ($openMenu = true)}
             ><IconMenu /></span
           >
+          <!-- svelte-ignore a11y-click-events-have-key-events -->
           <span class="D-refresh" on:click={onRefresh}><IconRefresh /></span>
+          <!-- svelte-ignore a11y-click-events-have-key-events -->
           <span class="D-comment" on:click={() => onActiveTab('comment')}><IconComment /></span>
+          <!-- svelte-ignore a11y-click-events-have-key-events -->
           <span class="D-config" on:click={() => onActiveTab('config')}><IconConfig /></span>
           {#if show}
             <!-- 是否显示关闭以及退出登录，主要区分页面评论区评论管理与以及评论管理独立初始化 -->
+          <!-- svelte-ignore a11y-click-events-have-key-events -->
             <span class="D-exit" on:click={onExit}><IconExit /></span>
+          <!-- svelte-ignore a11y-click-events-have-key-events -->
             <span class="D-close" on:click={onOpenAndClose.onOpenAdmin('close')}><IconClose /></span>
           {/if}
         </nav>

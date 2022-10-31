@@ -93,7 +93,7 @@ async function SendMailHandler(config, data) {
   } catch (error) {
     /* eslint-disable no-console */
     console.error('Mail ERROR: Mail configuration information error cancel sending emails')
-    console.error(error)
+    // console.error(error)
     /* eslint-enable no-console */
   }
 }
