@@ -98,6 +98,7 @@ async function CommitComment(params) {
     // 判断是否使用博主身份评论
     if (config.mail === params.mail) throw new Error('login')
     // ip 限流
+
     await limitFilter(params.ip)
     // 字数限制
     const isExceed = WordNumberExceed(config.wordNumber, params)

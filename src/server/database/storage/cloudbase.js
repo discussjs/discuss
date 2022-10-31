@@ -126,7 +126,7 @@ module.exports = async () => {
         return res.total
       },
       async getCommentCountLimit({ ip, created }) {
-        const query = _.gt(Date.now() - created)
+        const query = { created: _.gt(Date.now() - created) }
         if (ip) query.ip = ip
         const res = await mdb.where(query).count()
         return res.total

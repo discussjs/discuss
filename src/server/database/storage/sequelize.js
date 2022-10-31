@@ -299,7 +299,7 @@ module.exports = async () => {
       return await Comment.count({ where: query })
     },
     async getCommentCountLimit({ ip, created }) {
-      const query = { [Op.gt]: Date.now() - created }
+      const query = { created: { [Op.gt]: Date.now() - created } }
       if (ip) query.ip = ip
       return await Comment.count({ where: query })
     },

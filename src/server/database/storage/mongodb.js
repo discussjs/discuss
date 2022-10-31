@@ -103,7 +103,7 @@ module.exports = async () => {
         return await db.collection(DISCUSS_DB_COMMENT).countDocuments(query)
       },
       async getCommentCountLimit({ ip, created }) {
-        const query = { $gt: Date.now() - created }
+        const query = { created: { $gt: Date.now() - created } }
         if (ip) query.ip = ip
         return await db.collection(DISCUSS_DB_COMMENT).countDocuments(query)
       },
