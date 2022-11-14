@@ -19,6 +19,7 @@
   "pleaseLogin": "请登录后再使用管理员邮箱评论",
   "sendError": "评论失败~",
   "more": "更多评论",
+  "moreCommentsChild": "展开剩余的$counter条回复评论",
   "notComments": "没有评论",
   "commentsAudit": "您的评论可能需要通过审核后才能显示",
   "commentsError": "获取评论失败~",

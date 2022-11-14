@@ -86,7 +86,7 @@
     {#if replying === comment.id}
       <Submit cancel={true} {pid} {rid} {wordLimit} on:onCancel={onReply} on:submitComment={submitComment} />
     {/if}
-    {#if comment.replys}
+    {#if comment.replys && comment.replys.length}
       <div class="D-comments-child">
         <!-- on:onReply 为事件转发，将其转发到comments.svelte -->
         <!-- 此处的转发是指：转发子评论的 on:onReply 事件 -->
@@ -96,7 +96,29 @@
             child:  on:onReply -> comment.svelte -> comments.svelte
         -->
         <!-- 简而言之: 此处的 on:onReply 与上方<script>里面的 onReply 方法没有半毛钱关系(仅和回复按钮的 on:click=onReply 有关系) -->
-        <svelte:self comments={comment.replys} {replying} {wordLimit} on:onReply on:submitComment={submitComment} />
+        <svelte:self
+          comments={comment.isMore ? comment.replys : comment.replys.slice(0, 3)}
+          {replying}
+          {wordLimit}
+          on:onReply
+          on:submitComment={submitComment}
+        />
+        {#if !comment.isMore && comment.replys.length > 3}
+          <!-- svelte-ignore a11y-click-events-have-key-events -->
+          <div
+            class="D-comments-child-more"
+            on:click={() => {
+              comment.isMore = true
+            }}
+          >
+            {translate('moreCommentsChild').replace('$counter', comment.replys.length - 3)}
+            <svg viewBox="0 0 13 13"
+              ><path
+                d="M10.291 4.163a.466.466 0 00-.707 0L6.437 7.659 3.291 4.163a.465.465 0 00-.707 0 .6.6 0 000 .785l3.5 3.89c.094.103.22.162.353.162.133 0 .26-.059.354-.163l3.5-3.889a.6.6 0 000-.785z"
+              /></svg
+            >
+          </div>
+        {/if}
       </div>
     {/if}
   </div>
@@ -112,7 +134,7 @@
   .D-comments {
     margin-top: 20px;
     position: relative;
-    padding: 15px 15px 6px;
+    padding: 15px;
     border-radius: 10px;
     border: solid 1px var(--D-Low-Color);
 
@@ -136,7 +158,7 @@
       border: 0;
       border-radius: 0;
       margin-left: 40px;
-      padding: 15px 0 10px;
+      padding-top: 15px;
       border-top: dashed 1px var(--D-Low-Color);
     }
 
@@ -147,6 +169,32 @@
 
     .D-reply {
       right: 0;
+    }
+  }
+
+  .D-comments-child-more {
+    cursor: pointer;
+    color: #818181;
+    margin-left: 40px;
+    padding-left: 30px;
+    font-size: 12px;
+    position: relative;
+
+    &::after {
+      content: '';
+      top: 50%;
+      left: 0;
+      width: 26px;
+      height: 1px;
+      position: absolute;
+      background: rgba(129, 129, 129, 0.5);
+    }
+
+    svg {
+      width: 13px;
+      height: 13px;
+      fill: currentColor;
+      vertical-align: middle;
     }
   }
 

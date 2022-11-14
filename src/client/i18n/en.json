@@ -19,6 +19,7 @@
   "pleaseLogin": "Please log in and then use the admin email to comment",
   "sendError": "Comment failed~",
   "more": "More",
+  "moreCommentsChild": "Expand the remaining $counter reply comments",
   "notComments": "Not Comments",
   "commentsAudit": "Your comment may need to be moderated before it can be displayed",
   "commentsError": "Failed to get comments~",
