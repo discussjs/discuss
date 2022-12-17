@@ -9,10 +9,10 @@
     "build": "rollup -c",
     "start:client": "rollup -c -w",
     "start:server": "node ./start.js",
-    "start:server:hot": "npx nodemon ./start.js",
-    "prepare": "npx husky install",
-    "lint": "npx eslint src && npx prettier --check src",
-    "lint:fix": "npx eslint --fix src && npx prettier --check --write src"
+    "start:server:hot": "nodemon ./start.js",
+    "prepare": "husky install",
+    "lint": "eslint src && prettier --check src",
+    "lint:fix": "eslint --fix src && prettier --check --write src"
   },
   "keywords": [
     "discuss",
@@ -43,7 +43,7 @@
     "md5": "^2.3.0",
     "min-1px": "^1.0.0",
     "mongodb": "^4.8.0",
-    "msg-alert": "^1.0.0-beta.2",
+    "msg-alert": "^1.0.0-beta.4",
     "mysql2": "^2.3.3",
     "nodemailer": "^6.7.0",
     "output-line": "^1.0.1",
