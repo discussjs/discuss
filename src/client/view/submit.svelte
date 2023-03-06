@@ -218,7 +218,7 @@
       }
 
       // 网站
-      if (siteLen === 0 || (isUrl(site.value) && siteLen <= siteWord)) {
+      if ((siteLen === 0 && siteWord === 0) || (isUrl(site.value) && (siteLen <= siteWord || siteWord === 0))) {
         if (siteLen) site.value = new URL(site.value).origin
         site.is = true
       } else {
@@ -227,7 +227,7 @@
 
       // 内容
       const dom = new DOMParser().parseFromString(contentHTML, 'text/html')
-      const textContent = dom.body.textContent.length
+      const textContent = dom.body.textContent.length + dom.querySelectorAll('img').length
       if ((contentWord === 0 && textContent > 1) || (textContent > 1 && textContent <= contentWord)) {
         content.is = true
       } else {
