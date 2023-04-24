@@ -30,17 +30,6 @@
   const contentStr = 'content'
   const mailReg = /^\w+([-.]\w+)*@\w+([-.]\w+)*(\.[a-z]{2,5})+$/
 
-  function isUrl(str) {
-    try {
-      const url = new URL(str)
-      if (/^https?:\/\//.test(str) && /([A-Za-z\d]{1,30}\.)+[A-Za-z\d]{2,5}$/.test(url.hostname)) {
-        return true
-      }
-      // eslint-disable-next-line no-empty
-    } catch (error) {}
-    return false
-  }
-
   // svelte变量
   let storage = localStorage.discuss
   let isEmot = false
@@ -198,10 +187,9 @@
   function metasChange() {
     try {
       const { nick, mail, site, content } = metas
-      const { nick: nickWord, mail: mailWord, site: siteWord, content: contentWord } = wordLimit
+      const { nick: nickWord, mail: mailWord, content: contentWord } = wordLimit
       const nickLen = nick.value.length
       const mailLen = mail.value.length
-      const siteLen = site.value.length
 
       // 昵称
       if ((nickWord === 0 && nickLen > 1) || (nickLen > 1 && nickLen <= nickWord)) {
@@ -215,14 +203,6 @@
         mail.is = true
       } else {
         mail.is = false
-      }
-
-      // 网站
-      if ((siteLen === 0 && siteWord === 0) || (isUrl(site.value) && (siteLen <= siteWord || siteWord === 0))) {
-        if (siteLen) site.value = new URL(site.value).origin
-        site.is = true
-      } else {
-        site.is = false
       }
 
       // 内容
