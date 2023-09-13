@@ -7,8 +7,6 @@ const {
   DISCUSS_DB_COUNTER = 'd_counter'
 } = process.env
 
-const sequelize = new Sequelize(JSON.parse(D_SEQUELIZE_DB)[0])
-
 const ModelOptions = { freezeTableName: true, timestamps: false }
 
 const AdminModel = {
@@ -124,7 +122,6 @@ const AdminModel = {
     allowNull: false
   }
 }
-const Admin = sequelize.define(DISCUSS_DB_ADMIN, AdminModel, ModelOptions)
 
 const CommentModel = {
   id: {
@@ -199,7 +196,6 @@ const CommentModel = {
     allowNull: false
   }
 }
-const Comment = sequelize.define(DISCUSS_DB_COMMENT, CommentModel, ModelOptions)
 
 const CounterModel = {
   id: {
@@ -226,7 +222,6 @@ const CounterModel = {
     allowNull: false
   }
 }
-const Counter = sequelize.define(DISCUSS_DB_COUNTER, CounterModel, ModelOptions)
 
 function findAllHandler(datas) {
   const result = []
@@ -234,8 +229,15 @@ function findAllHandler(datas) {
   return result
 }
 
-module.exports = async () => {
+module.exports = async (sequelizeConfig = {}) => {
+  const sequelize = new Sequelize(JSON.parse(D_SEQUELIZE_DB)[0], sequelizeConfig)
+
+  const Admin = sequelize.define(DISCUSS_DB_ADMIN, AdminModel, ModelOptions)
+  const Comment = sequelize.define(DISCUSS_DB_COMMENT, CommentModel, ModelOptions)
+  const Counter = sequelize.define(DISCUSS_DB_COUNTER, CounterModel, ModelOptions)
+
   await sequelize.sync()
+
   return {
     async addAdmin(data) {
       await Admin.create(data)
