@@ -20,6 +20,11 @@
     "concise",
     "vue"
   ],
+  "exports": {
+    "./server": "./index.js",
+    "./client": "./dist/discuss.js",
+    "./client-admin": "./dist/discuss.admin.js"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/discussjs/discuss"
