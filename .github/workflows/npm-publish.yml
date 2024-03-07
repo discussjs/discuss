@@ -11,25 +11,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: 检查分支
-        uses: actions/checkout@v2
-
-      - name: 安装 Node
-        uses: actions/setup-node@v1
+      - uses: actions/checkout@main
+      - uses: actions/setup-node@main
         with:
-          node-version: 16
-          registry-url: https://registry.npmjs.org/
-
-      - name: 安装依赖
-        run: npm install
-
-      - name: 检查代码
-        run: npm run lint:fix
-
-      - name: 构建
-        run: npm run build
-
-      - name: 发布
-        run: npm publish
+          node-version: latest
+      - run: npm install
+      - run: npm run lint:fix
+      - run: npm run build
+      - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
