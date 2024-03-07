@@ -32,6 +32,7 @@
 
   // svelte变量
   let storage = localStorage.discuss
+  let draft = localStorage.getItem('discuss:draft')
   let isEmot = false
   let emotIndex = 0
   let emotMaps = {}
@@ -86,11 +87,16 @@
   function initInfo() {
     try {
       storage = JSON.parse(storage) || {}
+      draft = JSON.parse(draft) || {}
+
       for (const [k, v] of Object.entries(storage)) {
         metas[k].value = v || ''
       }
+
+      metas.content.value = draft[D.path]?.content || ''
     } catch (error) {
       storage = {}
+      draft = {}
     }
   }
 
@@ -140,6 +146,11 @@
       storage[k] = v.value.trim()
     }
     localStorage.discuss = JSON.stringify(storage)
+
+    draft[D.path] = {}
+    draft[D.path].content = metas.content.value
+    localStorage.setItem('discuss:draft', JSON.stringify(draft))
+
     // 重新解析表情
     parseEmot()
   }
@@ -514,7 +525,10 @@
 
     &:hover {
       background: var(--D-Low-Color);
-      box-shadow: 0 2px 2px 0 rgb(0 0 0 / 14%), 0 3px 1px -2px rgb(0 0 0 / 20%), 0 1px 5px 0 rgb(0 0 0 / 12%);
+      box-shadow:
+        0 2px 2px 0 rgb(0 0 0 / 14%),
+        0 3px 1px -2px rgb(0 0 0 / 20%),
+        0 1px 5px 0 rgb(0 0 0 / 12%);
     }
   }
 
