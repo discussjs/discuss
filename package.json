@@ -1,11 +1,12 @@
 {
   "name": "discuss",
-  "version": "1.2.7",
+  "version": "1.2.8",
   "description": "一款简单，安全，免费的评论系统 | A simple, safe, free comment system",
   "main": "index.js",
   "unpkg": "dist/discuss.js",
   "jsdelivr": "dist/discuss.js",
   "scripts": {
+    "prepublishOnly": "npm run build",
     "build": "rollup -c",
     "start:client": "rollup -c -w",
     "start:server": "node ./start.js",
